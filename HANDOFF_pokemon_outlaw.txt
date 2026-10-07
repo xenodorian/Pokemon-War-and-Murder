@@ -1,0 +1,217 @@
+HANDOFF: POKEMON OUTLAW ROM HACK PATCHES (FireRed hack, GBA)
+Written 2026-10-07. Read this whole file before doing anything.
+
+=====================================================================
+1. WHAT THIS PROJECT IS
+=====================================================================
+The user plays "Pokemon Outlaw" (a FireRed 1.0 / BPRE hack, build outlaw-2015-09-05) on an R36S handheld
+(RetroArch, mGBA core). I make patches on top of that ROM using one Python build script. The user wants:
+  - a single already-patched .gba
+  - a matching RetroArch save state (.state) whose ROM CRC is re-paired to the new ROM
+  - optionally the IPS patch (against the original ROM)
+Each delivery gets a name like "Pokemon Outlaw Quest Log (Slimosaur).gba" / ".state".
+Everything is verified in an emulator harness only, never on real hardware. Say so in deliveries.
+
+The user will NOT have the original ROM in a new chat unless they re-attach it. Ask them to attach
+f4046af2-outlaw-2015-09-05.gba (the unpatched hack ROM, 16,777,240 bytes) and their latest .state.
+
+=====================================================================
+2. USER PREFERENCES (follow these)
+=====================================================================
+- Simple factual questions: short, objective, unemotional answers. No extra detail.
+- NEVER use an em dash. NEVER use emoji.
+- Fiction: plain language, high school vocabulary, action forward.
+- While coding, if a request looks simple but needs intensive thinking, flag it once and ask once.
+- Prefer portable, self-contained, pre-packaged installs over manual pip/venv dependency resolution.
+- When analyzing a document, do not state something as fact unless exact supporting text/data was found.
+  Flag unverified inferences explicitly.
+- When searching, do not assume multi-keyword searches need all keywords on one line. Retry loosely
+  before concluding something does not exist.
+- If an edit is unclear or beyond the scope of the prompt, stop and confirm first.
+- The user likes frequent short progress reports, dislikes long sleep/poll loops and background jobs
+  (several tool calls were rejected for that reason). Report after each test attempt when asked.
+
+=====================================================================
+3. FILE LAYOUT (bundle: outlaw_handoff_bundle.zip, unzip to recreate /home/claude/work)
+=====================================================================
+IMPORTANT: build.py has hardcoded absolute paths. Recreate this layout exactly:
+  /home/claude/work/orig.gba            <- copy of the user's ORIGINAL ROM (not in the bundle)
+  /home/claude/work/tools/              build.py g3.py gfx.py quests.py scr.py story.py tdis.py tdis2.py
+                                        topng.py qtest.py harness.c harness_ls (prebuilt emulator harness binary)
+                                        taunter.png (Taunter sprite = Haunros pixel art, 64x64, red outline)
+                                        taunter_orig.png (the user's original Taunter sprite, now unused)
+                                        slimosaur.png (Slimosaur sprite, 64x64, 15 colors)
+  /home/claude/work/stage2/             prep.py rob.c rob.ld data.h shot.raw splat.png  (robbery/shoot mechanic)
+  /home/claude/work/stage3/             sell.c sell.ld sdata.h                          (SELL POKEMON feature)
+  /home/claude/work/allmaps.txt         dump of every map's objects/scripts (prep.py reads it)
+  /home/claude/work/scratch_drivers/    emulator test drivers (mt.py, drv2.py, sim.py, sim2.py, patchmon.py, ...)
+  /home/claude/work/out/                release outputs
+Test drivers hardcode a scratchpad path (SP in drv2.py: /tmp/claude-0/.../scratchpad/). Edit SP to a
+writable directory and copy the .mgba states there.
+
+Python deps: keystone-engine (thumb assembler), Pillow, numpy, scipy, scikit-image.
+System tools: clang, ld.lld, llvm-objcopy, nm (build.py compiles stage2/rob.c and stage3/sell.c to thumb).
+Run python with -I? build.py is run as:   cd /home/claude/work && python3 -I tools/build.py [outpath]
+(-I isolated mode; the script adds its own sys.path.) Debug env vars exist (see section 8), never set them
+for a release build.
+
+=====================================================================
+4. HOW TO BUILD AND DELIVER A RELEASE
+=====================================================================
+1. cd /home/claude/work && env -u DEBUGWARP -u DEBUGCANDY -u DEBUGTRAINER -u DEBUGMUT -u DEBUGMART \
+     -u DEBUGBATTLE python3 -I tools/build.py "/home/claude/work/out/Pokemon Outlaw Quest Log (NAME).gba"
+   (output size should be 16,777,240 bytes; build asserts that free space is 0xFF where it allocates)
+2. STATE PAIRING. A RetroArch .state is an RZIP: 20-byte header (magic '#RZIPv', chunk size 0x20000 at
+   offset 8, total size at 12), then chunks of [u32 compressed length][zlib data], each decompressing to
+   up to 131072 bytes. The decompressed blob is 'RASTATE' + mGBA state. The ROM CRC32 (of the whole .gba file)
+   is a u32 at decompressed offset 0x18. To re-pair: decompress, write zlib.crc32(rom) at 0x18, recompress
+   in 131072-byte chunks. The mGBA-only state (what the harness loads) is raw[16:16+0x81040].
+   The previous delivered state is a fine template (it contains the user's party/save data).
+3. IPS: diff the new ROM against /home/claude/work/orig.gba, records of changed runs (merge gaps <= 2 bytes,
+   max 0xFFFF per record, no record may start at 0x454F46 (the "EOF" value), all offsets < 0xFFFFFF).
+   Apply it back to orig.gba and assert equality with the ROM before delivering.
+4. Copy build.py and other changed source into out/source_tools/ (kept in sync each delivery).
+5. Send .gba, .state, and the .ips with SendUserFile (display attach). Lead with what changed in
+   plain words. State that it was verified in the emulator only.
+
+=====================================================================
+5. WHAT HAS BEEN BUILT SO FAR (all in tools/build.py unless noted)
+=====================================================================
+Earlier work (delivered in earlier chats; details live in build.py comments):
+  - Quest log menu entry (QUESTS), Poke Flute quest, RENAME menu entry
+  - Sandshrew / Sandslash learnsets (Sandslash level 23: Stone Edge, Swords Dance, Strength, Dig ...)
+  - Move SANDSTORM in a repurposed slot (move 251), text speed options
+  - Mewtwo catch rate and moves, Stone Edge accuracy 100
+  - Glock / 9MM ROUND items and the robbery / shoot mechanic (stage2/rob.c, see section 6)
+  - SELL POKEMON feature (stage3/sell.c)
+  - HM forgetting (HMs can be forgotten without a deleter)
+  - SEWER SLIDE: repurposes unused move slot 344 (Volt Tackle). Poison, power 70, acc 95, PP 15, contact,
+    50% poison then 50% flinch (effect id 12 custom script), Fly animation. Grimer learns it at Lv14.
+    Usable from the party menu like Fly (fly-map travel). Muk does NOT learn it.
+    Session fixes this chat: description is "Slides in filth. / May poison or flinch. / Also used to travel."
+    (first line was clipped before). The party-menu help bar (field-move table at 0x45a37c, indexed by
+    action id minus 0x12) had no entry for index 12 so it showed garbage when hovered. Added an entry:
+    "Travel to cities by sewer". The user asked for "Travel to cities via the sewer system" but that text
+    is clipped by the submenu window (only about 25 characters are visible). Tell the user if they ask.
+  - TAUNTER: species 252 (national dex slot 251, Celebi's page), Ghost/Poison, evolves from Tauros at Lv25,
+    stats 100/150/100/100/150/75, Levitate, category "MOCKING BULL". Sprite is now tools/taunter.png
+    (the Haunros fusion art converted to 64x64 pixel art with a red outline).
+  - Physical Mutagen (item 54) and Special Mutagen (item 55), 5000 each: +10 Atk/Def IVs and +10 SpA/SpD IVs
+    (capped at 31, tested with maxed IVs). Protein and Calcium 7500, Rare Candy 9900 (price cannot be 10,000
+    because the mart column shows "?000"), all sold in all 15 marts.
+
+This chat:
+  - Old man (graphics id 32, "gamer") shoot fix: stage2/prep.py scanner no longer reads junk after script
+    terminators; type 4 double battle pairs (separate objects sharing a trainer id) are now shootable, and
+    shooting one removes both partners (rob.c scans object templates for the same trainer id).
+    Result: 417 trainer ids, 388 shootable.
+  - JASPER crash fix: Route 11 trainer 259 (object local id 5 at (38,15)) had a corrupt script pointer
+    0x081a9cbf (the script starts mid-instruction). Walking into his sight read garbage as a trainer id and
+    crashed. build.py allocates a rebuilt script (trainerbattle type0, trainer 259, intro 0x08184f5d, defeat
+    0x08184f7e, then the intact tail) and repoints the template. prep.py has FIXED={259}.
+    Verified in emulator: JASPER spots the player ("Competition! I can't get enough"), battle starts,
+    no crash. Only the start of the battle was watched, not the entire fight.
+    HUGO is trainer 258, DIRK 260, DARIAN 261 (all graphics id 32 old men on Route 11): all in the shootable set.
+    A defeated gamer next to the player in the user's state showed the shoot prompt and shot correctly.
+  - GRIMER -> MUK at Lv25 (was 38), MUK -> SLIMOSAUR at Lv35.
+    Muk learnset: Sludge Bomb moved from Lv47 to Lv25, Shadow Punch added at Lv30.
+  - SLIMOSAUR: species 253, national dex slot 385 (Jirachi's page). Poison/Grass, base 110 in all six stats,
+    category "POISON PLANT", dex text "This POKEMON grows in polluted / areas of nature." Learnset: Muk's moves
+    to Lv35, Giga Drain Lv35, then Venusaur's moves above Lv35 (Growth 41, Synthesis 53, SolarBeam 65).
+    My own choices (not specified by the user): abilities Stench/Overgrow, Venusaur's EV yield/exp yield/catch
+    rate/growth rate, 50% male, egg groups Amorphous/Grass, Muk's cry and party icon and sprite coordinates,
+    Venusaur's height/weight, TM compat = Muk OR Venusaur, hue-shifted shiny palette. Sprite built from a
+    Japeal fusion-generator image (64x64, 15 colors, bottom aligned).
+  - Evolutions verified live in the emulator with Rare Candies (Grimer 24 -> Muk, Muk 34 -> Slimosaur).
+    The Sludge Bomb and Giga Drain learn-move prompts were NOT tested live (learnsets verified from ROM data).
+
+Latest delivery: "Pokemon Outlaw Quest Log (Taunter Sprite)" gba/state plus outlaw_questlog.ips. It contains
+everything above. out/ also keeps "(Slimosaur)" and earlier named builds.
+
+=====================================================================
+6. KEY TECHNICAL NOTES
+=====================================================================
+ROM: FireRed 1.0 (BPRE), expanded to 16 MB. alloc(bytes, align) allocates from 0xA00000 upward.
+Helpers in build.py: ptr(), text() (FR charset), thumb_fn() (keystone), r32/w32, setmove(), cp(table, size, dst, src).
+c4(t) helper: 'ldr r4,=0x08000000+t+1; bl THUNK_R4' where t is a FILE offset (pass addr-0x08000000).
+Existing trampolines live around 0x3af2a0..0x3af3a0; do not collide (mutagen wrappers are at 0x3af380+).
+
+Species tables (index = species id): sprite tables front 0x2350ac, back 0x23654c (8 bytes: ptr, size, tag),
+palette PAL / SHINY tables (8 bytes), sprite coords 0x2349cc and 0x235e6c, base stats 0x254784 (28 bytes),
+names 0x245ee0 (11 bytes), species to national dex 0x251fee (u16, index species-1; the national to species
+function searches this table linearly so a repurposed national number resolves to the new species),
+dex entries 0x44e850 (36 bytes, indexed by NATIONAL number), evolution table 0x259754 (40 bytes = 5 x
+{method u16, param u16, target u16, pad}; method 4 = level), TM compat 0x252bc8 (8 bytes), learnsets
+LEARN=0x25d7b4 (u32 ptr per species; entries (level<<9)|move, 0xFFFF end), cries 0x48c914 and 0x48db44
+(12 bytes, index species-1), party icons 0x3d37a0 (+ icon palette index 0x3d3e80, elevation 0x23a004).
+Move data MOVE_DATA=0x250c04 (12 bytes), names MOVE_NAMES=0x247094 (13 bytes), descriptions MOVE_DESC=0x4886e8
+(u32 ptr, index move-1). Dex category copy loop was patched to copy 12 chars with the 0xFF terminator.
+Species limits: ids 252..276 are unused "?" slots (254..276 still free = 23 slots), 277..411 are real Hoenn data
+(overwritable, 135 slots), 412 = Egg and the table edge. Past that needs relocating every species table.
+Trainer data table at file 0x798790 (40 bytes: class, pic, name[12] at +4 ...). Object event templates are
+0x18 bytes: local id +0, gfx +1, trainerType u16 +0xc, script ptr +0x10. The sight check requires the template
+script to start with 0x5c (trainerbattle).
+Script opcodes used: 0x26 specialvar, 0x21 compare_var_to_value, 0x06 goto_if, 0x0f loadword, 0x09 callstd,
+0x02 end, 0x5c trainerbattle (type0 = 5c 00 id(2) 00 00 intro_ptr defeat_ptr), 0x39 warp, 0x44 additem.
+Item struct 44 bytes at 0x3db028 (price at +16, desc ptr +20). Medicine flow hooks at 0x12533a, 0x12541e, 0x125516.
+Evolution/summary note: when editing a test state, keep exp consistent with level and growth rate or the
+summary screen's exp bar loop (code near 0x13aa2c) spins forever and looks like a hang.
+
+Robbery/shoot mechanic: stage2/rob.c is C compiled to thumb. data.h is generated by prep.load() from
+allmaps.txt giving g_ids[] / g_shoot[]. prep.py rules: plain scripts only, type 0 or 4 first trainerbattle,
+only trainerbattle types 0/4/5.
+
+=====================================================================
+7. KNOWN NOT SHOOTABLE TRAINER IDS (29)
+=====================================================================
+Cinnabar Gym 178, 179, 180, 213, 214, 215; Saffron Dojo 317; Vermilion Gym 423; Rocket Grunts 357, 362, 366,
+367, 368; Rocket Warehouse 543, 544, 545 (16 ids with scripted extras); and 13 type-2 double-battle pair ids:
+484, 486, 487, 488, 489, 490, 491, 557, 560, 576, 580, 589, 601. Total 29. (An earlier chat message said 12 pair
+ids; the correct count is 13.) Reason is inferred from scanner rules (scripted extras, or one object holding two
+trainers), not individually verified.
+
+=====================================================================
+8. TEST HARNESS
+=====================================================================
+tools/harness_ls: headless mGBA-based runner. Usage: harness_ls ROM SCRIPTFILE OUTPREFIX with env
+LOADSTATE=<raw mGBA state file>. Script lines: "<frame> <hexkeys>" press, "<frame+4> 0" release,
+"shot <frame>" (writes OUTPREFIX_%05d.ppm), "ram <frame> <hexaddr> <n>" (dump), "end <frame>".
+Env PCS=<n> PCE=<m> samples the PC (a few false positives in BIOS/IRQ, e.g. 0x80008ac..b4 is a normal wait loop).
+Key hex: A=1 B=2 Select=4 Start=8 Right=10 Left=20 Up=40 Down=80.
+scratch_drivers/mt.py: go(name, keys, shots, endframe, rom, state, rams) runs it and builds a contact sheet PNG.
+patchmon.py: patch(src_state, dst_state, slot, species=None, level=None) edits a party mon in an mGBA state
+(handles XOR encryption and checksum). EWRAM is at state offset 0x21000, party at 0x02024284 (100 bytes/mon),
+party count at 0x02024029.
+Debug-only build env vars (NEVER ship): DEBUGWARP=group,num,x,y (the QUESTS menu entry warps there),
+DEBUGITEMS, DEBUGCANDY (adds 30 Rare Candy), DEBUGTRAINER, DEBUGMUT, DEBUGMART, DEBUGBATTLE, DEBUGSE.
+Start menu: cursor opens on the last used entry; QUESTS sits 3 above SAVE, BAG 1 above QUESTS, POKEMON 2 above QUESTS.
+Typical party test: Start(8), Up, A (POKEMON), A (select), A (SUMMARY), Right to change pages.
+Bag opens on the Key Items pocket; press Left once for Items, Down many times to reach the end.
+
+=====================================================================
+9. OPEN ITEMS / NOT DONE
+=====================================================================
+- Visually check all graphics id 32 sprites on Route 11 (HUGO (16,17), JASPER (38,15), DARIAN (50,4),
+  DIRK (57,16)). Not done.
+- Battle tests for DIRK and DARIAN, and shooting HUGO himself: not run (HUGO verified from data only).
+- Triage of other object templates with a null or odd script pointer, which might crash like JASPER did:
+  MtMoon_B2F local 6, Cerulean local 10, Celadon local 13, FiveIsland local 3, Route4 local 7, Route7 local 1,
+  Route15 local 14, SevenIsland_SevaultCanyon_Entrance local 7, and the Seafoam / Victory Road scripts at
+  0x81be11d. Not done.
+- Type 2 double battle pairs (two trainers on one object) are not shootable. User has not asked for them.
+- Live test of the Muk Lv25 Sludge Bomb prompt and the Slimosaur Lv35 Giga Drain prompt.
+- The user asked (hypothetically) about a fusion machine and a fourth evolution stage. The answers given:
+  a fourth stage is as easy as a third (just another evolution row; the real limit is free species slots);
+  a general fusion machine is very hard (149k pairs, ROM stat/learnset/sprite tables are static, no spare
+  field to record parents, art would need to come from the user). A hand-picked fixed set of fusions is feasible.
+- Web research found nothing notable about other hacks' Diglett's Cave.
+- The user may want the Sewer Slide help text changed if they accept the clipped longer text.
+
+=====================================================================
+10. SANDBOX CAVEATS
+=====================================================================
+- The cloud sandbox network is allowlisted (package registries and GitHub only). It cannot fetch the Japeal
+  fusion site; the user supplies images as attachments.
+- Outputs must be sent with SendUserFile; the user cannot see the working directory.
+- The user attached images of fusions made on japeal.com. Art-source and licensing questions are theirs
+  to judge; do not claim anything about licensing.
