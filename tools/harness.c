@@ -42,6 +42,7 @@ int main(int argc,char**argv){
     for(int i=0;i<npk;i++) if(pk[i][0]==fr){unsigned sb=core->busRead32(core,pk[i][3]==2?0x0300500c:0x03005008); if(pk[i][3]==1) core->busWrite8(core,sb+pk[i][1],core->busRead8(core,sb+pk[i][1])|pk[i][2]); else core->busWrite8(core,sb+pk[i][1],pk[i][2]);}
     core->setKeys(core,keys);
     core->runFrame(core);
+    if(getenv("SAVEAT")&&fr==atoi(getenv("SAVEAT"))){ static char st[0x90000]; memset(st,0,sizeof st); int ok=core->saveState(core,st); FILE*so=fopen(getenv("SAVEOUT"),"wb"); fwrite(st,1,0x81040,so); fclose(so); fprintf(stderr,"saved %d\n",ok); }
     { static short ab[16384]; int pk2=0; for(int ch=0;ch<2;ch++){ blip_t*bl=core->getAudioChannel(core,ch); int n=blip_samples_avail(bl); if(n>16384)n=16384; n=blip_read_samples(bl,ab,n,0); if(ch==0&&getenv("AUDIOOUT")){static FILE*af=0; if(!af) af=fopen(getenv("AUDIOOUT"),"wb"); fwrite(ab,2,n,af); fflush(af);} for(int q=0;q<n;q++){int v=ab[q]<0?-ab[q]:ab[q]; if(v>pk2)pk2=v;} } if(getenv("AUDIO")&&fr%300==0) fprintf(stderr,"dbg f%d pk=%d\n",fr,pk2); if(getenv("AUDIO")&&pk2>300) fprintf(stderr,"audio f%d peak=%d\n",fr,pk2); }
     if(getenv("PCS")&&fr>=atoi(getenv("PCS"))&&fr%atoi(getenv("PCE"))==0){struct ARMCore*c=core->cpu;fprintf(stderr,"f%d pc=%08x lr=%08x sp=%08x r0=%08x\n",fr,c->gprs[15],c->gprs[14],c->gprs[13],c->gprs[0]);}
     for(int i=0;i<nr;i++) if(rams[i][0]==fr){ fprintf(stderr,"RAM f%d %08x:",fr,rams[i][1]); for(int k=0;k<rams[i][2];k++) fprintf(stderr," %02x",core->busRead8(core,rams[i][1]+k)); fprintf(stderr,"\n"); }
