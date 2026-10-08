@@ -85,7 +85,7 @@ def install(r):
         print('scene',(g,n),'body',(bx,by),'feather',(fx,fy),'cop',(px,py))
     # --- Giovanni's words after losing (Rocket Hideout B4F, object script at 0x161317)
     assert r.b[0x16133b:0x16133d]==bytes([0x0f,0x00])
-    t_gio=text(r,"GIOVANNI: Dude, you can't stop us. We have the GOVERNMENT and SILPH on our side.\n\nBut something is killing my men. It is coming for me next. Take the SILPH SCOPE and run.\n\nAnd tell LANCE I never talked.")
+    t_gio=text(r,"GIOVANNI: Dude, you can't stop us. We have the GOVERNMENT and SILPH on our side.\n\nBut something is killing my men. It is coming for me next. Take the HM behind me and run.\n\nAnd tell LANCE I never talked.")
     r.w32(0x16133d,t_gio)
     # --- Mr. Fuji in the tower (2,66)
     h=header(r,2,66); ev=r32(r,h+4)-0x08000000; po=r32(r,ev+4)-0x08000000; fo=None
