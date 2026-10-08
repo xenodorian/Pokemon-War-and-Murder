@@ -236,3 +236,27 @@ def splat_script(r,fns):
     t=leg1.enc('A note is pinned to the body:\n\n“EXECUTED FOR ')[:-1]+b'\xfd\x02'+leg1.enc('.”')
     S=SB(); S.lock(); S.raw(0x23); S.ptr(fns['army_note']); S.msg(0x08000000+r.alloc(t,1)); S.release(); S.end()
     return 0x08000000+put_script(r,S)
+
+# ----------------------------------------------------------------------------------------------- the General (final camp)
+FLAG_GENERAL=0x4CA           # the General was beaten
+GENERAL_ID_SLICE=(90,94)     # four spare ids: the General, two pairs of elite soldiers share one id each, the two camp guards share one
+LEGENDS=[243,244,245,251,249,250]       # RAIKOU ENTEI SUICUNE CELEBI LUGIA HO-OH, all level 50
+GENERAL_MAP={13:6,12:5,9:5,11:5}
+def general_frame(g):
+    """Giovanni's overworld sprite with the uniform recoloured khaki (rows from the neck down only, so the hair stays dark)"""
+    return [[(GENERAL_MAP.get(v,v) if y>=11 else v) for v in row] for y,row in enumerate(g)]
+def general_pic_recolor(cols):
+    c=list(cols)
+    c[9]=(46,54,34); c[12]=(76,88,52); c[11]=(108,122,76); c[5]=(218,174,58); c[6]=(166,126,38); c[13]=(168,170,160)
+    return c
+def general_pic_pixels(g,cols):
+    for y in range(14):
+        for x in range(64):
+            if g[y][x]==12: g[y][x]=13
+            elif g[y][x]==11: g[y][x]=8
+def camp_team(tid,n,lo,hi):
+    import random
+    rng=random.Random('camp-team-%d'%tid); used=set(); levels=sorted(rng.randint(lo,hi) for _ in range(n)); party=[]
+    for lv in levels:
+        sp=pick_species(rng,lv,used); used.add(sp); party.append((sp,lv))
+    return party

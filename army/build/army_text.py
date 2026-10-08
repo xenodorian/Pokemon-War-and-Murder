@@ -52,3 +52,28 @@ def captain_lines(city,cap,num,nxt,medal):
             "CAPT. %s: A KANTO brat beat the JRA?"%cap,
             ("CAPT. %s: Take my %s. I earned it in the fields of Johto. Don't think this ends the Revolution.\n\n%s"%(cap,medal,("%s's base will not fall so easily."%nxt) if nxt else "The GENERAL waits beyond the sea. You will not reach him.")),
             "CAPT. %s: Get out. Johto will remember this."%cap)
+
+# ---- the final camp (Seven Island)
+GENERAL='TOKIWA'
+ELITE_INTRO=["Halt! This is JRA HEADQUARTERS. Nobody walks in on the GENERAL.\n\nPEACE THROUGH CONQUEST!",
+ "You broke ten bases and still think you can reach the GENERAL? I am JOHTO's last wall!",
+ "I trained for years on MT. SILVER for this day. Surrender, KANTO scum!",
+ "The Revolution ends nowhere. Least of all here!"]
+ELITE_DEFEAT=["The GENERAL... will avenge me.","Johto forgive me. I failed.","How can a KANTO brat be this strong?","My legion... my honor..."]
+ELITE_AFTER=["Go on. The GENERAL waits. He is nothing like the Captains.","You will not survive the GENERAL's legends.","I have lost. Move along.","Peace through conquest... even in defeat."]
+GUARD2_INTRO=["Stop! Only JRA officers enter HEADQUARTERS. Prepare to be crushed!\n\nPEACE THROUGH CONQUEST!","You walked into my line of sight. Nobody enters the GENERAL's camp!"]
+GUARD2_DEFEAT=["Impossible. A civilian passed the last gate.","The Captains were not enough..."]
+GUARD2_AFTER=["Go in, then. The GENERAL will end you.","Enter. You will not leave."]
+def camp_lines(role,tid):
+    rng=random.Random('camp-%s-%d'%(role,tid))
+    a,b,c={'elite':(ELITE_INTRO,ELITE_DEFEAT,ELITE_AFTER),'guard':(GUARD2_INTRO,GUARD2_DEFEAT,GUARD2_AFTER)}[role]
+    return tuple('JRA ELITE: '+rng.choice(p) for p in (a,b,c))
+GENERAL_LINES=dict(
+ intro="GENERAL %s: So the rat who broke my ten bases stands before me at last. I am the sword of Johto, and these are the legends that built it.\n\nPEACE THROUGH CONQUEST!"%GENERAL,
+ defeat="GENERAL %s: Impossible... the legends of Johto fell to a KANTO child?"%GENERAL,
+ won=["GENERAL %s: Then the Revolution is over. My legends would not have followed a loser anyway."%GENERAL,
+      "GENERAL %s: Take these. Johto's great dream dies with me today. Tell KANTO it was never about peace."%GENERAL],
+ final="The JRA is collapsing! Soldiers across KANTO are laying down their arms and going home.",
+ after="GENERAL %s: Go. I have no army left to command."%GENERAL)
+LOCK_LEAGUE="The door is locked. A plate beside it reads:\n\nSEALED UNTIL THE POKéMON LEAGUE FALLS."
+CAMP_SIGN="JOHTO REVOLUTIONARY ARMY\nGENERAL HEADQUARTERS\nSEVEN ISLAND\n\nPEACE THROUGH CONQUEST!"

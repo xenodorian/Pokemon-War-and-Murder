@@ -44,7 +44,7 @@ def build_base_map(r,src_n,objects,warps,mapsec,name):
     for k in (383,391): lp=r32(r,LT+4*k)-0x08000000; assert 4<=r32(r,lp)<=60,k
     tab=r.alloc(bytes(b[LT:LT+4*NL])+struct.pack('<I',0x08000000+lay),4); r.w32(0x55194,0x08000000+tab)
     hb[18:20]=struct.pack('<H',NL+1); STATE['NL']=NL+1
-    if STATE['NL']==393: r.w32(0x3f1cac+4*(mapsec-0x58),0x08000000+r.alloc(leg1.enc(name),1))
+    if mapsec not in STATE.setdefault('named',set()): r.w32(0x3f1cac+4*(mapsec-0x58),0x08000000+r.alloc(leg1.enc(name),1)); STATE['named'].add(mapsec)
     hb[20]=mapsec; hb[0x1a]=100; hb[25]|=0x04
     hdr=r.alloc(bytes(hb),4)
     g2=r32(r,GROUPS+8)-0x08000000; num=STATE['NUM']
@@ -94,6 +94,7 @@ def patrol_tiles(r,g,n,start,keep_out,k=2,seed='p'):
 HOUSE=(32,8,5,4)           # Pewter's house (x,y,w,h); door at column 1 of the bottom row
 # bx,by = top left of the house; yg = the approach row below it. ground = tile whose block fills cleared land. carve = corridor rectangles, clear = open land, guards = (x,y,facing), start = a tile on the existing town road
 EXT={
+ 'SEVEN ISLAND':dict(ext=14,ground=(23,16),carve=[],clear=[],rowfill=[(24,37,14,19,23),(24,37,20,29,23)],bx=28,by=14,guards=[(27,18,10),(33,18,9)],sign=(34,18),start=(21,16)),
  'PALLET':   dict(ext=14,ground=(18,17),carve=[(22,17,36,18)],clear=[(24,12,35,16)],bx=28,by=13,guards=[(27,17,10),(33,17,9)],sign=(34,17),start=(21,17),evac=(12,11)),
  'VIRIDIAN': dict(ext=8, ground=(36,14),carve=[(42,20,52,21)],clear=[(42,15,52,19)],bx=45,by=16,guards=[(44,20,10),(50,20,9)],sign=(51,20),start=(41,20)),
  'CERULEAN': dict(ext=14,ground=(39,14),carve=[],clear=[(48,13,57,17)],bx=50,by=14,guards=[(49,18,10),(55,18,9)],sign=(56,18),start=(46,18)),
@@ -112,6 +113,10 @@ def carve_exterior(r,c,house):
     if e['ext']: army_sites.extend_right(r,g,n,e['ext'])
     if e.get('insert'): army_sites.insert_rows(r,g,n,*e['insert'])
     for (x0,y0,x1,y1) in e['carve']+e['clear']: army_sites.fill(r,g,n,x0,y0,x1,y1,gv)
+    for (x0,x1,y0,y1,sx) in e.get('rowfill',[]):
+        for yy in range(y0,y1+1):
+            v=army_sites.get_block(r,g,n,sx,yy)
+            for xx in range(x0,x1+1): army_sites.set_block(r,g,n,xx,yy,v)
     if e.get('evac'): ts.evacuate(*e['evac'])
     slot=ts.free_slot(); assert slot,'no free palette slot in '+c['name']
     blocks=house.graft(ts,slot)
@@ -187,6 +192,63 @@ def install_city(r,fns,gf,c,house,item_by_num):
         W,_=army_sites.dims(r,g,n)
         assert any((W-1,yy) in seen for yy in range(0,40)) or c['name'] in ('PALLET','VIRIDIAN','LAVENDER','SAFFRON'),'east exit lost'
     return dict(pat_ids=pat_ids,cleared=cleared,victims=VICTIM_VARS[idx])
+
+def flag_lock_script(r,flag,text):
+    """the camp door: refused (and pushed back) until the flag is set"""
+    S=SB(); S.lockall()
+    S.raw(0x2b); S._add(struct.pack('<H',flag)); S.goto_if(1,'open')
+    S.msg(TXT(r,text),4)
+    S.applymovement(0xff,0x08000000+r.alloc(bytes([0x10,0xfe]),1)); S.waitmovement(0xff); S.releaseall(); S.end()
+    S.lab('open'); S.releaseall(); S.end()
+    return 0x08000000+put_script(r,S)
+def general_script(r,tid,flag_cleared):
+    L=army_text.GENERAL_LINES
+    S=SB(); S.raw(0x5c,1); S._add(struct.pack('<HH',tid,0)); S.ptr(TXB(r,L['intro'])); S.ptr(TXB(r,L['defeat'])); S.ref('cont')
+    S.msg(TXT(r,L['after']),6); S.end()
+    S.lab('cont')
+    S.raw(0x2b); S._add(struct.pack('<H',flag_cleared)); S.goto_if(1,'again')
+    S.setflag(flag_cleared)
+    for c_ in CITIES: S.setflag(FLAG_CLEARED0+c_['idx'])             # the army collapses: every patrol and base soldier leaves
+    S.raw(0x44); S._add(struct.pack('<HH',68,5))                     # 5 RARE CANDY
+    S.msg(TXT(r,L['won'][0])); S.msg(TXT(r,L['won'][1]))
+    S.msg(TXT(r,"You received 5 RARE CANDY!"),4)
+    S.msg(TXT(r,L['final']),6); S.end()
+    S.lab('again'); S.msg(TXT(r,L['after']),6); S.end()
+    return 0x08000000+put_script(r,S)
+def install_camp(r,fns,gf,g_general,house,flag_champ):
+    import reach
+    g,n=3,18; b=r.b; G_SOLDIER,G_CAPTAIN,G_SPLAT=gf
+    ids=ID_POOL[GENERAL_ID_SLICE[0]:GENERAL_ID_SLICE[1]]; gen_id,elite=ids[0],ids[1:3]; guard_id=ids[3]
+    make_trainer(r,gen_id,CLS_GENERAL,PIC_GENERAL,army_text.GENERAL,[(sp,50) for sp in LEGENDS])
+    for tid in elite: make_trainer(r,tid,CLS_SOLDIER,PIC_SOLDIER,'ELITE',camp_team(tid,4,46,49))
+    make_trainer(r,guard_id,CLS_SOLDIER,PIC_SOLDIER,'GUARD',camp_team(guard_id,3,44,47))
+    # interior: Silph Co 1F, the lobby floor; the General sits in the deepest dead end
+    entry,warps_src=best_entry(r,47)
+    sold,cap=army_sites.plan_interior(bytes(r.b),1,47,entry,warps_src,4,'CAMP')
+    objs=[]
+    for i,(p_,mv) in enumerate(sold):
+        tid=elite[i//2]; a_,b_,c_=army_text.camp_lines('elite',tid*10+i)
+        objs.append(obj_tmpl(G_SOLDIER,p_[0],p_[1],soldier_script(r,tid,a_,b_,c_),mv,1,4,FLAG_GENERAL))
+    objs.append(obj_tmpl(g_general,cap[0][0],cap[0][1],general_script(r,gen_id,FLAG_GENERAL),cap[1],1,4,0))
+    for i,t in enumerate(objs): t[0]=i+1
+    ph=header(r,g,n); pev=r32(r,ph+4)-0x08000000; DW=r.b[pev+1]
+    bg,bn=build_base_map(r,47,objs,[(entry[0],entry[1],0,DW,n,g)],0xac,'JRA HEADQUARTERS')
+    # the island: same grey house as every base, on an eastern extension
+    c=dict(name='SEVEN ISLAND',town=n)
+    carve_exterior(r,c,house); e=EXT['SEVEN ISLAND']
+    door=(e['bx']+1,e['by']+3); front=(e['bx']+1,e['by']+4)
+    dw=add_warp(r,g,n,door[0],door[1],0,bn,2); assert dw==DW
+    add_coord(r,g,n,front[0],front[1],flag_lock_script(r,flag_champ,army_text.LOCK_LEAGUE))
+    for k,(gx,gy,mv) in enumerate(e['guards']):
+        a_,b_,c_=army_text.camp_lines('guard',guard_id*10+k)
+        add_obj(r,g,n,obj_tmpl(G_SOLDIER,gx,gy,soldier_script(r,guard_id,a_,b_,c_),mv,1,4,FLAG_GENERAL))
+    add_sign(r,g,n,e['sign'][0],e['sign'][1],0x3402,army_text.CAMP_SIGN)
+    seen,_=reach.reach(bytes(r.b),bg,bn,entry)
+    for t in objs:
+        x,y=struct.unpack('<hh',bytes(t[4:8])); assert any((x+dx,y+dy) in seen for dx,dy in ((1,0),(-1,0),(0,1),(0,-1))),('camp object not reachable',x,y)
+    seen,_=reach.reach(bytes(r.b),g,n,e['start'])
+    assert front in seen,'camp door not reachable'
+    return dict(general=gen_id,flag=FLAG_GENERAL)
 # ----------------------------------------------------------------------------------------------- main
 if __name__=='__main__':
     import qconsts
@@ -198,6 +260,8 @@ if __name__=='__main__':
     surge_pic=b[T+40*416+3]
     pic_from_png(r,PIC_SOLDIER,W+'/soldier_pic.png')          # supplied soldier picture
     alloc_trainer_pic(r,PIC_CAPTAIN,surge_pic,lambda c: ramp(c,'captain'),captain_pupil)
+    g_general=army_gfx.add_remapped(r,87,{},fn=general_frame); assert g_general==0xa2
+    alloc_trainer_pic(r,PIC_GENERAL,b[T+40*349+3],general_pic_recolor,general_pic_pixels)
     rename_class(r,CLS_SOLDIER,'JRA SOLDIER'); rename_class(r,CLS_CAPTAIN,'JRA CAPTAIN'); rename_class(r,CLS_GENERAL,'JRA GENERAL')
     item_by_num={}
     for c in CITIES:
@@ -225,7 +289,9 @@ if __name__=='__main__':
     for c in order:
         info=install_city(r,fns,(g_soldier,g_captain,g_splat),c,house,item_by_num)
         print('installed',c['name'],'base map',STATE['NUM']-1,'ids',info['pat_ids'])
-    json.dump([dict(name=c['name'],num=c['num'],idx=c['idx'],captain=c['captain'],flag=FLAG_CLEARED0+c['idx'],item=c['item'],cap=c['cap'],medal=c['medal_full']) for c in CITIES],open(W+'/cities.json','w'))
+    camp=install_camp(r,fns,(g_soldier,g_captain,g_splat),g_general,house,FLAGS['FLAG_DEFEATED_CHAMP'])
+    print('camp',camp)
+    json.dump([dict(name=c['name'],num=c['num'],idx=c['idx'],captain=c['captain'],flag=FLAG_CLEARED0+c['idx'],item=c['item'],cap=c['cap'],medal=c['medal_full']) for c in CITIES]+[dict(name='GENERAL',num=11,idx=10,captain=army_text.GENERAL,flag=FLAG_GENERAL,item=0,cap=50,medal='')],open(W+'/cities.json','w'))
     # hook: the map-load pass now runs the old one (police, shot trainers) and then the army pass
     assert b[0xa0981c:0xa09824]==bytes.fromhex('014b1847c046c046')
     r.w32(0xa09824,fns['army_entry'])

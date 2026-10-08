@@ -67,11 +67,15 @@ JRA_WHERE={'PALLET':'PALLET TOWN, a grey JRA building through the east trees.','
  'CERULEAN':'CERULEAN CITY, a grey JRA building on the east road.','VERMILION':'VERMILION CITY, a grey JRA building on the east road.','LAVENDER':'LAVENDER TOWN, a grey JRA building through the east cliff.',
  'CELADON':'CELADON CITY, a grey JRA building on the east road.','SAFFRON':'SAFFRON CITY, a grey JRA building by the west gate.','FUCHSIA':'FUCHSIA CITY, a grey JRA building north of the pond.','CINNABAR':'CINNABAR ISLAND, a grey JRA building on the south beach.'}
 def jra_quests():
-    cities=sorted(json.load(open('/home/claude/work/army/cities.json')),key=lambda c:c['num'])
+    allc=sorted(json.load(open('/home/claude/work/army/cities.json')),key=lambda c:c['num'])
+    cities=[c for c in allc if c['name']!='GENERAL']; gen=[c for c in allc if c['name']=='GENERAL'][0]
     out=[]
     for c in cities:
         door='This door is unlocked.' if c['num']==1 else 'You need the %s to open the door.'%cities[c['num']-2]['medal']
         out.append(dict(title='JRA: '+c['name'],done=[('f',c['flag'],True)],stages=[(None,JRA_WHERE[c['name']],'The JOHTO REVOLUTIONARY ARMY holds %s. Beat CAPT. %s for the %s. %s'%(c['name'],c['captain'],c['medal'],door))]))
+    out.append(dict(title='JRA: GENERAL',done=[('f',gen['flag'],True)],stages=[
+      ([f('FLAG_DEFEATED_CHAMP',False)],'The POKéMON LEAGUE, past ROUTE 23.','The JRA headquarters on SEVEN ISLAND is sealed until the CHAMPION falls.'),
+      (None,'SEVEN ISLAND, a grey JRA building through the east lawn.','Beat GENERAL %s and his six legendary POKéMON to end the JOHTO REVOLUTIONARY ARMY.'%gen['captain'])]))
     return out
 JRA_QUESTS=jra_quests()
 SIDE=[

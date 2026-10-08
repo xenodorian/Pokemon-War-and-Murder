@@ -33,7 +33,7 @@ class Tileset:
         s.cb=r32(r,S+16)
         s.next_tile=NSEC_TILES-1+640        # new tiles are taken from the top of the secondary range
         s.next_meta=NSEC_META-1+640
-        s.used=None
+        s.used=None; s.pool=None
     def entries(s,m): return list(s.pmeta(m)) if m<640 else list(s.smeta[m-640])
     def attr(s,m): return s.pattr(m) if m<640 else s.sattr[m-640]
     def tile_px(s,t):
@@ -48,8 +48,13 @@ class Tileset:
             for e in s.entries(m): used.add(e>>12)
         return used
     def alloc_tile(s,px):
-        t=s.next_tile; s.next_tile-=1
-        assert t-640>=s.nreal,'secondary tileset full'
+        """new tiles go to secondary indices that no metatile used on this map points at (the top of the range first)"""
+        if s.pool is None:
+            used=set()
+            for m in set(s.map_blocks()):
+                for e in s.entries(m): used.add(e&0x3ff)
+            s.pool=[t for t in range(640+NSEC_TILES-1,639,-1) if t not in used]
+        t=s.pool.pop(0)
         s.stiles[32*(t-640):32*(t-640)+32]=px; return t
     def alloc_meta(s,ents,attr):
         m=s.next_meta; s.next_meta-=1
