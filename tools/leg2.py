@@ -36,8 +36,8 @@ def build_native(r):
     out={}
     for ln in subprocess.run(['nm',W+'/leg2.elf'],capture_output=True,text=True,check=True).stdout.split('\n'):
         f=ln.split()
-        if len(f)==3 and f[2] in ('kc_show','karma_check','bless_do'): out[f[2]]=(int(f[0],16)&~1)|1
-    assert len(out)==3
+        if len(f)==3 and f[2] in ('kc_show','karma_check','bless_do','police_info','police_shoot'): out[f[2]]=(int(f[0],16)&~1)|1
+    assert len(out)==5
     return out
 # ---------------------------------------------------------------- start menu entry
 def menu_entry(r,fns):
@@ -112,10 +112,12 @@ def trainer_script(r,fns):
     t_mons=T('You took their POKéMON!')
     t_ask=T('Bless this TRAINER with a\nBLESS TAG?')
     t_thanks=T('Thank you for the blessings, my sins feel cleansed! Here, as a token of my gratitude, have an item!')
+    t_askpol=T('Shoot the officer?\nThis uses one 9MM ROUND.')
+    t_polshot=T('The officer goes down.')
     ITEM_9MM=53; SE_SHOT=347; pk=lambda v: struct.pack('<H',v)
     S=SB()
     S.raw(0x23); S.ptr(SYM['rob_info'])
-    S.compare(0x8006,0); S.goto_if(1,'normal')
+    S.compare(0x8006,0); S.goto_if(1,'pol')
     S.raw(0x47); S._add(pk(BLESS_ITEM)+pk(1)); S.compare(0x800d,0); S.goto_if(1,'rob')
     S.compare(0x8004,1); S.goto_if(1,'rob')
     S.compare(0x8005,0); S.goto_if(1,'rob')
@@ -142,6 +144,17 @@ def trainer_script(r,fns):
     S.compare(0x8007,0); S.goto_if(1,'noprt'); S.raw(0x53); S._add(pk(0x8007)); S.raw(0x55); S._add(pk(0x8007))
     S.lab('noprt'); S.msg(t_mons)
     S.lab('done'); S.release(); S.end()
+    S.lab('pol')
+    S.raw(0x23); S.ptr(fns['police_info']); S.compare(0x8007,0); S.goto_if(1,'normal')
+    S.raw(0x47); S._add(pk(ITEM_GLOCK)+pk(1)); S.compare(0x800d,0); S.goto_if(1,'normal')
+    S.raw(0x47); S._add(pk(ITEM_9MM)+pk(1)); S.compare(0x800d,0); S.goto_if(1,'normal')
+    S.msg(t_askpol,5); S.compare(0x800d,0); S.goto_if(1,'normal')
+    S.raw(0x45); S._add(pk(ITEM_9MM)+pk(1))
+    S.playse(SE_SHOT); S.raw(0x30)
+    S.raw(0x53); S._add(pk(0x800f))
+    S.raw(0x23); S.ptr(fns['police_shoot'])
+    S.raw(0x55); S._add(pk(0x800f))
+    S.msg(t_polshot); S.goto('done')
     S.lab('normal'); S.raw(0x5e)
     r.w32(0x1a4ed9,0x08000000+put_script(r,S))
 if __name__=='__main__':

@@ -17,7 +17,7 @@ SE_FORGIVE=0x1f   # placeholder, replaced below if a fanfare is wanted
 def build_native(r):
     r.cur=(r.cur+3)&~3; base=0x08000000+r.cur
     open(W+'/church.ld','w').write('ENTRY(kill_price)\nSECTIONS { . = 0x%08x; .all : { *(.text*) *(.rodata*) *(.data*) } /DISCARD/ : { *(.ARM.exidx*) *(.comment) *(.note*) *(.ARM.attributes) } }\n'%base)
-    subprocess.run(['clang','--target=thumbv4t-none-eabi','-mthumb','-Os','-ffreestanding','-fno-builtin','-fno-pic','-fno-stack-protector','-nostdlib','-fno-unwind-tables','-fno-asynchronous-unwind-tables','-c',W+'/church.c','-o',W+'/church.o'],check=True)
+    subprocess.run(['clang','--target=thumbv4t-none-eabi','-mthumb','-Os','-ffreestanding','-fno-builtin','-fno-pic','-fno-stack-protector','-nostdlib','-fno-unwind-tables','-fno-asynchronous-unwind-tables']+__import__('os').environ.get('CHURCH_CFLAGS','').split()+['-c',W+'/church.c','-o',W+'/church.o'],check=True)
     subprocess.run(['ld.lld','-T',W+'/church.ld',W+'/church.o','-o',W+'/church.elf'],check=True)
     subprocess.run(['llvm-objcopy','-O','binary',W+'/church.elf',W+'/church.bin'],check=True)
     blob=open(W+'/church.bin','rb').read(); a=r.alloc(blob,4); assert 0x08000000+a==base
