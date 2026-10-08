@@ -61,8 +61,35 @@ void police_info(void){
     u32 id=OPP; GSV(7)=0;
     if(id>=POL0&&id<POL0+NPOL){ u8* t=tmpl_for((u8)LASTTALKED); if(t&&t[1]!=GFX_SPLAT) GSV(7)=1; }
 }
-// shooting an officer: Kill Count +1 (counter), the officer becomes a splatter
+// shooting an officer: Kill Count +1 (counter), the officer becomes a splatter and the player takes their party, as with any shot trainer
+typedef void (*fn_create)(void*,u16,u8,u8,u8,u32,u8,u32);
+#define CreateMon      ((fn_create)(0x0803da54|1))
+#define GiveMonToPlayer ((u8(*)(void*))(0x08040b14|1))
+#define SetMonData     ((void(*)(void*,u32,const void*))(0x0804037c|1))
+#define SpeciesToNat   ((u16(*)(u16))(0x08043298|1))
+#define SetDexFlag     ((u32(*)(u16,u8))(0x08088e74|1))
+#define TRAINERS 0x08798790
 void police_shoot(void){
+    u32 id=OPP;
     u8* t=tmpl_for((u8)LASTTALKED); if(t) kill_tmpl(t);
     u16* p=kc_var(KC_POL_KILLS); if(*p<KC_MAX) (*p)++;
+    u8* tr=(u8*)(TRAINERS+40*id);
+    u8 pf=tr[0], n=tr[32]; u8* party=*(u8**)(tr+36);
+    u32 sz=(pf&1)?16:8;
+    for(int i=0;i<n;i++){
+        u8* e=party+sz*i;
+        u32 iv=e[0]|(e[1]<<8); u8 lvl=e[2]; u16 sp=e[4]|(e[5]<<8);
+        u32 mon[25];
+        CreateMon(mon,sp,lvl,(u8)((iv*31*257)>>16),0,0,0,0);
+        if(pf&2){ u16 it=e[6]|(e[7]<<8); SetMonData(mon,12,&it); }
+        if(pf&1){
+            u8* mv=e+((pf&2)?8:6);
+            for(int k=0;k<4;k++){
+                u16 m=mv[2*k]|(mv[2*k+1]<<8);
+                if(m){ u8 pp=((u8*)0x08250c04)[12*m+4]; SetMonData(mon,13+k,&m); SetMonData(mon,17+k,&pp); }
+            }
+        }
+        u8 res=GiveMonToPlayer(mon);
+        if(res<=1){ u16 dn=SpeciesToNat(sp); SetDexFlag(dn,2); SetDexFlag(dn,3); }
+    }
 }

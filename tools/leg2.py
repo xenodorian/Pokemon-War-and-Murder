@@ -113,7 +113,7 @@ def trainer_script(r,fns):
     t_ask=T('Bless this TRAINER with a\nBLESS TAG?')
     t_thanks=T('Thank you for the blessings, my sins feel cleansed! Here, as a token of my gratitude, have an item!')
     t_askpol=T('Shoot the officer?\nThis uses one 9MM ROUND.')
-    t_polshot=T('The officer goes down.')
+    t_polshot=T('The officer goes down.\n\nYou took their POK\u00e9MON!')
     ITEM_9MM=53; SE_SHOT=347; pk=lambda v: struct.pack('<H',v)
     S=SB()
     S.raw(0x23); S.ptr(SYM['rob_info'])
