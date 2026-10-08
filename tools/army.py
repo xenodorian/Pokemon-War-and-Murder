@@ -38,6 +38,21 @@ def alloc_trainer_pic(r,pic,src_pic,recolor):
     cols=recolor(gfx.pal_to_rgb(src_pal))
     r.w32(fa,r32(r,fs))
     r.w32(pa,0x08000000+r.alloc(gfx.lz_comp(gfx.rgb_to_pal(cols)),4))
+def pic_from_png(r,pic,path):
+    """trainer picture from a 64x64 PNG (transparent background, up to 15 opaque colours)"""
+    from PIL import Image
+    im=Image.open(path).convert('RGBA'); assert im.size==(64,64)
+    cols=[]
+    for y in range(64):
+        for x in range(64):
+            c=im.getpixel((x,y))
+            if c[3]>=128 and c[:3] not in cols: cols.append(c[:3])
+    assert len(cols)<=15,len(cols)
+    idx=[[(cols.index(im.getpixel((x,y))[:3])+1) if im.getpixel((x,y))[3]>=128 else 0 for x in range(64)] for y in range(64)]
+    fa=0x23957c+8*pic; pa=0x239a1c+8*pic
+    assert struct.unpack('<HH',r.b[fa+4:fa+8])==(0x800,pic)
+    r.w32(fa,0x08000000+r.alloc(gfx.lz_comp(gfx.pixels_to_tiles(idx)),4))
+    r.w32(pa,0x08000000+r.alloc(gfx.lz_comp(gfx.rgb_to_pal([(115,197,164)]+cols+[(0,0,0)]*(15-len(cols)))),4))
 def ramp(cols,kind):
     """recolour a trainer picture palette: greys become olive, strong reds become tan, skin stays"""
     import colorsys
@@ -230,7 +245,7 @@ if __name__=='__main__':
     print('gfx',hex(g_soldier),hex(g_captain),hex(g_splat))
     assert (g_soldier,g_captain,g_splat)==(0x9f,0xa0,0xa1)
     surge_pic=b[T+40*416+3]
-    alloc_trainer_pic(r,PIC_SOLDIER,GRUNT_PIC,lambda c: ramp(c,'soldier'))
+    pic_from_png(r,PIC_SOLDIER,W+'/soldier_pic.png')          # supplied soldier picture
     alloc_trainer_pic(r,PIC_CAPTAIN,surge_pic,lambda c: ramp(c,'captain'))
     rename_class(r,CLS_SOLDIER,'JRA SOLDIER'); rename_class(r,CLS_CAPTAIN,'JRA CAPTAIN'); rename_class(r,CLS_GENERAL,'JRA GENERAL')
     add_medal(r,57,'HONOR MEDAL','A medal taken from CAPT.\nMARLOW of the JRA.',ITEMS['ITEM_OLD_AMBER'])
