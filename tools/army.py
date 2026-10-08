@@ -22,7 +22,7 @@ PIC_SOLDIER,PIC_CAPTAIN,PIC_GENERAL=64,66,68
 ITEM_BASE=0x3db028; ICONT=0x3d4294
 SE_SHOT=347
 GRUNT_PIC=109; GRUNT_TRAINER=359
-SOLDIER_MAP={13:7,12:6,11:5,8:5,9:6,10:7}             # grey uniform -> olive, red trim -> tan (palette 0x1106 entries 5-7)
+SOLDIER_MAP={13:7,12:6,11:5,8:7,9:7,10:7}             # grey uniform -> olive; the red R emblem (8-10) is painted over with the uniform colour (palette 0x1106 entries 5-7)
 CAPTAIN_MAP={8:6,9:10,10:10,13:7}                     # Surge's greens -> drab olive, pink -> dark olive (palette 0x1105)
 REASONS=['JAYWALKING','WEARING THE WRONG HAT','OWNING A RATTATA','HUMMING OFF KEY','ADMIRING KANTO','LOOKING SUSPICIOUS','SNEEZING AT A SOLDIER','ASKING QUESTIONS','BEING UNPATRIOTIC','STANDING ON A SHADOW','HAVING A NICE SMILE','NOT SALUTING']
 def etxt(s): return bytes(ENC[c] for c in s)+b'\xff'
@@ -49,6 +49,8 @@ def ramp(cols,kind):
         if (s<0.22 and v<0.97) or (0.5<h<0.8 and kind=='soldier'):      # neutral (and the soldier's navy torso): olive ramp by brightness
             lo,hi=((44,52,30),(190,200,140))
             t=min(1.0,v*1.25); c=tuple(int(lo[k]+(hi[k]-lo[k])*t) for k in range(3)); out.append(c)
+        elif 0.0<=h<0.06 and s>0.5 and kind=='soldier':   # the R emblem: same colour as the uniform
+            out.append((88,98,64))
         elif 0.0<=h<0.06 and s>0.5:   # saturated red -> tan/brown
             out.append((int(190*v+30),int(160*v+20),int(100*v+10)))
         elif kind=='captain' and (0.17<h<0.45) and s>0.4:   # bright green -> drab olive
