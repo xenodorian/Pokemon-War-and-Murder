@@ -40,6 +40,28 @@ REAPER=dict(title='THE REAPER',done=[var(VAR_LEAGUE,1)],stages=[
  ([tr(348,False)],'ROCKET HIDEOUT, under the CELADON GAME CORNER.','Face GIOVANNI. Someone is hunting his men and he fears he is next.'),
  (None,'POKéMON LEAGUE, past ROUTE 23.',"SHINIGAMI hunts LANCE too. Reach LANCE's room and meet SHINIGAMI at the entrance.")])
 def hm(title,item,where,todo): return dict(title=title,done=[it(item)],stages=[(None,where,todo)])
+SPIRIT_QUEST=dict(title='SPIRIT WITCH',done=[('v',0x40F5,10)],stages=[
+   ([('f',0x3FA,False)],'CELADON CITY, by the pond.','Talk to the SPIRIT WITCH. She only works with people who have good KARMA.'),
+   ([('v',0x40F5,0),('f',0x3F0,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the GASTLY in PALLET TOWN.'),
+   ([('v',0x40F5,0)],'PALLET TOWN.','Catch the level 5 GASTLY that haunts it, then return to the SPIRIT WITCH.'),
+   ([('v',0x40F5,1),('f',0x3F1,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the HOUNDOUR in VIRIDIAN CITY.'),
+   ([('v',0x40F5,1)],'VIRIDIAN CITY.','Catch the level 10 HOUNDOUR that haunts it, then return to the SPIRIT WITCH.'),
+   ([('v',0x40F5,2),('f',0x3F2,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the MURKROW in PEWTER CITY.'),
+   ([('v',0x40F5,2)],'PEWTER CITY.','Catch the level 15 MURKROW that haunts it, then return to the SPIRIT WITCH.'),
+   ([('v',0x40F5,3),('f',0x3F3,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the SNEASEL in CERULEAN CITY.'),
+   ([('v',0x40F5,3)],'CERULEAN CITY.','Catch the level 20 SNEASEL that haunts it, then return to the SPIRIT WITCH.'),
+   ([('v',0x40F5,4),('f',0x3F4,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the HAUNTER in VERMILION CITY.'),
+   ([('v',0x40F5,4)],'VERMILION CITY.','Catch the level 25 HAUNTER that haunts it, then return to the SPIRIT WITCH.'),
+   ([('v',0x40F5,5),('f',0x3F5,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the MISDREAVUS in LAVENDER TOWN.'),
+   ([('v',0x40F5,5)],'LAVENDER TOWN.','Catch the level 30 MISDREAVUS that haunts it, then return to the SPIRIT WITCH.'),
+   ([('v',0x40F5,6),('f',0x3F6,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the HOUNDOOM in CELADON CITY.'),
+   ([('v',0x40F5,6)],'CELADON CITY.','Catch the level 35 HOUNDOOM that haunts it, then return to the SPIRIT WITCH.'),
+   ([('v',0x40F5,7),('f',0x3F7,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the GENGAR in SAFFRON CITY.'),
+   ([('v',0x40F5,7)],'SAFFRON CITY.','Catch the level 40 GENGAR that haunts it, then return to the SPIRIT WITCH.'),
+   ([('v',0x40F5,8),('f',0x3F8,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the UMBREON in FUCHSIA CITY.'),
+   ([('v',0x40F5,8)],'FUCHSIA CITY.','Catch the level 45 UMBREON that haunts it, then return to the SPIRIT WITCH.'),
+   ([('v',0x40F5,9),('f',0x3F9,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the TYRANITAR in CINNABAR ISLAND.'),
+   ([('v',0x40F5,9)],'CINNABAR ISLAND.','Catch the level 50 TYRANITAR that haunts it, then return to the SPIRIT WITCH.')])
 SIDE=[
  dict(title='S.S. TICKET',done=[f('FLAG_GOT_SS_TICKET')],stages=[(None,"BILL's SEA COTTAGE on ROUTE 25. ROUTE 24 leads north from CERULEAN CITY.",'Meet BILL and get the S.S. TICKET.')]),
  hm('CUT (HM01)','ITEM_HM01',"S.S. ANNE at VERMILION CITY: the CAPTAIN's office.",'Talk to the CAPTAIN to get HM01 CUT. You need the S.S. TICKET to board.'),
@@ -79,7 +101,8 @@ SIDE=[
  dict(title='SAFARI ZONE',done=[f('FLAG_WORLD_MAP_SAFARI_ZONE_CENTER')],stages=[(None,'The SAFARI ZONE in FUCHSIA CITY.','Pay the entrance fee and look for the SECRET HOUSE.')]),
  dict(title='MANSION',done=[f('FLAG_WORLD_MAP_POKEMON_MANSION_1F')],stages=[(None,'The POKéMON MANSION on CINNABAR ISLAND.','Search the burnt mansion. A SECRET KEY lies on B1F.')]),
  dict(title='CERULEAN CAVE',done=[f('FLAG_WORLD_MAP_CERULEAN_CAVE_1F')],stages=[(None,'CERULEAN CAVE, across the water by CERULEAN CITY.','Enter the cave. It holds the strongest POKéMON in KANTO.')]),
- dict(title='CONFESSION',done=[('f',0x4AC,True)],stages=[(None,'The CHURCH in PALLET TOWN, south of the lab.','Talk to the PRIEST. He forgives your kills for a donation: 1,000 per kill, 9,999 at most. Your KILL COUNT drops to zero.')])
+ dict(title='CONFESSION',done=[('f',0x4AC,True)],stages=[(None,'The CHURCH in PALLET TOWN, south of the lab.','Talk to the PRIEST. He forgives your kills for a donation: 1,000 per kill, 9,999 at most. Your KILL COUNT drops to zero.')]),
+ SPIRIT_QUEST
 ]
 ALL=MAIN+[REAPER]+SIDE
 for i,q in enumerate(ALL): q['id']=i+1
