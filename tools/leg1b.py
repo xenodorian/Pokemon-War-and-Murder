@@ -52,21 +52,37 @@ def install(r):
     # --- feathers at the existing crime scenes
     feather(r,gid,3,2,23,10)          # Pewter, beside the body
     feather(r,gid,3,3,23,14)          # Cerulean, where the witness stands
-    # --- Rocket Hideout B1F: dead grunts, each with a feather
+    # --- one victim in each of the five cities before Diglett's Cave: body, feather and a police officer who explains
     t_body=text(r,"A dead ROCKET GRUNT. A black feather lies in the blood.")
-    for cx,cy in ((8,12),(21,12),(8,26),(21,26)):
-        x,y=free_tile(r,1,42,cx,cy)
-        S=SB(); S.msg(t_body,6); S.end(); sc=0x08000000+put_script(r,S)
-        add_obj(r,1,42,x,y,GFX_BODY,sc,0,0)
-        fx=x+1 if tile_free(r,1,42,x+1,y) else x-1
-        feather(r,gid,1,42,fx,y)
-    # --- police at the hideout bodies explain the feathers
-    cop_texts=["POLICE: Four dead grunts, and a black feather by every one. Nobody leaves the same thing four times by accident.\n\nIt has to be a calling card. I just cannot tell what it is saying.",
-               "POLICE: The grunts here were not robbed. The killer only wanted to leave the feather.\n\nWhy would anyone sign a murder? Whatever it means, it matters to them."]
-    for k,(cx,cy) in enumerate(((9,12),(22,12))):
-        x,y=free_tile(r,1,42,cx,cy)
-        S=SB(); S.msg(text(r,cop_texts[k]),2); S.end(); sc=0x08000000+put_script(r,S)
-        add_obj(r,1,42,x,y,leg1.GFX_POLICE,sc,8,0)
+    def walk_free(g,n,x,y):
+        h=header(r,g,n); lay=r32(r,h)-0x08000000; ev=r32(r,h+4)-0x08000000
+        w,hh=r32(r,lay),r32(r,lay+4); mp=r32(r,lay+12)-0x08000000
+        if not(0<=x<w and 0<=y<hh): return False
+        if struct.unpack('<H',r.b[mp+2*(y*w+x):mp+2*(y*w+x)+2])[0]&0xc00: return False
+        no,nw,nc,nb=r.b[ev:ev+4]; po,wp,cp,bp=[r32(r,ev+4+4*i)-0x08000000 for i in range(4)]
+        taken=set(struct.unpack('<hh',r.b[po+24*i+4:po+24*i+8]) for i in range(no))|set(struct.unpack('<hh',r.b[wp+8*i:wp+8*i+4]) for i in range(nw))
+        taken|=set(struct.unpack('<HH',r.b[bp+12*i:bp+12*i+4]) for i in range(nb))|set(struct.unpack('<HH',r.b[cp+16*i:cp+16*i+4]) for i in range(nc))
+        return (x,y) not in taken
+    def near(g,n,x,y,cands):
+        for dx,dy in cands:
+            if walk_free(g,n,x+dx,y+dy): return x+dx,y+dy
+        raise Exception('no free tile near %s'%((g,n,x,y),))
+    cop_texts={
+     (3,0):"POLICE: A dead ROCKET GRUNT, and a black feather in the blood. Odd.\n\nWho leaves a feather behind? Probably nothing. Move along.",
+     (3,1):"POLICE: Another ROCKET GRUNT, and another black feather. Same as PALLET TOWN.\n\nTwo in a row is no accident.",
+     (3,5):"POLICE: Fifth dead ROCKET GRUNT, fifth black feather. One per town, always on the same road.\n\nA calling card, and whoever leaves it is moving east. I would like to know where to."}
+    scenes=[((3,0),12,12),((3,1),24,20),((3,3),24,16),((3,5),24,20)]
+    for (g,n),cx,cy in scenes:
+        if (g,n)==(3,3):
+            bx,by=near(g,n,23,14,[(-1,0),(-1,1),(-1,-1),(0,1),(0,-1)])   # beside the existing feather
+            add_obj(r,g,n,bx,by,GFX_BODY,0x08000000+put_script(r,(lambda S:(S.msg(t_body,6),S.end(),S)[2])(SB())),0,0)
+            continue
+        bx,by=free_tile(r,g,n,cx,cy)
+        S=SB(); S.msg(t_body,6); S.end(); add_obj(r,g,n,bx,by,GFX_BODY,0x08000000+put_script(r,S),0,0)
+        fx,fy=near(g,n,bx,by,[(1,0),(-1,0),(0,1),(0,-1)]); feather(r,gid,g,n,fx,fy)
+        px,py=near(g,n,bx,by,[(0,2),(0,-2),(2,0),(-2,0),(1,1),(-1,1),(1,-1),(-1,-1)])
+        C=SB(); C.msg(text(r,cop_texts[(g,n)]),2); C.end(); add_obj(r,g,n,px,py,leg1.GFX_POLICE,0x08000000+put_script(r,C),8,0)
+        print('scene',(g,n),'body',(bx,by),'feather',(fx,fy),'cop',(px,py))
     # --- Giovanni's words after losing (Rocket Hideout B4F, object script at 0x161317)
     assert r.b[0x16133b:0x16133d]==bytes([0x0f,0x00])
     t_gio=text(r,"GIOVANNI: Dude, you can't stop us. We have the GOVERNMENT and SILPH on our side.\n\nBut something is killing my men. It is coming for me next. Take the SILPH SCOPE and run.\n\nAnd tell LANCE I never talked.")

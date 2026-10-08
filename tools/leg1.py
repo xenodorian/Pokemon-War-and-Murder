@@ -69,7 +69,7 @@ BEATS=[
  (3,2,24,10,GFX_BODY,6,0,"A dead ROCKET GRUNT lies in a pool of blood.\n\nA black feather is stuck to his chest. A note is pinned under it. It reads: FOR PIKACHU."),
  (3,2,25,10,GFX_POLICE,2,8,"POLICE: Another ROCKET grunt, and another black feather. Whoever kills them leaves one behind every time.\n\nA calling card, maybe? I do not know what it means. We are not allowed to investigate ROCKET deaths. Move along, kid."),
  (3,3,24,14,19,2,8,"WITNESS: I saw it last night. A pale figure stood over a ROCKET. When it left, it laid a black feather on the body.\n\nDon't tell the cops. They take money from ROCKET."),
- (3,3,25,14,GFX_POLICE,2,8,"POLICE: There was a black feather by that body too, just like in PEWTER. A killer who signs their work, I guess.\n\nMaybe the feather means something to them. I am not paid to ask. ROCKET pays us to look away."),
+ (3,3,25,14,GFX_POLICE,2,8,"POLICE: There was a black feather by that body too, just like in PALLET, VIRIDIAN and PEWTER. A killer who signs their work, I guess.\n\nMaybe the feather means something to them. I am not paid to ask. ROCKET pays us to look away."),
 ]
 def free_tile(r,g,n,cx,cy):
     """nearest open walkable tile to (cx,cy): no object/warp/sign on it or next to it, and 3 or more walkable neighbours"""
@@ -96,7 +96,7 @@ def free_tile(r,g,n,cx,cy):
 STORY=[
  # (group,num, near x,y, gfx, std, movement, text)
  (3,4,16,10,19,2,8,"VOLUNTEER: MR. FUJI was framed by ROCKET. He told me they stole a trainer's PIKACHU and executed it.\n\nHe is held in the POKeMON TOWER. Go and free him."),
- (1,42,14,20,49,2,8,"HURT GRUNT: Don't shoot! The base is full of bodies. Someone is hunting the bosses.\n\nGIOVANNI is next. I am getting out of here."),
+ (1,42,14,20,49,2,8,"HURT GRUNT: Don't shoot! Someone is hunting ROCKET, one grunt in every town on the road.\n\nGIOVANNI is next. I am getting out of here."),
  (3,10,27,20,55,2,8,"SCIENTIST: PROF. OAK sold trainer records to ROCKET. That is how they found the owner of that PIKACHU.\n\nI saw the files myself."),
  (3,1,28,16,32,2,8,"OLD MAN: GIOVANNI has vanished. The gym is closed. They say LANCE took the LEAGUE by force.\n\nWhoever hunts ROCKET will meet him there."),
 ]
