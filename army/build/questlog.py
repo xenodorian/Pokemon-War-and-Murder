@@ -75,7 +75,13 @@ def jra_quests():
         out.append(dict(title='JRA: '+c['name'],done=[('f',c['flag'],True)],stages=[(None,JRA_WHERE[c['name']],'The JOHTO REVOLUTIONARY ARMY holds %s. Beat CAPT. %s for the %s. %s'%(c['name'],c['captain'],c['medal'],door))]))
     out.append(dict(title='JRA: GENERAL',done=[('f',gen['flag'],True)],stages=[
       ([f('FLAG_DEFEATED_CHAMP',False)],'The POKéMON LEAGUE, past ROUTE 23.','The JRA headquarters on SEVEN ISLAND is sealed until the CHAMPION falls.'),
-      (None,'SEVEN ISLAND, a grey JRA building through the east lawn.','Beat GENERAL %s and his six legendary POKéMON to end the JOHTO REVOLUTIONARY ARMY.'%gen['captain'])]))
+      (None,'SEVEN ISLAND, a grey JRA building through the east lawn.','Beat GENERAL %s and his six legendary POKéMON to end the JOHTO REVOLUTIONARY ARMY. The HALL OF JUSTICE records your team when he falls.'%gen['captain'])]))
+    out.append(dict(title='HALL OF JUSTICE',done=[('f',0x4CB,True)],stages=[
+      ([('f',gen['flag'],False)],'SEVEN ISLAND, the JRA headquarters.','Beat GENERAL %s first. The HALL OF JUSTICE opens for you when he falls.'%gen['captain']),
+      (None,'The HALL OF JUSTICE, where you stood when GORE fell.','Let the COMMISSIONER record your team, then read the statue plaque to see the roll.')]))
+    out.append(dict(title='POLICE DEAL',done=[('v',0x40AB,3)],stages=[
+      ([('v',0x40AB,1)],'Anywhere the police find you.','You refused the deal. The offer will not come again.'),
+      (None,'Any police officer, once the police are after you.','Kill more than 10 people and more than 10 JRA soldiers. An officer offers to look the other way if you stop killing civilians.')]))
     return out
 JRA_QUESTS=jra_quests()
 SIDE=[

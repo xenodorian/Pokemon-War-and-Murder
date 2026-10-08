@@ -174,3 +174,40 @@ void arc_install(void){
         *(u32*)(sp+0x1C)=((u32)(void*)arc_cb)|1;
     }
 }
+
+// ---- the Hall of Justice record: the team (species and level) at the moment General Gore fell, kept in its own variables (0x40AC..0x40B4), apart from the Hall of Fame
+#define JH_SP 0x40AC
+#define JH_LV 0x40B2
+#define PARTY 0x02024284
+#define PARTYCOUNT 0x02024029
+#define GETMON ((u32(*)(void*,u32,void*))(0x0803FBE8|1))
+#define SPNAMES 0x08245EE0
+void jh_record(void){
+    u32 n=*(u8*)PARTYCOUNT; if(n>6) n=6;
+    for(u32 i=0;i<6;i++){
+        u32 sp=0, lv=0;
+        if(i<n){ void* mon=(void*)(PARTY+100*i); sp=GETMON(mon,11,0); lv=GETMON(mon,56,0); }
+        *kc_var(JH_SP+i)=(u16)sp;
+        u16* lp=kc_var(JH_LV+(i>>1));
+        if(i&1) *lp=(u16)((*lp&0x00FF)|(lv<<8)); else *lp=(u16)((*lp&0xFF00)|(lv&0xFF));
+    }
+}
+static u32 jh_level(u32 i){ u16 v=*kc_var(JH_LV+(i>>1)); return (i&1)?(v>>8):(v&0xFF); }
+// GSV1 = species of slot GSV4 (0 = none), gStringVar1 = its level
+void jh_slot(void){
+    u32 i=GSV(4); if(i>5){ GSV(1)=0; return; }
+    GSV(1)=*kc_var(JH_SP+i);
+    u8* o=put_num(STRVAR1,jh_level(i)); *o=0xFF;
+}
+// the roll of honour: "NAME Lv45" lines, two to a page, in gStringVar1. GSV7 = 1 when a team is recorded
+void jh_roll(void){
+    u8* o=STRVAR1; u32 k=0;
+    for(u32 i=0;i<6;i++){
+        u32 sp=*kc_var(JH_SP+i); if(!sp) continue;
+        if(k){ *o++=(k&1)?0xFE:0xFB; }
+        const u8* nm=(const u8*)(SPNAMES+11*sp);
+        while(*nm!=0xFF) *o++=*nm++;
+        o=put_str(o,T_LV); o=put_num(o,jh_level(i)); k++;
+    }
+    *o=0xFF; GSV(7)=k?1:0;
+}

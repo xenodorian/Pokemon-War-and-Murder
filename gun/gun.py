@@ -322,9 +322,21 @@ def hall_of_justice(r,nat):
     S.lab('none'); S.msg(T("COMMISSIONER: And you ended it without leaving a single soldier dead. KANTO noticed that too."),4)
     S.lab('go')
     S.msg(T("COMMISSIONER: The League keeps its Hall of Fame. This is the HALL OF JUSTICE, for the ones who ended a war. Your team stands here beside the ten medals."),4)
-    S.msg(T("COMMISSIONER: Stand ready. History is watching."),4)
-    S.raw(0x68); S.raw(0x98,1,0x18)
-    S.raw(0x25,0x10,0x01); S.raw(0x27); S.raw(0x6b); S.end()
+    S.msg(T("COMMISSIONER: Stand ready. Your team goes into the roll, one by one."),4)
+    # the induction: each POK\u00e9MON on the team is shown and written into the HALL OF JUSTICE's own record (kept apart from the Hall of Fame)
+    from g3 import ENC as E_
+    mix=bytes([0xfd,3])+bytes(E_[c] for c in ' joins the roll.')+bytes([0xfe])+bytes(E_[c] for c in 'Lv. ')+bytes([0xfd,2,0xff])
+    t_mon=0x08000000+r.alloc(mix,1)
+    S.raw(0x23); S.ptr(nat['jh_record'])
+    for i in range(6):
+        S.setvar(0x8004,i); S.raw(0x23); S.ptr(nat['jh_slot']); S.compare(0x8001,0); S.goto_if(1,'rolled')
+        S.raw(0x75); S._add(struct.pack('<H',0x8001)); S.raw(10,3)               # showmonpic
+        S.raw(0x7d,1); S._add(struct.pack('<H',0x8001))                          # bufferspeciesname 1
+        S.msg(t_mon,4)
+        S.raw(0x76)                                                              # hidemonpic
+    S.lab('rolled')
+    S.msg(T("COMMISSIONER: It is done. The HALL OF JUSTICE keeps your team. The way out is behind you."),4)
+    S.setflag(0x4CB); S.raw(0x6b); S.end()
     sc=0x08000000+put_script(r,S)
     ft=r.alloc(struct.pack('<HHI',0x4001,0,sc)+struct.pack('<H',0),4)
     hof=header(r,1,80); ms_old=r32(r,hof+8)-0x08000000; wi=None; k=ms_old
@@ -347,7 +359,10 @@ def hall_of_justice(r,nat):
     for (x,y),c in zip(CASES,cities):
         q=SB(); q.msg(T("BASE NO. %d, %s\nCAPT. %s\n%s"%(c['num'],c['name'],c['captain'],c['medal'])),3); q.end()
         bgs+=struct.pack('<HHBBHI',x,y,0,0,0,0x08000000+put_script(r,q))
-    q=SB(); q.msg(T("TO THOSE WHO ENDED THE JOHTO REVOLUTIONARY ARMY.\n\nPEACE THROUGH JUSTICE."),3); q.end()
+    q=SB(); q.msg(T("TO THOSE WHO ENDED THE JOHTO REVOLUTIONARY ARMY.\n\nPEACE THROUGH JUSTICE."),3)
+    q.raw(0x23); q.ptr(nat['jh_roll']); q.compare(0x8007,1); q.goto_if(5,'end')
+    q.msg(T("ROLL OF HONOUR"),3); q.msg(0x02021cd0,3)
+    q.lab('end'); q.end()
     bgs+=struct.pack('<HHBBHI',6,3,0,0,0,0x08000000+put_script(r,q))
     ba=r.alloc(bgs,4)
     # ---- the way out: the doormat takes the player back to Pallet Town
@@ -371,7 +386,7 @@ def build_native(r,arc_gfx):
     kc=[int(l.split()[0],16) for l in subprocess.run(['nm','/home/claude/work/police/kills.elf'],capture_output=True,text=True,check=True).stdout.split('\n') if l.endswith(' kill_check')][0]|1
     arr=lambda t: ','.join(str(ENC_[c]) for c in t)+',255'
     from g3 import ENC as ENC_
-    open(W+'/gun_data.h','w').write('#define NJ %d\nstatic const u16 J_IDS[]={%s};\n#define ROB_WRAP_LOAD 0x%08x\n#define ROB_WRAP_SCRIPTS 0x%08x\n#define KILL_CHECK 0x%08x\n#define ARC_GFX %d\nstatic const u8 T_LIB[]={%s};\nstatic const u8 T_HIDDEN[]={%s};\n'%(len(ids),','.join(map(str,ids)),wl,ws,kc,arc_gfx,arr('LIBERTY COUNT: '),arr('???')))
+    open(W+'/gun_data.h','w').write('#define NJ %d\nstatic const u16 J_IDS[]={%s};\n#define ROB_WRAP_LOAD 0x%08x\n#define ROB_WRAP_SCRIPTS 0x%08x\n#define KILL_CHECK 0x%08x\n#define ARC_GFX %d\nstatic const u8 T_LV[]={%s};\nstatic const u8 T_LIB[]={%s};\nstatic const u8 T_HIDDEN[]={%s};\n'%(len(ids),','.join(map(str,ids)),wl,ws,kc,arc_gfx,'0,%d,%d,255'%(ENC_['L'],ENC_['v']),arr('LIBERTY COUNT: '),arr('???')))
     r.cur=(r.cur+3)&~3; base=0x08000000+r.cur
     open(W+'/gun.ld','w').write('ENTRY(gw_load)\nSECTIONS { . = 0x%08x; .all : { *(.text*) *(.rodata*) *(.data*) } /DISCARD/ : { *(.ARM.exidx*) *(.comment) *(.note*) *(.ARM.attributes) } }\n'%base)
     subprocess.run(['clang','--target=thumbv4t-none-eabi','-mthumb','-Os','-ffreestanding','-fno-builtin','-fno-pic','-fno-stack-protector','-nostdlib','-fno-unwind-tables','-fno-asynchronous-unwind-tables','-c',W+'/gun.c','-o',W+'/gun.o'],check=True)
@@ -381,8 +396,8 @@ def build_native(r,arc_gfx):
     out={}
     for ln in subprocess.run(['nm',W+'/gun.elf'],capture_output=True,text=True,check=True).stdout.split('\n'):
         f=ln.split()
-        if len(f)==3 and f[2] in ('gw_load','gw_scripts','jra_info','jra_pay','jra_shoot','kill_check2','deal_info','deal_accept','deal_refuse','deal_state','deal_gate','kc_show2','lib_text','arc_install'): out[f[2]]=(int(f[0],16)&~1)|1
-    assert len(out)==14,out.keys()
+        if len(f)==3 and f[2] in ('gw_load','gw_scripts','jra_info','jra_pay','jra_shoot','kill_check2','deal_info','deal_accept','deal_refuse','deal_state','deal_gate','kc_show2','lib_text','arc_install','jh_record','jh_slot','jh_roll'): out[f[2]]=(int(f[0],16)&~1)|1
+    assert len(out)==17,out.keys()
     r.w32(0x3af284,out['gw_load']); r.w32(0x3af294,out['gw_scripts'])
     # police scripts call kill_check: they now call the version that goes quiet after the deal
     pat=bytes([0x23])+struct.pack('<I',kc); sites=[]; i=0
