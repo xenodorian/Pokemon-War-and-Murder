@@ -241,19 +241,25 @@ def splat_script(r,fns):
 FLAG_GENERAL=0x4CA           # the General was beaten
 GENERAL_ID_SLICE=(90,94)     # four spare ids: the General, two pairs of elite soldiers share one id each, the two camp guards share one
 LEGENDS=[243,244,245,251,249,250]       # RAIKOU ENTEI SUICUNE CELEBI LUGIA HO-OH, all level 50
-GENERAL_MAP={13:6,12:5,9:5,11:5}
-def general_frame(g):
-    """Giovanni's overworld sprite with the uniform recoloured khaki (rows from the neck down only, so the hair stays dark)"""
-    return [[(GENERAL_MAP.get(v,v) if y>=11 else v) for v in row] for y,row in enumerate(g)]
-def general_pic_recolor(cols):
-    c=list(cols)
-    c[9]=(46,54,34); c[12]=(76,88,52); c[11]=(108,122,76); c[5]=(218,174,58); c[6]=(166,126,38); c[13]=(168,170,160)
-    return c
-def general_pic_pixels(g,cols):
-    for y in range(14):
-        for x in range(64):
-            if g[y][x]==12: g[y][x]=13
-            elif g[y][x]==11: g[y][x]=8
+GENERAL_MAP={13:6,12:7,9:5,11:5}
+GEN_HAIR_ROWS={0:18,3:18,4:18,1:20,5:20,6:20,2:22,7:22,8:22}
+def make_general_fn():
+    """Giovanni's overworld sprite: grey hair, olive uniform. The hair (palette entries 13, 12, 7 in the head rows) becomes grey (12, 11, 13); the rest of the body is remapped olive.
+    add_remapped calls the function once per frame, in order, so the frame number is counted here."""
+    st=dict(f=0)
+    def fn(g):
+        fi=st['f']; st['f']+=1; lim=GEN_HAIR_ROWS[fi]; out=[]
+        for y,row in enumerate(g):
+            o=[]
+            for v in row:
+                if y<=lim and v in (13,12,7) and not (fi in (0,3,4) and y>18):
+                    if fi in (2,7,8) and v in (12,13) and y>16: v=GENERAL_MAP.get(v,v)
+                    else: v={13:12,12:11,7:13}[v]
+                else: v=GENERAL_MAP.get(v,v)
+                o.append(v)
+            out.append(o)
+        return out
+    return fn
 def camp_team(tid,n,lo,hi):
     import random
     rng=random.Random('camp-team-%d'%tid); used=set(); levels=sorted(rng.randint(lo,hi) for _ in range(n)); party=[]

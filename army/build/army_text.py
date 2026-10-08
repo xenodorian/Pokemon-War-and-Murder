@@ -54,7 +54,7 @@ def captain_lines(city,cap,num,nxt,medal):
             "CAPT. %s: Get out. Johto will remember this."%cap)
 
 # ---- the final camp (Seven Island)
-GENERAL='TOKIWA'
+GENERAL='GORE'
 ELITE_INTRO=["Halt! This is JRA HEADQUARTERS. Nobody walks in on the GENERAL.\n\nPEACE THROUGH CONQUEST!",
  "You broke ten bases and still think you can reach the GENERAL? I am JOHTO's last wall!",
  "I trained for years on MT. SILVER for this day. Surrender, KANTO scum!",

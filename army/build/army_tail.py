@@ -260,8 +260,8 @@ if __name__=='__main__':
     surge_pic=b[T+40*416+3]
     pic_from_png(r,PIC_SOLDIER,W+'/soldier_pic.png')          # supplied soldier picture
     alloc_trainer_pic(r,PIC_CAPTAIN,surge_pic,lambda c: ramp(c,'captain'),captain_pupil)
-    g_general=army_gfx.add_remapped(r,87,{},fn=general_frame); assert g_general==0xa2
-    alloc_trainer_pic(r,PIC_GENERAL,b[T+40*349+3],general_pic_recolor,general_pic_pixels)
+    g_general=army_gfx.add_remapped(r,87,{},fn=make_general_fn()); assert g_general==0xa2
+    pic_from_png(r,PIC_GENERAL,W+'/general_pic.png')          # supplied General picture
     rename_class(r,CLS_SOLDIER,'JRA SOLDIER'); rename_class(r,CLS_CAPTAIN,'JRA CAPTAIN'); rename_class(r,CLS_GENERAL,'JRA GENERAL')
     item_by_num={}
     for c in CITIES:
