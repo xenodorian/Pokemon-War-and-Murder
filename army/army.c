@@ -73,9 +73,15 @@ static void army_pass(u8 n){
     *mv=mask|(u16)(1<<t[0]);
     make_splat(t);
 }
+// floor decals (the player's splatter, story bodies, feathers, army splatters) sit one elevation below people so a person standing in front of one is drawn over it, not under it
+static void decals_low(u8 n){
+    u8* t=SB1+0x8E0;
+    for(int i=0;i<n&&i<64;i++,t+=0x18){ u8 g=t[1]; if(g==0x98||g==0x99||g==0x9b||g==GFX_ARMY_SPLAT) t[8]=2; }
+}
 void army_entry(void){
     OLD_PASS();
     army_pass(EVENTS[0]);
+    decals_low(EVENTS[0]);
 }
 // examine script of a victim: puts an arbitrary reason (picked by the victim's local id) in STRVAR1
 void army_note(void){

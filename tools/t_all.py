@@ -9,7 +9,7 @@ def make(rom,out,g,n,x,y,give=None):
     if give: gv=bytes([0x79])+struct.pack('<H',give[0])+bytes([give[1]])+bytes(2)+bytes(9)
     sc=gv+bytes([0x39,g,n,0xff])+struct.pack('<HH',x,y)+bytes([0x27,0x02]); d[a:a+len(sc)]=sc
     d[0xa01a38:0xa01a3c]=struct.pack('<I',0x08000000+a); open(out,'wb').write(d)
-def run(name,rom,g,n,x,y,pokes=(),keys=(),shots=(),rams=(),end=700,flags=True,give=None):
+def run(name,rom,g,n,x,y,pokes=(),keys=(),shots=(),rams=(),end=700,flags=True,give=None,state='out/base.state'):
     make(rom,'out/t_%s.gba'%name,g,n,x,y,give)
     L=[]
     if flags: L.append("setbit 2 fe5 3")
@@ -22,7 +22,7 @@ def run(name,rom,g,n,x,y,pokes=(),keys=(),shots=(),rams=(),end=700,flags=True,gi
     open('/tmp/claude-0/ta.txt','w').write('\n'.join(L))
     for g_ in os.listdir('shots'):
         if g_.startswith('t_'+name+'_'): os.remove('shots/'+g_)
-    r=subprocess.run(['./tools/harness_new','out/t_%s.gba'%name,'/tmp/claude-0/ta.txt','shots/t_'+name],env=dict(os.environ,LOADSTATE='out/base.state'),capture_output=True,text=True,timeout=300)
+    r=subprocess.run(['./tools/harness_new','out/t_%s.gba'%name,'/tmp/claude-0/ta.txt','shots/t_'+name],env=dict(os.environ,LOADSTATE=state),capture_output=True,text=True,timeout=300)
     ims=[Image.open('shots/t_%s_%05d.ppm'%(name,s)) for s in shots]
     cols=min(3,len(ims)); rows=(len(ims)+cols-1)//cols
     W=Image.new('RGB',(240*cols,160*rows))

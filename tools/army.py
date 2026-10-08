@@ -13,8 +13,10 @@ from shinigami import SB,put_script
 from g3 import ENC
 W='/home/claude/work/army'
 T=0x798790; GROUPS=0x3526A8
-ID_POOL=list(range(1,30))+list(range(50,55))+list(range(79,89))+list(range(454,462))+list(range(492,516))
-FLAG_CLEARED0=0x4B0          # + city index: the base was cleared (soldiers leave)
+# trainer ids that no script or special uses: Hoenn leftovers (1-29 without 3, which is the hack's AIDE), the unused channelers, and gym trainers the hack removed.
+# 492-515 (Trainer Tower, player pictures) and 326-331 (rival) are in use and stay out.
+ID_POOL=[1,2]+list(range(4,30))+list(range(50,55))+list(range(79,89))+list(range(454,462))+[101,113,124,147,161,174,175,176,200,210,211,212,217,257,263,275,284,299,311,312,370,372,395,397,398,399,405,407,408,409,424,425,428,430,433,434,437,439,440,530,533,593,594]
+FLAG_CLEARED0=0x4C0          # + city index: the base was cleared (soldiers leave). 0x4B0-0x4BC are the vanilla FLAG_DEFEATED_<leader> flags, so they are not used
 VICTIM_VAR0=0x40F9           # + city index: bit k set = the NPC with local id k was shot by a patrol
 MAX_VICTIMS=3
 CLS_SOLDIER,CLS_CAPTAIN,CLS_GENERAL=48,44,45          # unused vanilla classes, renamed
@@ -235,8 +237,8 @@ def install_pewter(r,fns,gf,item):
               talk_script(r,"JRA SOLDIER: PEWTER's stone walls make fine barracks. JOHTO thanks you for your cooperation.")]
     # base interior (group 2 map 69)
     objs=[obj_tmpl(G_SOLDIER,13,4,base_sc[0],8,1,4,cleared),obj_tmpl(G_SOLDIER,9,9,base_sc[1],10,1,4,cleared),
-          obj_tmpl(G_SOLDIER,14,15,base_sc[2],8,1,4,cleared),obj_tmpl(G_SOLDIER,8,23,base_sc[3],10,1,4,cleared),
-          obj_tmpl(G_CAPTAIN,11,32,cap_sc,7,1,3,cleared)]
+          obj_tmpl(G_SOLDIER,14,15,base_sc[2],8,1,4,cleared),obj_tmpl(G_SOLDIER,25,17,base_sc[3],9,1,4,cleared),
+          obj_tmpl(G_CAPTAIN,24,26,cap_sc,9,1,4,cleared)]       # every soldier and the Captain sit in the part of the floor reachable from the entrance stairs
     for i,t in enumerate(objs): t[0]=i+1
     PEW_WARP=len(b)  # placeholder, replaced below
     # Pewter warps: the base door becomes warp 6
@@ -249,10 +251,17 @@ def install_pewter(r,fns,gf,item):
             v=b[mp+2*((8+dy)*w+32+dx):mp+2*((8+dy)*w+32+dx)+2]
             b[mp+2*((2+dy)*w+33+dx):mp+2*((2+dy)*w+33+dx)+2]=v
     add_warp(r,3,2,34,5,0,n,g)
-    add_obj(r,3,2,obj_tmpl(G_SOLDIER,33,6,guard_sc[0],9,0,0,cleared))       # guards beside the door, facing left / right
-    add_obj(r,3,2,obj_tmpl(G_SOLDIER,35,6,guard_sc[1],10,0,0,cleared))
+    # guards must not close the 1-tile lawn path along y=6 (door front tile is (34,6), reached from the east): one west of the door, one at the lawn entrance
+    add_obj(r,3,2,obj_tmpl(G_SOLDIER,33,6,guard_sc[0],10,0,0,cleared))
+    add_obj(r,3,2,obj_tmpl(G_SOLDIER,39,6,guard_sc[1],9,0,0,cleared))
     for sc,pos in zip(pat_sc,((27,22),(30,15))):
         add_obj(r,3,2,obj_tmpl(G_SOLDIER,pos[0],pos[1],sc,1,1,4,cleared))
+    import reach
+    seen,_=reach.reach(bytes(b),2,69,(12,3))
+    for t in objs:
+        x,y=struct.unpack('<hh',bytes(t[4:8])); assert any((x+dx,y+dy) in seen for dx,dy in ((1,0),(-1,0),(0,1),(0,-1))),('base object not reachable',x,y)
+    seen,_=reach.reach(bytes(b),3,2,(24,36))
+    assert (34,6) in seen,'Pewter base door is not reachable on foot'
     return dict(pat_ids=pat_ids,cleared=cleared,victims=VICTIM_VAR0+idx)
 # ----------------------------------------------------------------------------------------------- main
 if __name__=='__main__':
