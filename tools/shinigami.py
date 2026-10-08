@@ -41,6 +41,7 @@ class SB:
     def setflag(s,f): s.raw(0x29); s._add(struct.pack('<H',f))
     def clearflag(s,f): s.raw(0x2a); s._add(struct.pack('<H',f))
     def compare(s,v,x): s.raw(0x21); s._add(struct.pack('<HH',v,x))
+    def goto(s,label): s.raw(0x05); s.ref(label)
     def goto_if(s,cond,label): s.raw(0x06,cond); s.ref(label)
     def playse(s,n): s.raw(0x2f); s._add(struct.pack('<H',n))
     def delay(s,n): s.raw(0x28); s._add(struct.pack('<H',n))
@@ -95,11 +96,41 @@ def overworld_frames(path):
         return out
     # sheet rows: 0 up, 1 down, 2 left, 3 right; cols: 0 walk A, 1 stand, 2 walk B
     return [frame(1,1),frame(0,1),frame(2,1),frame(1,0),frame(1,2),frame(0,0),frame(0,2),frame(2,0),frame(2,2)]
-def gfx_add_object(r,info_src_gfx,frames,tag):
+SHARED_TAG=0x1120
+def _nearest(c,cols):
+    return min(range(len(cols)),key=lambda k: sum((a-b)**2 for a,b in zip(c,cols[k])))
+def sprite_palette_entry(r,tag):
+    b=r.b; pt=r32(r,0x5f4d8)-0x08000000; n=0
+    while True:
+        t=struct.unpack('<H',b[pt+8*n+4:pt+8*n+6])[0]
+        if t==tag: return pt+8*n
+        assert t!=0x11ff; n+=1
+def build_shared_palette(r,frames):
+    """one palette (tag 0x1120, slot 10) for the splatter, Shinigami and the feather, because only slot 10 loads custom colours"""
     b=r.b
+    rep,pal=quant_all(frames,10)
+    ent=sprite_palette_entry(r,SHARED_TAG); old=gfx.pal_to_rgb(bytes(b[r32(r,ent)-0x08000000:r32(r,ent)-0x08000000+32]))
+    gt=r32(r,0x5f2f4)-0x08000000; info=r32(r,gt+4*0x98)-0x08000000
+    imgt=r32(r,info+0x1c)-0x08000000; tp=r32(r,imgt)-0x08000000
+    use={}
+    for k in range(128):
+        for nib in (b[tp+k]&15,b[tp+k]>>4):
+            if nib: use[nib]=use.get(nib,0)+1
+    reds=[old[i] for i,_ in sorted(use.items(),key=lambda x:-x[1])[:4]]
+    for k in range(128):
+        lo,hi=b[tp+k]&15,b[tp+k]>>4
+        lo=0 if lo==0 else 11+_nearest(old[lo],reds); hi=0 if hi==0 else 11+_nearest(old[hi],reds)
+        b[tp+k]=lo|(hi<<4)
+    cols=[(255,0,255)]+pal+[(0,0,0)]*(10-len(pal))+reds+[(0,0,0)]*(4-len(reds))+[(0,0,0)]
+    cols=(cols+[(0,0,0)]*16)[:16]
+    # the Shinigami colours occupy indices 1..len(pal); reds are 11..14
+    r.w32(ent,0x08000000+r.alloc(gfx.rgb_to_pal(cols),4))
+    return rep,pal,cols
+def shared_index(rgb,cols,limit):
+    return 1+_nearest(rgb,cols[1:limit])
+def gfx_add_object(r,info_src_gfx,frames,shared):
+    b=r.b; rep,pal,cols=shared
     gt=r32(r,0x5f2f4)-0x08000000; mx=b[0x5f2e0]
-    # palette from all frames
-    allimgs=frames; rep,pal=quant_all(allimgs)
     idx_frames=[]
     for f in frames:
         idx=[[0]*16 for _ in range(32)]
@@ -108,27 +139,18 @@ def gfx_add_object(r,info_src_gfx,frames,tag):
                 p=f.getpixel((x,y))
                 if p[3]>=128: idx[y][x]=pal.index(rep[p[:3]])+1
         idx_frames.append(tiles_from_pixels(idx,2,4))
-    cols=[(255,0,255)]+pal+[(0,0,0)]*(15-len(pal))
-    palbytes=gfx.rgb_to_pal(cols)
-    pal_a=r.alloc(palbytes,4)
-    # extend the sprite palette table with a new tag
-    pt=r32(r,0x5f4d8)-0x08000000; n=0
-    while struct.unpack('<H',b[pt+8*n+4:pt+8*n+6])[0]!=0x11ff: n+=1
-    newpt=r.alloc(bytes(b[pt:pt+8*n])+struct.pack('<IHH',0x08000000+pal_a,tag,0)+struct.pack('<IHH',0,0x11ff,0),4)
-    for a in (0x5f4d8,0x5f570,0x5f5c8): assert r32(r,a)==0x08000000+pt; r.w32(a,0x08000000+newpt)
-    # frame images (9 x 256 bytes) and the image table
     img_ptrs=[r.alloc(t,4) for t in idx_frames]
     imgt=r.alloc(b''.join(struct.pack('<IHH',0x08000000+p,0x100,0) for p in img_ptrs),4)
     ib=r32(r,gt+4*info_src_gfx)-0x08000000
-    info=bytearray(b[ib:ib+36]); info[2:4]=struct.pack('<H',tag); info[0x1c:0x20]=struct.pack('<I',0x08000000+imgt); info[12]=(info[12]&0xF0)|10
+    info=bytearray(b[ib:ib+36]); info[2:4]=struct.pack('<H',SHARED_TAG); info[0x1c:0x20]=struct.pack('<I',0x08000000+imgt); info[12]=(info[12]&0xF0)|10
     info_a=r.alloc(bytes(info),4)
     new=r.alloc(bytes(b[gt:gt+4*(mx+1)])+struct.pack('<I',0x08000000+info_a),4)
     r.w32(0x5f2f4,0x08000000+new); b[0x5f2e0]=mx+1
     return mx+1
-def quant_all(frames):
+def quant_all(frames,maxc=15):
     big=Image.new('RGBA',(16*len(frames),32))
     for i,f in enumerate(frames): big.paste(f,(16*i,0))
-    return quant(big)
+    return quant(big,maxc)
 def trainer_pic(r,path):
     im=Image.open(path).convert('RGBA'); assert im.size==(64,64)
     rep,pal=quant(im)
@@ -202,8 +224,10 @@ def lavender(r,gfx_shini):
     S.clearflag(F_SPLAT_HIDDEN)
     for s_ in spl: S.addobject(s_)
     S.delay(30)
-    S.applymovement(sid,mv_up); S.waitmovement(sid)
-    S.removeobject(sid)
+    import os
+    if not os.environ.get('SHINI_NOWALK'):
+        S.applymovement(sid,mv_up); S.waitmovement(sid)
+        S.removeobject(sid)
     S.setflag(F_POLICE_GONE); S.setvar(VAR_SCENE,1)
     S.releaseall(); S.end()
     sc_scene=0x08000000+put_script(r,S)
@@ -236,7 +260,9 @@ def tower_top(r,gfx_shini):
 def install(r):
     pic_art=SRC+'battle.png'; ow_art=SRC+'overworld.png'
     trainer_pic(r,pic_art); trainer(r)
-    gid=gfx_add_object(r,GFX_POLICE,overworld_frames(ow_art),0x1121); print('shinigami gfx id',hex(gid))
+    fr=overworld_frames(ow_art)
+    shared=build_shared_palette(r,fr)
+    gid=gfx_add_object(r,GFX_POLICE,fr,shared); print('shinigami gfx id',hex(gid))
     lavender(r,gid); tower_top(r,gid)
 if __name__=='__main__':
     r=Rom(sys.argv[1]); install(r); r.save(sys.argv[2]); print('end',hex(r.cur))
