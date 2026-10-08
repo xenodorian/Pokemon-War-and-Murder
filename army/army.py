@@ -478,7 +478,7 @@ def flag_lock_script(r,flag,text):
     S.applymovement(0xff,0x08000000+r.alloc(bytes([0x10,0xfe]),1)); S.waitmovement(0xff); S.releaseall(); S.end()
     S.lab('open'); S.releaseall(); S.end()
     return 0x08000000+put_script(r,S)
-HALL_OF_JUSTICE=(81,5,6)     # map number in group 2 (built by gun.py right after Heaven), arrival tile
+HALL_OF_JUSTICE=(81,6,11)     # map number in group 2 (built by gun.py right after Heaven), arrival tile
 def general_script(r,tid,flag_cleared):
     L=army_text.GENERAL_LINES
     S=SB(); S.raw(0x5c,1); S._add(struct.pack('<HH',tid,0)); S.ptr(TXB(r,L['intro'])); S.ptr(TXB(r,L['defeat'])); S.ref('cont')

@@ -249,38 +249,102 @@ def story_offers(r,nat):
         sc=put_script(r,S)
         b[site:site+5]=bytes([0x05])+struct.pack('<I',0x08000000+sc)
 
-# ---------------------------------------------------------------- HALL OF JUSTICE (a copy of the Hall of Fame room, reached after General Gore falls)
-def hall_of_justice(r):
-    b=r.b; hof=header(r,1,80); lay=r32(r,hof)-0x08000000
-    w,h=r32(r,lay),r32(r,lay+4)
-    T=lambda s: T_(r,s)
-    S=SB(); S.lockall(); S.raw(0xc7,2)
-    S.raw(0x4f); S._add(struct.pack('<H',0xff)); S.ptr(0x08162dcd); S.raw(0x51); S._add(struct.pack('<H',0))
-    S.raw(0x4f); S._add(struct.pack('<H',0xff)); S.ptr(0x081a75e7); S.raw(0x4f); S._add(struct.pack('<H',1)); S.ptr(0x081a75eb); S.raw(0x51); S._add(struct.pack('<H',0))
-    S.raw(0x28); S._add(struct.pack('<H',0x12))
-    S.msg(T("COMMISSIONER: So it is true. GENERAL GORE has fallen, and the JRA is finished. KANTO owes you a debt it cannot pay."),4)
-    S.msg(T("COMMISSIONER: This is the HALL OF JUSTICE. Those who end a war are recorded here, along with the POK\u00e9MON that fought it."),4)
-    S.msg(T("COMMISSIONER: Whatever else you have done, today you stood for KANTO. Let us record your team."),4)
-    S.raw(0x68)                               # closemessage
-    S.raw(0x98,1,0x18)                        # fadescreenspeed 1, 0x18
-    S.raw(0x25,0x10,0x01); S.raw(0x27); S.raw(0x6b); S.end()   # special 0x110 (the Hall of Fame screen), waitstate
+# ---------------------------------------------------------------- HALL OF JUSTICE (its own room: marble, a red and gold carpet, the scales of justice, a display case per Captain)
+import justice_art as JA
+HW,HH=13,13
+def hall_of_justice(r,nat):
+    b=r.b; T=lambda s: T_(r,s)
+    ch=header(r,2,67); clay=r32(r,ch)-0x08000000
+    PRIM=r32(r,clay+16); SEC=r32(r,clay+20)-0x08000000
+    def tb(a16):
+        out=[]
+        for ty in range(2):
+            for tx in range(2):
+                tt=a16[ty*8:ty*8+8,tx*8:tx*8+8]; bb=bytearray(32)
+                for y in range(8):
+                    for x in range(4): bb[y*4+x]=int(tt[y,2*x])|(int(tt[y,2*x+1])<<4)
+                out.append(bytes(bb))
+        return out
+    tl=[];mts=[]
+    for a in JA.TILES:
+        base=len(tl); tl+=tb(a); mts.append([(7<<12)|(640+base+i) for i in range(4)]+[0,0,0,0])
+    ta=r.alloc(gfx.lz_comp(b''.join(tl)),4)
+    pal=bytearray(512)
+    for i,c in enumerate([(0,0,0)]+JA.PAL): pal[7*32+2*i:7*32+2*i+2]=gfx.rgb_to_pal([c])
+    pa=r.alloc(bytes(pal),4); ma=r.alloc(b''.join(struct.pack('<8H',*m) for m in mts),4)
+    aa=r.alloc(b''.join(struct.pack('<I',0x20000000) for _ in mts),4)
+    Hd=bytearray(b[SEC:SEC+24]); Hd[4:8]=struct.pack('<I',0x08000000+ta); Hd[8:12]=struct.pack('<I',0x08000000+pa); Hd[12:16]=struct.pack('<I',0x08000000+ma); Hd[20:24]=struct.pack('<I',0x08000000+aa); Hd[16:20]=bytes(4)
+    sec=r.alloc(bytes(Hd),4)
+    # layout
+    grid=[[JA.F0 if (x+y)%2==0 else JA.F1 for x in range(HW)] for y in range(HH)]
+    for x in range(HW): grid[0][x]=JA.WT; grid[1][x]=JA.WM
+    for y in range(2,HH): grid[y][0]=JA.WM; grid[y][HW-1]=JA.WM
+    grid[0][6]=JA.WEM
+    for x in (3,9): grid[0][x]=JA.BT; grid[1][x]=JA.BB
+    for x in range(4,9):
+        for y in (2,3): grid[y][x]=JA.DAIS
+    grid[2][6]=JA.STT; grid[3][6]=JA.STB
+    for y in range(4,HH):
+        grid[y][5]=JA.CL; grid[y][6]=JA.CC; grid[y][7]=JA.CR
+    for y in (5,8): grid[y][3]=JA.COL; grid[y][HW-4]=JA.COL
+    CASES=[(2,y) for y in (3,5,7,9,11)]+[(HW-3,y) for y in (3,5,7,9,11)]
+    for x,y in CASES: grid[y][x]=JA.CAB
+    grid[HH-1][6]=JA.MAT
+    vals=[]
+    for y in range(HH):
+        for x in range(HW):
+            k=grid[y][x]; vals.append((640+k)|(0x0400 if k in JA.BLOCKED else 0x3000))
+    blocks=r.alloc(b''.join(struct.pack('<H',v) for v in vals),4)
+    wb=640+JA.WM
+    border=r.alloc(struct.pack('<4H',wb|0x400,wb|0x400,wb|0x400,wb|0x400),4)
+    lay=r.alloc(struct.pack('<IIIIII',HW,HH,0x08000000+border,0x08000000+blocks,PRIM,0x08000000+sec)+bytes([2,2,0,0]),4)
+    # ---- the ceremony
+    S=SB(); S.lockall(); S.raw(0xc7,2); S.setvar(0x4001,1)
+    mv_up=0x08000000+r.alloc(bytes([0x11]*6+[0xfe]),1)
+    S.raw(0x4f); S._add(struct.pack('<H',0xff)); S.ptr(mv_up); S.raw(0x51); S._add(struct.pack('<H',0))
+    S.raw(0x28); S._add(struct.pack('<H',0x14))
+    S.msg(T("COMMISSIONER: Stop there, and let me look at you. So you are the one who brought down GENERAL GORE."),4)
+    S.msg(T("COMMISSIONER: Ten bases fell, and ten Captains with them. Every case in this hall holds the record of one of them."),4)
+    S.raw(0x23); S.ptr(nat['lib_text']); S.compare(0x8007,0); S.goto_if(1,'none')
+    S.msg(0x08000000+r.alloc(leg1.enc('COMMISSIONER: You put ')[:-1]+b'\xfd\x02'+leg1.enc(' JRA soldiers in the ground. KANTO will not forget that, and neither will this hall.'),1),4); S.goto('go')
+    S.lab('none'); S.msg(T("COMMISSIONER: And you ended it without leaving a single soldier dead. KANTO noticed that too."),4)
+    S.lab('go')
+    S.msg(T("COMMISSIONER: The League keeps its Hall of Fame. This is the HALL OF JUSTICE, for the ones who ended a war. Your team stands here beside the ten medals."),4)
+    S.msg(T("COMMISSIONER: Stand ready. History is watching."),4)
+    S.raw(0x68); S.raw(0x98,1,0x18)
+    S.raw(0x25,0x10,0x01); S.raw(0x27); S.raw(0x6b); S.end()
     sc=0x08000000+put_script(r,S)
     ft=r.alloc(struct.pack('<HHI',0x4001,0,sc)+struct.pack('<H',0),4)
-    # warp-into-map script of the Hall of Fame (turns the player to face the room)
-    ms_old=r32(r,hof+8)-0x08000000; wi=None; k=ms_old
+    hof=header(r,1,80); ms_old=r32(r,hof+8)-0x08000000; wi=None; k=ms_old
     while b[k]!=0:
         if b[k]==4: wi=r32(r,k+1)
         k+=5
     assert wi
     ms=r.alloc(bytes([2])+struct.pack('<I',0x08000000+ft)+bytes([4])+struct.pack('<I',wi)+b'\x00',4)
-    # one officer where Oak stands in the Hall of Fame
-    po=r32(r,r32(r,hof+4)-0x08000000+4)-0x08000000; ox,oy=struct.unpack('<hh',b[po+4:po+8])
-    t=bytearray(b[po:po+24]); t[1]=60; t[9]=0; t[10]=0; t[16:20]=struct.pack('<I',0x08000000+put_script(r,(lambda q:(q.lab('x'),q.msg(T("COMMISSIONER: Take your time. History is watching."),2),q.end(),q)[-1])(SB())))
-    objs=r.alloc(bytes(t),4)
-    ev=r.alloc(bytes([1,0,0,0])+struct.pack('<IIII',0x08000000+objs,0,0,0),4)
+    # ---- people: the commissioner at the foot of the dais, two honour guards
+    def talk(text):
+        q=SB(); q.msg(T(text),2); q.end(); return 0x08000000+put_script(r,q)
+    def obj(i,x,y,gfx_,mv,script):
+        t=bytearray(24); t[0]=i; t[1]=gfx_; t[4:6]=struct.pack('<h',x); t[6:8]=struct.pack('<h',y); t[8]=3; t[9]=mv; t[16:20]=struct.pack('<I',script); return bytes(t)
+    objs=obj(1,6,4,60,8,talk("COMMISSIONER: Take your place on the carpet. The record is made once."))+obj(2,4,8,60,10,talk("GUARD: Ten medals, ten cases. I know every Captain's name by heart."))+obj(3,HW-5,8,60,9,talk("GUARD: Whatever you did to get here, you stopped the JRA. That counts."))
+    oa=r.alloc(objs,4)
+    # ---- plaques
+    cities=json.load(open('/home/claude/work/army/cities.json'))[:10]
+    cities.sort(key=lambda c: c['num'])
+    bgs=b''
+    for (x,y),c in zip(CASES,cities):
+        q=SB(); q.msg(T("BASE NO. %d, %s\nCAPT. %s\n%s"%(c['num'],c['name'],c['captain'],c['medal'])),3); q.end()
+        bgs+=struct.pack('<HHBBHI',x,y,0,0,0,0x08000000+put_script(r,q))
+    q=SB(); q.msg(T("TO THOSE WHO ENDED THE JOHTO REVOLUTIONARY ARMY.\n\nPEACE THROUGH JUSTICE."),3); q.end()
+    bgs+=struct.pack('<HHBBHI',6,3,0,0,0,0x08000000+put_script(r,q))
+    ba=r.alloc(bgs,4)
+    # ---- the way out: the doormat takes the player back to Pallet Town
+    X=SB(); X.raw(0x39,PALLET[0],PALLET[1],0xff); X._add(struct.pack('<HH',PALLET[2],PALLET[3])); X.raw(0x27); X.end()
+    ca=r.alloc(struct.pack('<HHBBHHHI',6,HH-1,3,0,0x40E3,0,0,0x08000000+put_script(r,X)),4)
+    ev=r.alloc(bytes([3,0,1,len(bgs)//12])+struct.pack('<IIII',0x08000000+oa,0,0x08000000+ca,0x08000000+ba),4)
     NAME=0x63; r.w32(0x3f1cac+4*(NAME-0x58),0x08000000+r.alloc(leg1.enc('HALL OF JUSTICE'),1))
-    (g,n),hh=new_map(r,hof,lay,ev,NAME,scripts=ms)
-    return (g,n),(w//2,h//2)
+    (g,n),hh=new_map(r,ch,lay,ev,NAME,scripts=ms)
+    return (g,n),(6,HH-2)
 
 # ---------------------------------------------------------------- natives
 def build_native(r):
@@ -305,8 +369,8 @@ def build_native(r):
     out={}
     for ln in subprocess.run(['nm',W+'/gun.elf'],capture_output=True,text=True,check=True).stdout.split('\n'):
         f=ln.split()
-        if len(f)==3 and f[2] in ('gw_load','gw_scripts','jra_info','jra_pay','jra_shoot','kill_check2','deal_info','deal_accept','deal_refuse','deal_state','deal_gate','kc_show2'): out[f[2]]=(int(f[0],16)&~1)|1
-    assert len(out)==12,out.keys()
+        if len(f)==3 and f[2] in ('gw_load','gw_scripts','jra_info','jra_pay','jra_shoot','kill_check2','deal_info','deal_accept','deal_refuse','deal_state','deal_gate','kc_show2','lib_text'): out[f[2]]=(int(f[0],16)&~1)|1
+    assert len(out)==13,out.keys()
     r.w32(0x3af284,out['gw_load']); r.w32(0x3af294,out['gw_scripts'])
     # police scripts call kill_check: they now call the version that goes quiet after the deal
     pat=bytes([0x23])+struct.pack('<I',kc); sites=[]; i=0
@@ -505,7 +569,7 @@ def install(r):
     nat=build_native(r)
     fix_shot_sound(r); feather_black(r)
     police_offer(r,nat); story_offers(r,nat)
-    (jg,jn),jstart=hall_of_justice(r); assert (jg,jn)==(2,81),(jg,jn); print('hall of justice',(jg,jn),jstart)
+    (jg,jn),jstart=hall_of_justice(r,nat); assert (jg,jn)==(2,81),(jg,jn); print('hall of justice',(jg,jn),jstart)
     menus=add_menus(r,[(0,0,0,0),(0,0,1,0),(1,1,0,0),(1,1,1,0)])
     sc=trainer_script(r,fns,nat,menus)
     assert r32(r,0x1a4ed9)>=0x08000000

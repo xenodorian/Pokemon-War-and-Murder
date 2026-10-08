@@ -76,7 +76,7 @@ void deal_info(void){
     if(id<50||id>=POL0+NPOL) return;
     if(id>=POL0) GSV(6)=1;
     if(*kc_var(DEAL_VAR)&3) return;
-    if(*kc_var(LIB_VAR)>10 && kc_total()>0) GSV(7)=1;
+    if(*kc_var(LIB_VAR)>10 && kc_total()>10) GSV(7)=1;
 }
 void deal_accept(void){ *kc_var(DEAL_VAR)|=3; }
 void deal_refuse(void){ *kc_var(DEAL_VAR)|=1; }
@@ -142,10 +142,15 @@ static u8* put_num(u8* o,u32 v){
 void kc_show2(void){
     u32 n=kc_total(); u32 b=*kc_var(BLESS_VAR); int k=(int)b-(int)n; u32 lib=*kc_var(LIB_VAR);
     u8* o=STRVAR1;
-    o=put_str(o,T_KILLS); if(deal_on()) o=put_str(o,T_HIDDEN); else o=put_num(o,n); *o++=0xFE;
-    o=put_str(o,T_LIB); o=put_num(o,lib); *o++=0xFB;
-    o=put_str(o,T_BLESS); o=put_num(o,b); *o++=0xFE;
+    if(!deal_on()){ o=put_str(o,T_KILLS); o=put_num(o,n); *o++=0xFE; }      /* with the deal made the Kill Count entry is gone */
+    o=put_str(o,T_LIB); o=put_num(o,lib);
+    if(deal_on()){ *o++=0xFE; o=put_str(o,T_BLESS); o=put_num(o,b); *o++=0xFB; }
+    else { *o++=0xFB; o=put_str(o,T_BLESS); o=put_num(o,b); *o++=0xFE; }
     o=put_str(o,T_KARMA);
     if(k<0){ *o++=SIGN0; if(SIGN1) *o++=SIGN1; k=-k; }
     o=put_num(o,(u32)k); *o++=0x00; *o=0xFF;
+}
+// the Hall of Justice speech: Liberty Count into gStringVar1; GSV7 = 1 when there is one to mention
+void lib_text(void){
+    u32 lib=*kc_var(LIB_VAR); u8* o=put_num(STRVAR1,lib); *o=0xFF; GSV(7)=lib?1:0;
 }
