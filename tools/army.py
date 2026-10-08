@@ -31,7 +31,7 @@ def captain_frame(g):
 REASONS=['JAYWALKING','WEARING THE WRONG HAT','OWNING A RATTATA','HUMMING OFF KEY','ADMIRING KANTO','LOOKING SUSPICIOUS','SNEEZING AT A SOLDIER','ASKING QUESTIONS','BEING UNPATRIOTIC','STANDING ON A SHADOW','HAVING A NICE SMILE','NOT SALUTING']
 def etxt(s): return bytes(ENC[c] for c in s)+b'\xff'
 # ----------------------------------------------------------------------------------------------- assets
-def alloc_trainer_pic(r,pic,src_pic,recolor):
+def alloc_trainer_pic(r,pic,src_pic,recolor,pixfn=None):
     """copy a trainer picture into an unused slot with a recoloured palette"""
     b=r.b
     fs=0x23957c+8*src_pic; ps=0x239a1c+8*src_pic
@@ -40,7 +40,10 @@ def alloc_trainer_pic(r,pic,src_pic,recolor):
     assert struct.unpack('<H',b[ps+4:ps+6])[0]==src_pic
     src_pal=gfx.lz_decomp(b,r32(r,ps)-0x08000000)
     cols=recolor(gfx.pal_to_rgb(src_pal))
-    r.w32(fa,r32(r,fs))
+    if pixfn:
+        g=gfx.tiles_to_pixels(gfx.lz_decomp(b,r32(r,fs)-0x08000000),8,8); pixfn(g,cols)
+        r.w32(fa,0x08000000+r.alloc(gfx.lz_comp(gfx.pixels_to_tiles(g)),4))
+    else: r.w32(fa,r32(r,fs))
     r.w32(pa,0x08000000+r.alloc(gfx.lz_comp(gfx.rgb_to_pal(cols)),4))
 def pic_from_png(r,pic,path):
     """trainer picture from a 64x64 PNG (transparent background, up to 15 opaque colours)"""
@@ -57,6 +60,13 @@ def pic_from_png(r,pic,path):
     assert struct.unpack('<HH',r.b[fa+4:fa+8])==(0x800,pic)
     r.w32(fa,0x08000000+r.alloc(gfx.lz_comp(gfx.pixels_to_tiles(idx)),4))
     r.w32(pa,0x08000000+r.alloc(gfx.lz_comp(gfx.rgb_to_pal([(115,197,164)]+cols+[(0,0,0)]*(15-len(cols)))),4))
+def captain_pupil(g,cols):
+    """the black pupil pixel of the left eye becomes dark brown (palette entry 12, whose two stray pixels move to entry 13)"""
+    for y in range(64):
+        for x in range(64):
+            if g[y][x]==12: g[y][x]=13
+    assert g[13][33]==15
+    g[13][33]=12; cols[12]=(58,30,18)
 def ramp(cols,kind):
     """recolour a trainer picture palette: greys become olive, strong reds become tan, skin stays"""
     import colorsys
@@ -254,7 +264,7 @@ if __name__=='__main__':
     assert (g_soldier,g_captain,g_splat)==(0x9f,0xa0,0xa1)
     surge_pic=b[T+40*416+3]
     pic_from_png(r,PIC_SOLDIER,W+'/soldier_pic.png')          # supplied soldier picture
-    alloc_trainer_pic(r,PIC_CAPTAIN,surge_pic,lambda c: ramp(c,'captain'))
+    alloc_trainer_pic(r,PIC_CAPTAIN,surge_pic,lambda c: ramp(c,'captain'),captain_pupil)
     rename_class(r,CLS_SOLDIER,'JRA SOLDIER'); rename_class(r,CLS_CAPTAIN,'JRA CAPTAIN'); rename_class(r,CLS_GENERAL,'JRA GENERAL')
     add_medal(r,57,'HONOR MEDAL','A medal taken from CAPT.\nMARLOW of the JRA.',ITEMS['ITEM_OLD_AMBER'])
     # collision: the army splatter never blocks (same exemption as the player's splatter and story bodies)
