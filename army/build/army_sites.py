@@ -107,3 +107,10 @@ def insert_rows(r,g,n,at,M,pattern):
     new=old[:at]+[list(old[pattern[k%len(pattern)]]) for k in range(M)]+old[at:]
     a=r.alloc(b''.join(struct.pack('<%dH'%w,*row) for row in new),4)
     r.w32(lay+4,h+M); r.w32(lay+12,0x08000000+a)
+
+def get_grid(r,g,n):
+    w,h=dims(r,g,n); mp=map_off(r,g,n)
+    return [list(struct.unpack('<%dH'%w,r.b[mp+2*y*w:mp+2*(y+1)*w])) for y in range(h)]
+def put_grid(r,g,n,grid):
+    w,h=dims(r,g,n); mp=map_off(r,g,n)
+    for y in range(h): r.b[mp+2*y*w:mp+2*(y+1)*w]=struct.pack('<%dH'%w,*grid[y])

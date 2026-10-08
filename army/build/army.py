@@ -380,6 +380,8 @@ def carve_exterior(r,c,house):
     gv=army_sites.get_block(r,g,n,*e['ground'])
     if e['ext']: army_sites.extend_right(r,g,n,e['ext'])
     if e.get('insert'): army_sites.insert_rows(r,g,n,*e['insert'])
+    pre=army_sites.get_grid(r,g,n)          # the map before any cut (forests are repaired against it)
+    rects=list(e['carve'])+list(e['clear'])+[(x0,y0,x1,y1) for (x0,x1,y0,y1,sx) in e.get('rowfill',[])]+[(e['bx'],e['by'],e['bx']+4,e['by']+3)]
     for (x0,y0,x1,y1) in e['carve']+e['clear']: army_sites.fill(r,g,n,x0,y0,x1,y1,gv)
     for (x0,x1,y0,y1,sx) in e.get('rowfill',[]):
         for yy in range(y0,y1+1):
@@ -390,6 +392,13 @@ def carve_exterior(r,c,house):
     blocks=house.graft(ts,slot)
     for j,row in enumerate(blocks):
         for i,v in enumerate(row): army_sites.set_block(r,g,n,e['bx']+i,e['by']+j,v)
+    # forests: every tree must stay whole (2 wide, 3 tall); anything the cuts clipped is rebuilt or replaced by lawn
+    import retree
+    w_,h_=army_sites.dims(r,g,n); zone=set()
+    for (x0,y0,x1,y1) in rects:
+        for yy in range(y0-3,y1+4):
+            for xx in range(x0-3,x1+4): zone.add((xx,yy))
+    cur=army_sites.get_grid(r,g,n); army_sites.put_grid(r,g,n,retree.retree(cur,pre,w_,h_,gv,zone))
     ts.commit()
 def place_lot_objects(r,c,e,fns,gf,item_by_num,cleared,ids,base_num,base_map):
     """door warp, lock, guards, sign, patrols in the town map; returns patrol ids"""
