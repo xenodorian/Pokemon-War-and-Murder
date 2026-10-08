@@ -60,9 +60,16 @@ def install(r):
         add_obj(r,1,42,x,y,GFX_BODY,sc,0,0)
         fx=x+1 if tile_free(r,1,42,x+1,y) else x-1
         feather(r,gid,1,42,fx,y)
+    # --- police at the hideout bodies explain the feathers
+    cop_texts=["POLICE: Four dead grunts, and a black feather by every one. Nobody leaves the same thing four times by accident.\n\nIt has to be a calling card. I just cannot tell what it is saying.",
+               "POLICE: The grunts here were not robbed. The killer only wanted to leave the feather.\n\nWhy would anyone sign a murder? Whatever it means, it matters to them."]
+    for k,(cx,cy) in enumerate(((9,12),(22,12))):
+        x,y=free_tile(r,1,42,cx,cy)
+        S=SB(); S.msg(text(r,cop_texts[k]),2); S.end(); sc=0x08000000+put_script(r,S)
+        add_obj(r,1,42,x,y,leg1.GFX_POLICE,sc,8,0)
     # --- Giovanni's words after losing (Rocket Hideout B4F, object script at 0x161317)
     assert r.b[0x16133b:0x16133d]==bytes([0x0f,0x00])
-    t_gio=text(r,"GIOVANNI: Dude, you can't stop us. We have the GOVERNMENT and SILPH on our side.\n\nBut something in a black robe is killing my men. It is coming for me next. Take the SILPH SCOPE and run.\n\nAnd tell LANCE I never talked.")
+    t_gio=text(r,"GIOVANNI: Dude, you can't stop us. We have the GOVERNMENT and SILPH on our side.\n\nBut something is killing my men. It is coming for me next. Take the SILPH SCOPE and run.\n\nAnd tell LANCE I never talked.")
     r.w32(0x16133d,t_gio)
     # --- Mr. Fuji in the tower (2,66)
     h=header(r,2,66); ev=r32(r,h+4)-0x08000000; po=r32(r,ev+4)-0x08000000; fo=None
