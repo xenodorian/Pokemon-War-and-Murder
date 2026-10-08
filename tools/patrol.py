@@ -11,6 +11,7 @@ POL0=55; HIDE_FLAG=0x4AD
 CLASS_POLICE=91; PIC_POLICE=126; GFX_POLICE=60
 CITIES=[((3,1),[350],'VIRIDIAN CITY'),((3,2),[414],'PEWTER CITY'),((3,3),[234],'CERULEAN CITY'),((3,5),[141,423],'VERMILION CITY'),
         ((3,6),[132,265,160,266,267,133,402],'CELADON CITY'),((3,7),[418],'FUCHSIA CITY'),((3,10),[280,283,462,463,464,281],'SAFFRON CITY'),((3,8),[213,177,178,214,179,215,180],'CINNABAR ISLAND')]
+NAMES=['JACK','HANK','BOB','DAN','LEE','RAY','TOM','MIKE','FRED','GUS','NED','PAUL','SAM','TIM','VIC','WADE','ZACH','CARL','DEAN','ELI','GREG','IVAN','JOEL','OWEN']
 def install(r):
     b=r.b; k=0
     t_intro=0x08000000+r.alloc(leg1.enc("OFFICER: Halt! You have killed too many people. You're under arrest!"),1)
@@ -21,6 +22,7 @@ def install(r):
         for j in range(3):
             tid=POL0+k; src=pool[j%len(pool)]
             e=bytearray(b[T+40*src:T+40*src+40]); e[1]=CLASS_POLICE; e[3]=PIC_POLICE
+            nm=bytes(leg1.ENC[c] for c in NAMES[k]); e[4:16]=nm+b'\xff'*(12-len(nm))
             b[T+40*tid:T+40*tid+40]=e
             S=SB(); S.raw(0x5c,0); S._add(struct.pack('<HH',tid,0)); S.ptr(t_intro); S.ptr(t_lost); S.msg(t_after,6); S.end()
             sc=put_script(r,S)
