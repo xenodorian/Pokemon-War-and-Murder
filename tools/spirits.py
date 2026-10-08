@@ -20,12 +20,33 @@ B_CAUGHT=int(os.environ.get("SPIRIT_TEST_OUTCOME","7"))
 QUESTS=[(3,0,'PALLET TOWN',92,'GASTLY',5),(3,1,'VIRIDIAN CITY',228,'HOUNDOUR',10),(3,2,'PEWTER CITY',198,'MURKROW',15),
  (3,3,'CERULEAN CITY',215,'SNEASEL',20),(3,5,'VERMILION CITY',93,'HAUNTER',25),(3,4,'LAVENDER TOWN',200,'MISDREAVUS',30),
  (3,6,'CELADON CITY',229,'HOUNDOOM',35),(3,10,'SAFFRON CITY',94,'GENGAR',40),(3,7,'FUCHSIA CITY',197,'UMBREON',45),(3,8,'CINNABAR ISLAND',248,'TYRANITAR',50)]
-def add_wisp_gfx(r,src=60):
+def haunter_frames():
+    """9 frames (32x32 index arrays, shared palette indices) from the supplied grayscale Haunter sheet: rows = down, up, left; columns = walk, idle, walk"""
+    from PIL import Image
+    im=Image.open('/home/claude/work/shinigami_art/haunter_sheet.png').convert('RGBA'); a=np.array(im)
+    cols=[(0,26),(28,53),(55,81)]; rows=[(0,23),(26,50),(53,82)]
+    MAP={0:2,29:2,52:10,93:15,96:15,134:5,182:8}      # grey level -> shared palette index (10 and 15 are set to dark and mid grey)
+    def frame(r,c):
+        x0,x1=cols[c]; y0,y1=rows[r]
+        sub=a[y0:y1+1,x0:x1+1]; h,w=sub.shape[:2]
+        out=np.zeros((32,32),int)
+        ox=(32-w)//2; oy=31-h-1
+        for y in range(h):
+            for x in range(w):
+                px=sub[y,x]
+                if px[3]<128: continue
+                out[oy+y,ox+x]=MAP[int(px[0])]
+        return out
+    f={(r,c):frame(r,c) for r in range(3) for c in range(3)}
+    # engine order: down idle, up idle, left idle, down walk x2, up walk x2, left walk x2 (right-facing is the left frames flipped by the engine)
+    return [f[0,1],f[1,1],f[2,1],f[0,0],f[0,2],f[1,0],f[1,2],f[2,0],f[2,2]]
+def add_wisp_gfx(r,src=150):
     b=r.b
-    a=spirit_art.wisp()
-    t=tiles_from_pixels([[int(v) for v in row] for row in a],2,4)
-    p=r.alloc(t,4)
-    imgt=r.alloc(b''.join(struct.pack('<IHH',0x08000000+p,0x100,0) for _ in range(9)),4)
+    ent=shinigami.sprite_palette_entry(r,0x1120); pal=r32(r,ent)-0x08000000
+    b[pal+2*10:pal+2*10+2]=gfx.rgb_to_pal([(52,52,52)]); b[pal+2*15:pal+2*15+2]=gfx.rgb_to_pal([(96,96,96)])
+    frames=haunter_frames()
+    ptrs=[r.alloc(tiles_from_pixels([[int(v) for v in row] for row in fr],4,4),4) for fr in frames]
+    imgt=r.alloc(b''.join(struct.pack('<IHH',0x08000000+p,0x200,0) for p in ptrs),4)
     gt=r32(r,0x5f2f4)-0x08000000; mx=b[0x5f2e0]
     ib=r32(r,gt+4*src)-0x08000000
     info=bytearray(b[ib:ib+36]); info[2:4]=struct.pack('<H',WISP_TAG); info[0x1c:0x20]=struct.pack('<I',0x08000000+imgt); info[12]=(info[12]&0xF0)|10
@@ -83,7 +104,7 @@ def install(r):
         h=header(r,g,n); lay=r32(r,h)-0x08000000; w,hh=r32(r,lay),r32(r,lay+4)
         x,y=free_tile(r,g,n,w//2,hh//2)
         print('spirit',k+1,city,x,y)
-        add_obj(r,g,n,x,y,gid,0x08000000+spirit_script(r,k),movement=0,flag=SPIRIT_FLAG+k)
+        add_obj(r,g,n,x,y,gid,0x08000000+spirit_script(r,k),movement=1,flag=SPIRIT_FLAG+k)
     h=header(r,3,6); lay=r32(r,h)-0x08000000; w,hh=r32(r,lay),r32(r,lay+4)
     x,y=free_tile(r,3,6,w//2,hh//2+6); print('witch',x,y)
     add_obj(r,3,6,x,y,GFX_SHINI,0x08000000+witch_script(r),movement=8)
