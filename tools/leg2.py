@@ -44,7 +44,7 @@ def menu_entry(r,fns):
     b=r.b
     thunk1=r.alloc(bytes([0x08,0x47]),4); thunk2=r.alloc(bytes([0x10,0x47]),4)
     def call(t): return 'ldr r1,=%d\nbl %d\n'%(0x08000000+t+1,0x08000000+thunk1)
-    t_name=0x08000000+r.alloc(etxt('KILL COUNT'),1)
+    t_name=0x08000000+r.alloc(etxt('KILLS'),1)
     t_desc=0x08000000+r.alloc(etxt('See your kills, blessings\nand karma.').replace(bytes([ENC[' '],0xff]),b'') if False else bytes(ENC[c] if c!='\n' else 0xFE for c in 'See your kills, blessings\nand karma.')+b'\xff',1)
     # the script
     S=SB(); S.lockall(); S.raw(0x23); S.ptr(fns['kc_show']); S.msg(0x02021cd0); S.releaseall(); S.end()

@@ -10,10 +10,10 @@ CLASS_POLICE=91; PIC_POLICE=126
 # (group,num, cop x,y, trainer id, species, level, name, crime scene comment)
 COPS=[
  (3,0,11,14,50,58,5,'OFFICER KEN',"POLICE: A dead ROCKET GRUNT, and a black feather in the blood. Odd.\n\nWho leaves a feather behind? Probably nothing."),
- (3,1,24,22,51,58,10,'OFFICER DORA',"POLICE: Another ROCKET GRUNT, and another black feather. Same as PALLET TOWN.\n\nTwo in a row is no accident."),
+ (3,1,24,22,51,58,10,'OFFICER ROY',"POLICE: Another ROCKET GRUNT, and another black feather. Same as PALLET TOWN.\n\nTwo in a row is no accident."),
  (3,2,25,10,52,58,15,'OFFICER BEN',"POLICE: Another ROCKET grunt, and another black feather. Whoever kills them leaves one behind every time.\n\nA calling card, maybe? I do not know what it means."),
  (3,3,25,14,53,59,20,'OFFICER LEE',"POLICE: There was a black feather by that body too, just like in PALLET, VIRIDIAN and PEWTER.\n\nA killer who signs their work. Maybe the feather means something to them."),
- (3,5,24,22,54,59,25,'OFFICER AMY',"POLICE: Fifth dead ROCKET GRUNT, fifth black feather. One per town, always on the same road.\n\nA calling card, and whoever leaves it is moving east."),
+ (3,5,24,22,54,59,25,'OFFICER CAL',"POLICE: Fifth dead ROCKET GRUNT, fifth black feather. One per town, always on the same road.\n\nA calling card, and whoever leaves it is moving east."),
 ]
 def build_native(r):
     r.cur=(r.cur+3)&~3; base=0x08000000+r.cur

@@ -85,7 +85,7 @@ def install(r):
     ev=r.alloc(bytes([0,0,1,0])+struct.pack('<IIII',0,0,0x08000000+ca,0),4)
     ms=r.alloc(b'\x00',1)
     hb=bytearray(b[ch:ch+28]); hb[0:4]=struct.pack('<I',0x08000000+lay); hb[4:8]=struct.pack('<I',0x08000000+ev); hb[8:12]=struct.pack('<I',0x08000000+ms)
-    hb[20]=0xb9; hb[21]=0
+    hb[20]=0xb9; hb[21]=0; hb[25]|=0x04   # showMapName
     # layout id + tables
     LT=r32(r,0x55194)-0x08000000; NL=391
     for k in (383,390): lp=r32(r,LT+4*k)-0x08000000; assert 4<=r32(r,lp)<=60

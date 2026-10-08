@@ -191,6 +191,10 @@ def install(r,fns,gfx_id):
     SEC=0xb8                                                  # unused Sevii section, renamed
     r.w32(0x3f1cac+4*(SEC-0x58),0x08000000+r.alloc(leg1.enc('CHURCH OF FORGIVENESS'),1))
     hb[20]=SEC
+    hb[0x1a]=100                                              # floorNum 100: wide popup window, and the floor suffix is suppressed (patched below)
+    hb[25]|=0x04                                              # showMapName: the name popup appears on entering the church
+    assert bytes(b[0x98486:0x98488])==bytes([0x00,0x29])
+    b[0x98486:0x98488]=bytes([0x64,0x29])                     # MapNamePopupAppendFloorNum: floor 100 appends nothing
     hdr=r.alloc(bytes(hb),4)
     g2=r32(r,GROUPS+8)-0x08000000
     for k in (60,66):
