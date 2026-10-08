@@ -188,6 +188,9 @@ def install(r,fns,gfx_id):
             hp=r32(r,g2+4*(60+k-383))-0x08000000; assert r32(r,hp)==0x08000000+lp,k; r.w32(hp,0x08000000+nl)
     tab=r.alloc(bytes(ents)+struct.pack('<I',0x08000000+lay),4); r.w32(0x55194,0x08000000+tab)
     hb[18:20]=struct.pack('<H',NL+1)
+    SEC=0xb8                                                  # unused Sevii section, renamed
+    r.w32(0x3f1cac+4*(SEC-0x58),0x08000000+r.alloc(leg1.enc('CHURCH OF FORGIVENESS'),1))
+    hb[20]=SEC
     hdr=r.alloc(bytes(hb),4)
     g2=r32(r,GROUPS+8)-0x08000000
     for k in (60,66):
@@ -195,6 +198,15 @@ def install(r,fns,gfx_id):
     ntab=r.alloc(bytes(b[g2:g2+4*NEWNUM])+struct.pack('<I',0x08000000+hdr),4); r.w32(GROUPS+8,0x08000000+ntab)
     # ---- Pallet Town: church door warps at (7,15) and (8,15)
     ph=header(r,3,0); pev=r32(r,ph+4)-0x08000000
+    # ---- the sign beside the church
+    bpp=r32(r,pev+16)-0x08000000
+    found=0
+    for i in range(b[pev+3]):
+        o=bpp+12*i
+        if struct.unpack('<HH',b[o:o+4])==(10,11):
+            Ssg=SB(); Ssg.msg(shinigami.text(r,"THE CHURCH OF FORGIVENESS\n\nPALLET TOWN! Boring, crappy and small."),3); Ssg.end()
+            r.w32(o+8,0x08000000+put_script(r,Ssg)); found+=1
+    assert found==1
     nw=b[pev+1]; assert nw==4
     wp=r32(r,pev+8)-0x08000000
     ws=bytes(b[wp:wp+8*nw])+b''.join(struct.pack('<hhBBBB',x,15,0,1,NEWNUM,NEWGRP) for x in (7,8))
