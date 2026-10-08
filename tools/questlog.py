@@ -102,6 +102,7 @@ SIDE=[
  dict(title='MANSION',done=[f('FLAG_WORLD_MAP_POKEMON_MANSION_1F')],stages=[(None,'The POKéMON MANSION on CINNABAR ISLAND.','Search the burnt mansion. A SECRET KEY lies on B1F.')]),
  dict(title='CERULEAN CAVE',done=[f('FLAG_WORLD_MAP_CERULEAN_CAVE_1F')],stages=[(None,'CERULEAN CAVE, across the water by CERULEAN CITY.','Enter the cave. It holds the strongest POKéMON in KANTO.')]),
  dict(title='CONFESSION',done=[('f',0x4AC,True)],stages=[(None,'The CHURCH in PALLET TOWN, south of the lab.','Talk to the PRIEST. He forgives your kills for a donation: 1,000 per kill, 9,999 at most. Your KILL COUNT drops to zero.')]),
+ dict(title='JRA: PEWTER',done=[('f',0x4B0,True)],stages=[(None,'PEWTER CITY, the grey JRA building north-east of the Gym.','The JOHTO REVOLUTIONARY ARMY holds PEWTER. Fight through the base and beat CAPT. MARLOW. This door is unlocked.')]),
  SPIRIT_QUEST
 ]
 ALL=MAIN+[REAPER]+SIDE
