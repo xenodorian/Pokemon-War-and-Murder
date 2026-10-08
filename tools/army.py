@@ -19,6 +19,7 @@ ID_POOL=[1,2]+list(range(4,30))+list(range(50,55))+list(range(79,89))+list(range
 FLAG_CLEARED0=0x4C0          # + city index: the base was cleared (soldiers leave). 0x4B0-0x4BC are the vanilla FLAG_DEFEATED_<leader> flags, so they are not used
 VICTIM_VAR0=0x40F9           # + city index: bit k set = the NPC with local id k was shot by a patrol
 MAX_VICTIMS=3
+IDS_PER_CITY=9              # 4 base soldiers, the Captain, 2 patrol soldiers, 2 entrance guards
 CLS_SOLDIER,CLS_CAPTAIN,CLS_GENERAL=48,44,45          # unused vanilla classes, renamed
 PIC_SOLDIER,PIC_CAPTAIN,PIC_GENERAL=64,66,68
 ITEM_BASE=0x3db028; ICONT=0x3d4294
@@ -129,6 +130,14 @@ def obj_tmpl(gfxid,x,y,script,move=0,trainer=0,sight=0,flag=0,elev=3):
     t=bytearray(24); t[1]=gfxid; t[4:6]=struct.pack('<h',x); t[6:8]=struct.pack('<h',y); t[8]=elev; t[9]=move; t[10]=0x11 if move else 0
     t[12:14]=struct.pack('<H',trainer); t[14:16]=struct.pack('<H',sight); t[16:20]=struct.pack('<I',script); t[20:22]=struct.pack('<H',flag)
     return t
+def add_sign(r,g,n,x,y,block,text):
+    """a visible sign tile (collision) plus its bg event with the text; used for every base (the game font has no # character, so 'BASE NO. 1')"""
+    h=header(r,g,n); lay=r32(r,h)-0x08000000; w=r32(r,lay); mp=r32(r,lay+12)-0x08000000
+    r.b[mp+2*(y*w+x):mp+2*(y*w+x)+2]=struct.pack('<H',block)
+    ev=r32(r,h+4)-0x08000000; nb=r.b[ev+3]; bp=r32(r,ev+16)-0x08000000
+    S=SB(); S.msg(TXT(r,text),3); S.end()
+    new=r.alloc(bytes(r.b[bp:bp+12*nb])+struct.pack('<HHBBHI',x,y,0,0,0,0x08000000+put_script(r,S)),4)
+    r.b[ev+3]=nb+1; r.w32(ev+16,0x08000000+new)
 def add_warp(r,g,n,x,y,dest_warp,dest_map,dest_group):
     h=header(r,g,n); ev=r32(r,h+4)-0x08000000; nw=r.b[ev+1]; wp=r32(r,ev+8)-0x08000000
     new=r.alloc(bytes(r.b[wp:wp+8*nw])+struct.pack('<hhBBBB',x,y,0,dest_warp,dest_map,dest_group),4)
@@ -211,14 +220,15 @@ def build_base_map(r,objects,warps,mapsec,name):
 # ----------------------------------------------------------------------------------------------- Pewter
 PEWTER=dict(idx=0,group=3,num=2,city='PEWTER',captain='MARLOW')
 def install_pewter(r,fns,gf,item):
-    b=r.b; idx=0; ids=ID_POOL[8*idx:8*idx+8]
-    base_ids,cap_id,pat_ids=ids[0:4],ids[4],ids[5:7]
+    b=r.b; idx=0; ids=ID_POOL[IDS_PER_CITY*idx:IDS_PER_CITY*idx+IDS_PER_CITY]
+    base_ids,cap_id,pat_ids,guard_ids=ids[0:4],ids[4],ids[5:7],ids[7:9]
     cleared=FLAG_CLEARED0+idx
     G_SOLDIER,G_CAPTAIN,G_SPLAT=gf
     make=lambda tid,cls,pic,name,party: make_trainer(r,tid,cls,pic,name,party)
     for tid,name,party in [(base_ids[0],'BELL',[(161,14),(163,14)]),(base_ids[1],'CROSS',[(165,15),(167,15)]),
                            (base_ids[2],'DRAKE',[(172,13),(183,15),(194,15)]),(base_ids[3],'EVANS',[(216,16),(231,16)]),
-                           (pat_ids[0],'HOLT',[(190,15),(209,14)]),(pat_ids[1],'REYES',[(228,15),(179,15)])]:
+                           (pat_ids[0],'HOLT',[(190,15),(209,14)]),(pat_ids[1],'REYES',[(228,15),(179,15)]),
+                           (guard_ids[0],'FINCH',[(166,15),(162,15)]),(guard_ids[1],'VOSS',[(183,16),(194,15)])]:
         make(tid,CLS_SOLDIER,PIC_SOLDIER,name,party)
     make(cap_id,CLS_CAPTAIN,PIC_CAPTAIN,'MARLOW',[(162,19),(164,19),(168,20),(185,21)])
     SL=[("JRA SOLDIER: Intruder! This base belongs to the Johto Revolutionary Army!\n\nPEACE THROUGH CONQUEST!","JRA SOLDIER: My POKéMON... Johto forgive me.","JRA SOLDIER: CAPT. MARLOW will crush you. Long live Johto!"),
@@ -233,8 +243,8 @@ def install_pewter(r,fns,gf,item):
         "CAPT. MARLOW: Get out. Johto will remember this.")
     pat_sc=[soldier_script(r,pat_ids[0],"JRA SOLDIER: Papers, citizen! The Johto Revolutionary Army sees all.\n\nPEACE THROUGH CONQUEST!","JRA SOLDIER: Hmph... GOLDENROD will hear of this.","JRA SOLDIER: Move along. KANTO belongs to the Revolution."),
             soldier_script(r,pat_ids[1],"JRA SOLDIER: Another rebel sniffing around PEWTER? JOHTO's glory demands your surrender!","JRA SOLDIER: Argh! NEW BARK will send more of us.","JRA SOLDIER: Peace through conquest. Remember it.")]
-    guard_sc=[talk_script(r,"JRA SOLDIER: Move along, KANTO scum. This region belongs to the JRA.\n\nPEACE THROUGH CONQUEST!"),
-              talk_script(r,"JRA SOLDIER: PEWTER's stone walls make fine barracks. JOHTO thanks you for your cooperation.")]
+    guard_sc=[soldier_script(r,guard_ids[0],"JRA SOLDIER: Halt! Nobody enters JRA BASE NO. 1 without the Revolution's permission.\n\nPEACE THROUGH CONQUEST!","JRA SOLDIER: You... got past a Johto guard?","JRA SOLDIER: Go on, then. The Captain will deal with you."),
+              soldier_script(r,guard_ids[1],"JRA SOLDIER: Stop right there, KANTO scum! PEWTER's stone walls now belong to Johto!","JRA SOLDIER: Impossible. We trained under Mt. Silver itself!","JRA SOLDIER: Enjoy it while it lasts. The Revolution never sleeps.")]
     # base interior (group 2 map 69)
     objs=[obj_tmpl(G_SOLDIER,13,4,base_sc[0],8,1,4,cleared),obj_tmpl(G_SOLDIER,9,9,base_sc[1],10,1,4,cleared),
           obj_tmpl(G_SOLDIER,14,15,base_sc[2],8,1,4,cleared),obj_tmpl(G_SOLDIER,25,17,base_sc[3],9,1,4,cleared),
@@ -251,9 +261,11 @@ def install_pewter(r,fns,gf,item):
             v=b[mp+2*((8+dy)*w+32+dx):mp+2*((8+dy)*w+32+dx)+2]
             b[mp+2*((2+dy)*w+33+dx):mp+2*((2+dy)*w+33+dx)+2]=v
     add_warp(r,3,2,34,5,0,n,g)
-    # guards must not close the 1-tile lawn path along y=6 (door front tile is (34,6), reached from the east): one west of the door, one at the lawn entrance
-    add_obj(r,3,2,obj_tmpl(G_SOLDIER,33,6,guard_sc[0],10,0,0,cleared))
-    add_obj(r,3,2,obj_tmpl(G_SOLDIER,39,6,guard_sc[1],9,0,0,cleared))
+    # entrance guards: trainers that battle anyone who walks into their line of sight. They must not close the 1-tile lawn path along y=6 (the door front tile (34,6) is
+    # reached from the east): one stands west of the door facing east, one at the lawn entrance facing west. Every base gets guards the same way.
+    add_obj(r,3,2,obj_tmpl(G_SOLDIER,33,6,guard_sc[0],10,1,4,cleared))
+    add_obj(r,3,2,obj_tmpl(G_SOLDIER,38,6,guard_sc[1],9,1,4,cleared))
+    add_sign(r,3,2,39,6,0x3402,"JOHTO REVOLUTIONARY ARMY\nBASE NO. 1\n\nPEACE THROUGH CONQUEST!")
     for sc,pos in zip(pat_sc,((27,22),(30,15))):
         add_obj(r,3,2,obj_tmpl(G_SOLDIER,pos[0],pos[1],sc,1,1,4,cleared))
     import reach
@@ -284,7 +296,7 @@ if __name__=='__main__':
     r.bl(0x6394c,0x3b2300)
     # natives: the army splat script address lives in a ROM slot written after the script exists (breaks the script <-> native address cycle)
     slot=r.alloc(b'\xff'*4,4); old_apply=r32(r,0xa09824)
-    idx=0; pat=[(tid,FLAG_CLEARED0+idx,VICTIM_VAR0+idx) for tid in ID_POOL[8*idx+5:8*idx+7]]
+    idx=0; pat=[(tid,FLAG_CLEARED0+idx,VICTIM_VAR0+idx) for tid in ID_POOL[IDS_PER_CITY*idx+5:IDS_PER_CITY*idx+7]]
     reasons=[etxt(s_) for s_ in REASONS]
     h='#define GFX_SOLDIER %d\n#define GFX_ARMY_SPLAT %d\n#define SPLAT_SLOT 0x%08x\n#define OLD_APPLY 0x%08x\n#define MAX_VICTIMS %d\n'%(g_soldier,g_splat,0x08000000+slot,old_apply,MAX_VICTIMS)
     h+='#define NPAT %d\nstatic const unsigned short PAT_ID[]={%s};\nstatic const unsigned short PAT_CLEARED[]={%s};\nstatic const unsigned short PAT_VICTIMS[]={%s};\n'%(len(pat),','.join(str(p_[0]) for p_ in pat),','.join(str(p_[1]) for p_ in pat),','.join(str(p_[2]) for p_ in pat))
