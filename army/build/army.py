@@ -258,8 +258,7 @@ def build_base_map(r,src_n,objects,warps,mapsec,name):
     src=header(r,1,src_n); slay=r32(r,src)-0x08000000
     S=r32(r,slay+20)-0x08000000
     sec=grey_secondary(r,S)
-    P=r32(r,slay+16)-0x08000000; prim=grey_primary(r,P)
-    lay=bytearray(b[slay:slay+28]); lay[16:20]=struct.pack('<I',0x08000000+prim); lay[20:24]=struct.pack('<I',0x08000000+sec); assert bytes(lay[24:26])==bytes([2,2]),lay[24:28].hex()
+    lay=bytearray(b[slay:slay+28]); lay[20:24]=struct.pack('<I',0x08000000+sec); assert bytes(lay[24:26])==bytes([2,2]),lay[24:28].hex()
     lay=r.alloc(bytes(lay),4)
     ob=b''.join(bytes(t) for t in objects); oa=r.alloc(ob,4)
     wb=b''.join(struct.pack('<hhBBBB',*w) for w in warps); wa=r.alloc(wb,4)
