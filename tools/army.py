@@ -72,6 +72,8 @@ def ramp(cols,kind):
             out.append((88,98,64))
         elif 0.0<=h<0.06 and s>0.5:   # saturated red -> tan/brown
             out.append((int(190*v+30),int(160*v+20),int(100*v+10)))
+        elif kind=='captain' and 0.5<h<0.75 and s>0.3:   # blue eyes -> brown
+            out.append((112,62,40))
         elif kind=='captain' and 0.08<h<0.17 and s>0.35:   # blond hair -> brown
             c=colorsys.hsv_to_rgb(0.04,0.62,v*0.62); out.append(tuple(int(t*255) for t in c))
         elif kind=='captain' and (0.17<h<0.45) and s>0.4:   # bright green -> drab olive
