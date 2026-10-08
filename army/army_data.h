@@ -1,12 +1,12 @@
 #define GFX_SOLDIER 159
 #define GFX_ARMY_SPLAT 161
-#define SPLAT_SLOT 0x08ed617c
+#define SPLAT_SLOT 0x08ed6310
 #define OLD_APPLY 0x08ec2709
 #define MAX_VICTIMS 3
-#define NPAT 2
-static const unsigned short PAT_ID[]={7,8};
-static const unsigned short PAT_CLEARED[]={1216,1216};
-static const unsigned short PAT_VICTIMS[]={16633,16633};
+#define NPAT 20
+static const unsigned short PAT_ID[]={16,17,25,26,7,8,54,79,87,88,461,101,200,210,299,311,405,407,434,437};
+static const unsigned short PAT_CLEARED[]={1217,1217,1218,1218,1216,1216,1219,1219,1220,1220,1221,1221,1222,1222,1223,1223,1224,1224,1225,1225};
+static const unsigned short PAT_VICTIMS[]={16634,16634,16635,16635,16633,16633,16636,16636,16637,16637,16638,16638,16639,16639,16608,16608,16609,16609,16610,16610};
 #define NREASONS 12
 static const unsigned char R0[]={196,187,211,209,187,198,197,195,200,193,255};
 static const unsigned char R1[]={209,191,187,204,195,200,193,0,206,194,191,0,209,204,201,200,193,0,194,187,206,255};
