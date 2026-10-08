@@ -47,6 +47,38 @@ class Tileset:
         for m in set(s.map_blocks()):
             for e in s.entries(m): used.add(e>>12)
         return used
+    def render_block(s,m):
+        """16x16 RGB (list of rows of tuples) of metatile m with this tileset's tiles and palettes"""
+        ents=s.entries(m); img=[[(115,197,164)]*16 for _ in range(16)]
+        for layer in (0,1):
+            for q in range(4):
+                e=ents[layer*4+q]; t=e&0x3ff; hf=(e>>10)&1; vf=(e>>11)&1; pal=e>>12
+                px=s.tile_px(t); pl=s.ppal[pal] if pal<7 else s.spal[pal]
+                for y in range(8):
+                    for x in range(4):
+                        b=px[y*4+x]
+                        for dx,ix in ((0,b&15),(1,b>>4)):
+                            if not ix: continue
+                            xx=2*x+dx; yy=y
+                            if hf: xx=7-xx
+                            if vf: yy=7-yy
+                            img[(q//2)*8+yy][(q%2)*8+xx]=rgb(pl[ix])
+        return img
+    def variant_colors(s,a,b):
+        """mean colour of the pixels where tree variants a and b differ (their lawn-coloured corners): (colour of a, colour of b)"""
+        ia,ib=s.render_block(a),s.render_block(b); pa=[];pb=[]
+        for y in range(16):
+            for x in range(16):
+                if ia[y][x]!=ib[y][x]: pa.append(ia[y][x]); pb.append(ib[y][x])
+        mean=lambda L: tuple(sum(c[k] for c in L)/max(1,len(L)) for k in range(3))
+        return mean(pa),mean(pb)
+    def block_avg(s,m):
+        img=s.render_block(m); px=[c for row in img for c in row]
+        return tuple(sum(c[k] for c in px)/len(px) for k in range(3))
+    def edge_color(s,m,side):
+        img=s.render_block(m)
+        px=[img[y][0] for y in range(16)] if side=='left' else [img[y][15] for y in range(16)] if side=='right' else [img[0][x] for x in range(16)] if side=='top' else [img[15][x] for x in range(16)]
+        return tuple(sum(c[k] for c in px)/16 for k in range(3))
     def alloc_tile(s,px):
         """new tiles go to secondary indices that no metatile used on this map points at (the top of the range first)"""
         if s.pool is None:

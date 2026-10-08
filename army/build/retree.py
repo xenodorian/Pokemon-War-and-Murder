@@ -52,7 +52,7 @@ def plan_run(grid,pre,w,h,px,y0,y1):
     if not cand: return ['lawn']*L
     j=cand[-1]
     return orig[:j+1]+['bottom']+['lawn']*(L-j-2)
-def retree(grid,pre,w,h,lawn,zone):
+def retree(grid,pre,w,h,lawn,zone,ts):
     """grid: current raw block rows (a modified copy is returned); pre: the same map before the cuts; zone: set of (x,y) cells near the cuts"""
     out=[row[:] for row in grid]
     runs=[r for r in pair_runs(grid,w,h) if any(((r[0]+dx,y) in zone) for y in range(r[1],r[2]+1) for dx in (0,1))]
@@ -73,12 +73,29 @@ def retree(grid,pre,w,h,lawn,zone):
         if (px,y) in typ: return typ[(px,y)]!='lawn'
         return is_pair(grid,w,px,y)
     for (px,y),t in typ.items():
-        if t=='lawn': out[y][px]=lawn; out[y][px+1]=lawn; continue
-        ln=has(px-2,y); rn=has(px+2,y)
+        if t=='lawn': out[y][px]=lawn; out[y][px+1]=lawn
+    def tree_at(x,y):
+        if x<0 or x>=w: return True          # beyond the map edge the forest carries on
+        if y<0 or y>=h: return True
+        return (out[y][x]&0x3ff) in TREE
+    def pick(teal,plain,nx,ny,mine_side,toward):
+        """the variant whose lawn-coloured corners are closest to the neighbouring block's colour; trees next to trees keep the shaded (teal) variant"""
+        if tree_at(nx,ny): return teal
+        ca,cb=ts.variant_colors(teal,plain); cn=ts.block_avg(out[ny][nx]&0x3ff)
+        d=lambda c: sum((c[k]-cn[k])**2 for k in range(3))
+        return teal if d(ca)<=d(cb) else plain
+    SETS={'join':((0x14,0x16),(0x15,0x17)),'mid':((0x1c,0x1e),(0x1d,0x1f)),'mid0':((0x1c,0x1e),(0x1d,0x1f)),'bottom':((0x24,0x26),(0x25,0x27))}
+    for (px,y),t in typ.items():
+        if t=='lawn': continue
         if t=='tip': a,b=0x0e,0x0f
-        elif t=='mid0': a,b=0x1e,0x1f
-        elif t=='join': a,b=(0x14 if ln else 0x16),(0x15 if rn else 0x17)
-        elif t=='mid': a,b=(0x1c if ln else 0x1e),(0x1d if rn else 0x1f)
-        else: a,b=(0x24 if ln else 0x26),(0x25 if rn else 0x27)
+        else:
+            (lt,lp),(rt,rp)=SETS[t]
+            if t=='bottom' and 0<=y+1<h and not tree_at(px,y+1):
+                a=pick(lt,lp,px,y+1,'bottom','top'); b=pick(rt,rp,px+1,y+1,'bottom','top')
+            elif t=='mid0':
+                a=lp if tree_at(px-1,y) else pick(lt,lp,px-1,y,'left','right')
+                b=rp if tree_at(px+2,y) else pick(rt,rp,px+2,y,'right','left')
+            else:
+                a=pick(lt,lp,px-1,y,'left','right'); b=pick(rt,rp,px+2,y,'right','left')
         out[y][px]=(grid[y][px]&0xfc00)|a; out[y][px+1]=(grid[y][px+1]&0xfc00)|b
     return out

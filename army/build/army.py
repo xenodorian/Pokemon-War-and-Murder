@@ -398,7 +398,7 @@ def carve_exterior(r,c,house):
     for (x0,y0,x1,y1) in rects:
         for yy in range(y0-3,y1+4):
             for xx in range(x0-3,x1+4): zone.add((xx,yy))
-    cur=army_sites.get_grid(r,g,n); army_sites.put_grid(r,g,n,retree.retree(cur,pre,w_,h_,gv,zone))
+    cur=army_sites.get_grid(r,g,n); army_sites.put_grid(r,g,n,retree.retree(cur,pre,w_,h_,gv,zone,ts))
     ts.commit()
 def place_lot_objects(r,c,e,fns,gf,item_by_num,cleared,ids,base_num,base_map):
     """door warp, lock, guards, sign, patrols in the town map; returns patrol ids"""
