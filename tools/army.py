@@ -24,6 +24,10 @@ SE_SHOT=347
 GRUNT_PIC=109; GRUNT_TRAINER=359
 SOLDIER_MAP={13:7,12:6,11:5,8:7,9:7,10:7}             # grey uniform -> olive; the red R emblem (8-10) is painted over with the uniform colour (palette 0x1106 entries 5-7)
 CAPTAIN_MAP={8:6,9:10,10:10,13:7}                     # Surge's greens -> drab olive, pink -> dark olive (palette 0x1105)
+def captain_frame(g):
+    """Surge's greens -> drab olive; his yellow hair (palette entries 5-7, above the first jacket row) -> brown"""
+    cut=next((y for y,row in enumerate(g) if any(v in (8,9,10) for v in row)),22)
+    return [[({5:4,6:4,7:15}.get(v,v) if y<cut and v in (5,6,7) else CAPTAIN_MAP.get(v,v)) for v in row] for y,row in enumerate(g)]
 REASONS=['JAYWALKING','WEARING THE WRONG HAT','OWNING A RATTATA','HUMMING OFF KEY','ADMIRING KANTO','LOOKING SUSPICIOUS','SNEEZING AT A SOLDIER','ASKING QUESTIONS','BEING UNPATRIOTIC','STANDING ON A SHADOW','HAVING A NICE SMILE','NOT SALUTING']
 def etxt(s): return bytes(ENC[c] for c in s)+b'\xff'
 # ----------------------------------------------------------------------------------------------- assets
@@ -68,6 +72,8 @@ def ramp(cols,kind):
             out.append((88,98,64))
         elif 0.0<=h<0.06 and s>0.5:   # saturated red -> tan/brown
             out.append((int(190*v+30),int(160*v+20),int(100*v+10)))
+        elif kind=='captain' and 0.08<h<0.17 and s>0.35:   # blond hair -> brown
+            c=colorsys.hsv_to_rgb(0.04,0.62,v*0.62); out.append(tuple(int(t*255) for t in c))
         elif kind=='captain' and (0.17<h<0.45) and s>0.4:   # bright green -> drab olive
             c=colorsys.hsv_to_rgb(0.20,0.45,v*0.7); out.append(tuple(int(t*255) for t in c))
         elif kind=='captain' and (h>0.8 or h<0.02) and s>0.3:   # pink -> brass
@@ -241,7 +247,7 @@ if __name__=='__main__':
     import qconsts
     r=Rom(sys.argv[1]); b=r.b
     FLAGS,VARS,ITEMS=qconsts.consts()
-    g_soldier=army_gfx.add_remapped(r,49,SOLDIER_MAP); g_captain=army_gfx.add_remapped(r,82,CAPTAIN_MAP); g_splat=add_alias_gfx(r,0x98)
+    g_soldier=army_gfx.add_remapped(r,49,SOLDIER_MAP); g_captain=army_gfx.add_remapped(r,82,CAPTAIN_MAP,fn=captain_frame); g_splat=add_alias_gfx(r,0x98)
     print('gfx',hex(g_soldier),hex(g_captain),hex(g_splat))
     assert (g_soldier,g_captain,g_splat)==(0x9f,0xa0,0xa1)
     surge_pic=b[T+40*416+3]

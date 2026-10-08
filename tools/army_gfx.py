@@ -18,12 +18,12 @@ def frames_of(r,g,nframes=9,wt=2,ht=4):
                         v=b[tp+k]; k+=1; grid[ty*8+y][tx*8+x]=v&15; grid[ty*8+y][tx*8+x+1]=v>>4
         out.append(grid)
     return out
-def add_remapped(r,src,mapping,nframes=9,wt=2,ht=4):
+def add_remapped(r,src,mapping,nframes=9,wt=2,ht=4,fn=None):
     """new graphics entry = copy of `src` with palette indices remapped; same palette tag, so no palette slot is spent"""
     b=r.b; frames=frames_of(r,src,nframes,wt,ht)
     ptrs=[]
     for g in frames:
-        g2=[[mapping.get(v,v) for v in row] for row in g]
+        g2=fn(g) if fn else [[mapping.get(v,v) for v in row] for row in g]
         ptrs.append(r.alloc(tiles_from_pixels(g2,wt,ht),4))
     gt=r32(r,0x5f2f4)-0x08000000; mx=b[0x5f2e0]; ib=r32(r,gt+4*src)-0x08000000; imgt=r32(r,ib+0x1c)-0x08000000
     size=struct.unpack('<H',b[imgt+4:imgt+6])[0]
