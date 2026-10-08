@@ -68,12 +68,12 @@ def add_coord(r,g,n,x,y,script):
     old=b''
     if nc: cp=r32(r,ev+12)-0x08000000; old=bytes(r.b[cp:cp+16*nc])
     new=r.alloc(old+struct.pack('<HHBBHHHI',x,y,3,0,0x40E3,0,0,script),4); r.b[ev+2]=nc+1; r.w32(ev+12,0x08000000+new)   # var 0x40E3 stays 0, so the event always runs (trigger 0 would run the script in the wrong context)
-def door_lock_script(r,item,need):
+def door_lock_script(r,item,need,name):
     """stepping on the tile in front of the door without the previous base's medal: refused and pushed back"""
     S=SB(); S.lockall()
     S.raw(0x47); S._add(struct.pack('<HH',item,1))                  # checkitem
     S.compare(0x800D,1); S.goto_if(1,'open')
-    S.msg(TXT(r,"The door is locked. A plate beside it reads:\n\nJRA MEDAL %d REQUIRED."%need),4)
+    S.msg(TXT(r,"The door is locked. A plate beside it reads:\n\n%s REQUIRED."%name),4)
     S.applymovement(0xff,0x08000000+r.alloc(bytes([0x10,0xfe]),1)); S.waitmovement(0xff); S.releaseall(); S.end()
     S.lab('open'); S.releaseall(); S.end()
     return 0x08000000+put_script(r,S)
@@ -123,7 +123,7 @@ def place_lot_objects(r,c,e,fns,gf,item_by_num,cleared,ids,base_num,base_map):
     g,n=3,c['town']; G_SOLDIER,G_CAPTAIN,G_SPLAT=gf; nm=army_text.SURNAMES[8*c['idx']:8*c['idx']+8]
     door=(e['bx']+1,e['by']+3); front=(e['bx']+1,e['by']+4)
     dw=add_warp(r,g,n,door[0],door[1],0,base_num,2)
-    if c['num']>1: add_coord(r,g,n,front[0],front[1],door_lock_script(r,item_by_num[c['num']-1],c['num']-1))
+    if c['num']>1: add_coord(r,g,n,front[0],front[1],door_lock_script(r,item_by_num[c['num']-1],c['num']-1,[x for x in CITIES if x['num']==c['num']-1][0]['medal_full']))
     guard_ids,pat_ids=ids[7:9],ids[5:7]
     for k,(gx,gy,mv) in enumerate(e['guards']):
         a,b,cc=army_text.lines('guard',guard_ids[k],c['name'],c['num'],c['captain'])
@@ -137,14 +137,14 @@ def install_city(r,fns,gf,c,house,item_by_num):
     base_ids,cap_id,pat_ids,guard_ids=ids[0:4],ids[4],ids[5:7],ids[7:9]
     cleared=FLAG_CLEARED0+idx; G_SOLDIER,G_CAPTAIN,G_SPLAT=gf
     nm=army_text.SURNAMES[8*idx:8*idx+8]; g,n=3,c['town']
-    medal_name='JRA MEDAL %d'%c['num']
+    medal_name=c['medal_full']
     nxt=[x['name'] for x in CITIES if x['num']==c['num']+1]; nxt=nxt[0] if nxt else None
     # trainers
     for k,tid in enumerate(base_ids): make_trainer(r,tid,CLS_SOLDIER,PIC_SOLDIER,nm[k],gen_team(c,'soldier',tid))
     make_trainer(r,cap_id,CLS_CAPTAIN,PIC_CAPTAIN,c['captain'],gen_team(c,'captain',cap_id))
     for k,tid in enumerate(pat_ids): make_trainer(r,tid,CLS_SOLDIER,PIC_SOLDIER,nm[4+k],gen_team(c,'soldier',tid))
     base_sc=[soldier_script(r,base_ids[i],*army_text.lines('base',base_ids[i],c['name'],c['num'],c['captain'])) for i in range(4)]
-    ci,cd,cw,ca=army_text.captain_lines(c['name'],c['captain'],c['num'],nxt)
+    ci,cd,cw,ca=army_text.captain_lines(c['name'],c['captain'],c['num'],nxt,c['medal_full'])
     cap_sc=captain_script(r,cap_id,cleared,c['item'],ci,cd,cw,ca,medal_name,c['name'])
     pat_sc=[soldier_script(r,pat_ids[i],*army_text.lines('pat',pat_ids[i],c['name'],c['num'],c['captain'])) for i in range(2)]
     # interior
@@ -201,7 +201,7 @@ if __name__=='__main__':
     rename_class(r,CLS_SOLDIER,'JRA SOLDIER'); rename_class(r,CLS_CAPTAIN,'JRA CAPTAIN'); rename_class(r,CLS_GENERAL,'JRA GENERAL')
     item_by_num={}
     for c in CITIES:
-        add_medal(r,c['item'],'JRA MEDAL %d'%c['num'],'A medal taken from CAPT.\n%s of the JRA.'%c['captain'],ITEMS['ITEM_OLD_AMBER']); item_by_num[c['num']]=c['item']
+        add_medal(r,c['item'],c['medal'],c['medal_desc'],ITEMS['ITEM_OLD_AMBER']); item_by_num[c['num']]=c['item']
     # collision: the army splatter never blocks (same exemption as the player's splatter and story bodies)
     code=r.asm('ldrb r0,[r2,#5]\ncmp r0,#%d\nbeq exempt\nsubs r0,#0x98\ncmp r0,#1\nbhi normal\nexempt:\nldr r0,=0x0806396d\nbx r0\nnormal:\nldrb r0,[r6,#0xb]\nlsls r0,r0,#0x1c\nbx lr\n'%g_splat,0x3b2300)
     r.put(0x3b2300,code)
@@ -225,7 +225,7 @@ if __name__=='__main__':
     for c in order:
         info=install_city(r,fns,(g_soldier,g_captain,g_splat),c,house,item_by_num)
         print('installed',c['name'],'base map',STATE['NUM']-1,'ids',info['pat_ids'])
-    json.dump([dict(name=c['name'],num=c['num'],idx=c['idx'],captain=c['captain'],flag=FLAG_CLEARED0+c['idx'],item=c['item'],cap=c['cap']) for c in CITIES],open(W+'/cities.json','w'))
+    json.dump([dict(name=c['name'],num=c['num'],idx=c['idx'],captain=c['captain'],flag=FLAG_CLEARED0+c['idx'],item=c['item'],cap=c['cap'],medal=c['medal_full']) for c in CITIES],open(W+'/cities.json','w'))
     # hook: the map-load pass now runs the old one (police, shot trainers) and then the army pass
     assert b[0xa0981c:0xa09824]==bytes.fromhex('014b1847c046c046')
     r.w32(0xa09824,fns['army_entry'])

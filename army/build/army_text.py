@@ -47,8 +47,8 @@ def lines(role,tid,city,num,cap):
     j=rng.choice(JOHTO); kw=dict(J=j,CITY=city,N=num,CAP=cap)
     pools={'base':(BASE_INTRO,BASE_DEFEAT,BASE_AFTER),'pat':(PAT_INTRO,PAT_DEFEAT,PAT_AFTER),'guard':(GUARD_INTRO,GUARD_DEFEAT,GUARD_AFTER)}[role]
     return tuple('JRA SOLDIER: '+pick(p,rng,**kw) for p in pools)
-def captain_lines(city,cap,num,nxt):
+def captain_lines(city,cap,num,nxt,medal):
     return ("CAPT. %s: So you're the rat breaking my soldiers. %s is a stone in Johto's new empire.\n\nPEACE THROUGH CONQUEST!"%(cap,city),
             "CAPT. %s: A KANTO brat beat the JRA?"%cap,
-            ("CAPT. %s: Take my JRA MEDAL %d. I earned it in the fields of Johto. Don't think this ends the Revolution.\n\n%s"%(cap,num,("%s's base will not fall so easily."%nxt) if nxt else "The GENERAL waits beyond the sea. You will not reach him.")),
+            ("CAPT. %s: Take my %s. I earned it in the fields of Johto. Don't think this ends the Revolution.\n\n%s"%(cap,medal,("%s's base will not fall so easily."%nxt) if nxt else "The GENERAL waits beyond the sea. You will not reach him.")),
             "CAPT. %s: Get out. Johto will remember this."%cap)

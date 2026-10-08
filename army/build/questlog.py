@@ -70,8 +70,8 @@ def jra_quests():
     cities=sorted(json.load(open('/home/claude/work/army/cities.json')),key=lambda c:c['num'])
     out=[]
     for c in cities:
-        door='This door is unlocked.' if c['num']==1 else 'You need JRA MEDAL %d to open the door.'%(c['num']-1)
-        out.append(dict(title='JRA: '+c['name'],done=[('f',c['flag'],True)],stages=[(None,JRA_WHERE[c['name']],'The JOHTO REVOLUTIONARY ARMY holds %s. Beat CAPT. %s for JRA MEDAL %d. %s'%(c['name'],c['captain'],c['num'],door))]))
+        door='This door is unlocked.' if c['num']==1 else 'You need the %s to open the door.'%cities[c['num']-2]['medal']
+        out.append(dict(title='JRA: '+c['name'],done=[('f',c['flag'],True)],stages=[(None,JRA_WHERE[c['name']],'The JOHTO REVOLUTIONARY ARMY holds %s. Beat CAPT. %s for the %s. %s'%(c['name'],c['captain'],c['medal'],door))]))
     return out
 JRA_QUESTS=jra_quests()
 SIDE=[
