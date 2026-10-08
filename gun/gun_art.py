@@ -135,3 +135,21 @@ if __name__=='__main__':
         for bx in range(BW):
             if m[by,bx]: ov[by*16:by*16+16,bx*16:bx*16+16]=ov[by*16:by*16+16,bx*16:bx*16+16]*0.6+np.array([0,255,0])*0.4
     Image.fromarray(ov.astype(np.uint8)).resize((BW*32,BH*32),Image.NEAREST).save(W+'heaven_mask.png')
+
+def sprite_bob(src,steps=(0,2,4,6,8)):
+    """Arceus for the bobbing animation: the art fits the top 56 rows of a 64x64 canvas at rest (bottom aligned, 8 spare rows above),
+    and each extra frame is the same art lifted by `steps` pixels. One 15 colour palette for all frames. Returns (frames, palette)."""
+    im=Image.open(src).convert('RGBA'); bb=im.getbbox(); im=im.crop(bb)
+    s=min(62/im.size[0],56/im.size[1]); nw,nh=max(1,round(im.size[0]*s)),max(1,round(im.size[1]*s))
+    im=im.resize((nw,nh),Image.LANCZOS)
+    out=Image.new('RGBA',(64,64),(0,0,0,0)); out.paste(im,((64-nw)//2,64-nh),im)
+    a=np.array(out); alpha=a[:,:,3]>=140
+    pal=_q15(a[:,:,:3][alpha],5)
+    idx=np.zeros((64,64),int); ys,xs=np.nonzero(alpha); idx[ys,xs]=_nearest(a[ys,xs,:3],pal)+1
+    frames=[]
+    for k in steps:
+        f=np.zeros((64,64),int)
+        if k: f[:64-k,:]=idx[k:,:]
+        else: f=idx.copy()
+        frames.append(f)
+    return frames,[tuple(int(round(v)) for v in c) for c in pal]

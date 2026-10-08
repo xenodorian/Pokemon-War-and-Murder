@@ -30,13 +30,20 @@ def add_gfx(r,sprites,tags):
     src=r32(r,gt+4*108)-0x08000000            # an existing 64x64 object (same OAM, anims and size)
     assert struct.unpack('<6H',b[src:src+12])[4:6]==(64,64)
     newinfo=[];ids=[]
-    for (idx,pal),tag in zip(sprites,tags):
+    for (frames,pal,seq),tag in zip(sprites,tags):
         assert tag not in used
         cols=[(255,0,255)]+pal+[(0,0,0)]*(15-len(pal))
         pa=r.alloc(gfx.rgb_to_pal(cols),4); ents+=struct.pack('<IHH',0x08000000+pa,tag,0)
-        tiles=r.alloc(gfx.pixels_to_tiles([[int(v) for v in row] for row in idx]),4)
-        imgt=r.alloc(b''.join(struct.pack('<IHH',0x08000000+tiles,2048,0) for _ in range(9)),4)
-        info=bytearray(b[src:src+36]); info[2:4]=struct.pack('<H',tag); info[4:6]=struct.pack('<H',0x11ff); info[0x1c:0x20]=struct.pack('<I',0x08000000+imgt)
+        tiles=[r.alloc(gfx.pixels_to_tiles([[int(v) for v in row] for row in f]),4) for f in frames]
+        info=bytearray(b[src:src+36]); info[2:4]=struct.pack('<H',tag); info[4:6]=struct.pack('<H',0x11ff)
+        if seq is None:
+            imgt=r.alloc(b''.join(struct.pack('<IHH',0x08000000+tiles[0],2048,0) for _ in range(9)),4)
+        else:
+            imgt=r.alloc(b''.join(struct.pack('<IHH',0x08000000+t_,2048,0) for t_ in tiles),4)
+            cyc=r.alloc(b''.join(struct.pack('<hBB',im_,du_,0) for im_,du_ in seq)+struct.pack('<hh',-2,0),4)
+            atab=r.alloc(struct.pack('<I',0x08000000+cyc)*24,4)
+            info[24:28]=struct.pack('<I',0x08000000+atab); info[12]|=0x40       # every facing plays the bob; inanimate objects keep animating
+        info[0x1c:0x20]=struct.pack('<I',0x08000000+imgt)
         newinfo.append(r.alloc(bytes(info),4))
     ents+=bytes(b[pt+8*n:pt+8*n+8])
     npt=r.alloc(bytes(ents),4)
@@ -77,7 +84,7 @@ def warp_script(S,g,n,x,y):
     S.raw(0x39,g,n,0xff); S._add(struct.pack('<HH',x,y)); S.raw(0x27)
 
 # ---------------------------------------------------------------- HEAVEN
-def heaven(r,arceus_gfx):
+def heaven(r,arceus_gfx,nat):
     b=r.b
     h=art.build_heaven(); h=art.reduce_tiles(h,960)
     ntile=len(h['tiles']); assert ntile<=1000
@@ -111,8 +118,9 @@ def heaven(r,arceus_gfx):
     attrs=b''.join(struct.pack('<I',0x20000000) for _ in metas)
     walk=art.walk_mask(h['img'])
     walk[:3,:]=False                                     # the sun
-    for y in range(3,6):
+    for y in range(4,6):
         for x in (7,8,9): walk[y,x]=True                 # the light below it
+    for x in (6,7,8,9,10): walk[3,x]=False              # Arceus' space: nobody walks under the sprite
     for y in range(art.BH-5,art.BH):                     # cloud floor along the bottom
         walk[y,:]=True
     # keep only the cloud area connected to the start
@@ -155,11 +163,15 @@ def heaven(r,arceus_gfx):
     S.lab('no'); S.msg(T_(r,"ARCEUS: The light will wait for you."),4); S.releaseall(); S.end()
     sc=0x08000000+put_script(r,S)
     ev=r.alloc(bytes([0,0,0,0])+struct.pack('<IIII',0,0,0,0),4)
+    # Arceus' float: installed after every warp in and every load
+    I=SB(); I.raw(0x23); I.ptr(nat['arc_install']); I.end(); isc=0x08000000+put_script(r,I)
+    wt=r.alloc(struct.pack('<HHI',0x4001,0,isc)+struct.pack('<H',0),4)
+    hms=r.alloc(bytes([4])+struct.pack('<I',0x08000000+wt)+bytes([5])+struct.pack('<I',isc)+b'\x00',4)
     # name
     NAME=0xad; r.w32(0x3f1cac+4*(NAME-0x58),0x08000000+r.alloc(leg1.enc('HEAVEN'),1))
     ch=header(r,*HELL)
-    (g,n),hh=new_map(r,ch,lay,ev,NAME)
-    add_obj(r,g,n,ARC[0],ARC[1],arceus_gfx,sc,movement=3,rng=0x10)
+    (g,n),hh=new_map(r,ch,lay,ev,NAME,scripts=hms)
+    add_obj(r,g,n,ARC[0],ARC[1],arceus_gfx,sc,movement=8,rng=0)
     return (g,n),start,len(seen)
 
 # ---------------------------------------------------------------- HELL
@@ -347,7 +359,7 @@ def hall_of_justice(r,nat):
     return (g,n),(6,HH-2)
 
 # ---------------------------------------------------------------- natives
-def build_native(r):
+def build_native(r,arc_gfx):
     b=r.b
     ids=[t for t in range(1,760) if b[T+40*t+1] in (44,45,48) and b[T+40*t+32]>0]
     assert len(ids)==94
@@ -359,7 +371,7 @@ def build_native(r):
     kc=[int(l.split()[0],16) for l in subprocess.run(['nm','/home/claude/work/police/kills.elf'],capture_output=True,text=True,check=True).stdout.split('\n') if l.endswith(' kill_check')][0]|1
     arr=lambda t: ','.join(str(ENC_[c]) for c in t)+',255'
     from g3 import ENC as ENC_
-    open(W+'/gun_data.h','w').write('#define NJ %d\nstatic const u16 J_IDS[]={%s};\n#define ROB_WRAP_LOAD 0x%08x\n#define ROB_WRAP_SCRIPTS 0x%08x\n#define KILL_CHECK 0x%08x\nstatic const u8 T_LIB[]={%s};\nstatic const u8 T_HIDDEN[]={%s};\n'%(len(ids),','.join(map(str,ids)),wl,ws,kc,arr('LIBERTY COUNT: '),arr('???')))
+    open(W+'/gun_data.h','w').write('#define NJ %d\nstatic const u16 J_IDS[]={%s};\n#define ROB_WRAP_LOAD 0x%08x\n#define ROB_WRAP_SCRIPTS 0x%08x\n#define KILL_CHECK 0x%08x\n#define ARC_GFX %d\nstatic const u8 T_LIB[]={%s};\nstatic const u8 T_HIDDEN[]={%s};\n'%(len(ids),','.join(map(str,ids)),wl,ws,kc,arc_gfx,arr('LIBERTY COUNT: '),arr('???')))
     r.cur=(r.cur+3)&~3; base=0x08000000+r.cur
     open(W+'/gun.ld','w').write('ENTRY(gw_load)\nSECTIONS { . = 0x%08x; .all : { *(.text*) *(.rodata*) *(.data*) } /DISCARD/ : { *(.ARM.exidx*) *(.comment) *(.note*) *(.ARM.attributes) } }\n'%base)
     subprocess.run(['clang','--target=thumbv4t-none-eabi','-mthumb','-Os','-ffreestanding','-fno-builtin','-fno-pic','-fno-stack-protector','-nostdlib','-fno-unwind-tables','-fno-asynchronous-unwind-tables','-c',W+'/gun.c','-o',W+'/gun.o'],check=True)
@@ -369,8 +381,8 @@ def build_native(r):
     out={}
     for ln in subprocess.run(['nm',W+'/gun.elf'],capture_output=True,text=True,check=True).stdout.split('\n'):
         f=ln.split()
-        if len(f)==3 and f[2] in ('gw_load','gw_scripts','jra_info','jra_pay','jra_shoot','kill_check2','deal_info','deal_accept','deal_refuse','deal_state','deal_gate','kc_show2','lib_text'): out[f[2]]=(int(f[0],16)&~1)|1
-    assert len(out)==13,out.keys()
+        if len(f)==3 and f[2] in ('gw_load','gw_scripts','jra_info','jra_pay','jra_shoot','kill_check2','deal_info','deal_accept','deal_refuse','deal_state','deal_gate','kc_show2','lib_text','arc_install'): out[f[2]]=(int(f[0],16)&~1)|1
+    assert len(out)==14,out.keys()
     r.w32(0x3af284,out['gw_load']); r.w32(0x3af294,out['gw_scripts'])
     # police scripts call kill_check: they now call the version that goes quiet after the deal
     pat=bytes([0x23])+struct.pack('<I',kc); sites=[]; i=0
@@ -561,12 +573,12 @@ def install(r):
     for k in ('karma_check','bless_do','police_info','police_shoot'): assert fns[k]&1
     assert bytes(r.b[(fns['karma_check']&~1)-0x08000000:(fns['karma_check']&~1)-0x08000000+2])!=b'\xff\xff'
     # art
-    ag=art.sprite64(W+'/src22.png'); gg=art.sprite64(W+'/src21.png')
-    arc,gir=add_gfx(r,[ag,gg],[0x1122,0x1123])
-    (hg,hn),start,nwalk=heaven(r,arc)
+    ai,ap=art.sprite64(W+'/src22.png'); gi,gp=art.sprite64(W+'/src21.png')
+    arc,gir=add_gfx(r,[([ai],ap,None),([gi],gp,None)],[0x1122,0x1123])
+    nat=build_native(r,arc)
+    (hg,hn),start,nwalk=heaven(r,arc,nat)
     HEAVEN_WARP=(hg,hn,start[0],start[1]); HELL_WARP=(HELL[0],HELL[1],11,23)
     hell(r,gir)
-    nat=build_native(r)
     fix_shot_sound(r); feather_black(r)
     police_offer(r,nat); story_offers(r,nat)
     (jg,jn),jstart=hall_of_justice(r,nat); assert (jg,jn)==(2,81),(jg,jn); print('hall of justice',(jg,jn),jstart)

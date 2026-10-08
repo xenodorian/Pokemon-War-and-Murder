@@ -3,5 +3,6 @@ static const u16 J_IDS[]={1,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22
 #define ROB_WRAP_LOAD 0x08a09901
 #define ROB_WRAP_SCRIPTS 0x08a0991d
 #define KILL_CHECK 0x08eba51d
+#define ARC_GFX 163
 static const u8 T_LIB[]={198,195,188,191,204,206,211,0,189,201,207,200,206,240,0,255};
 static const u8 T_HIDDEN[]={172,172,172,255};

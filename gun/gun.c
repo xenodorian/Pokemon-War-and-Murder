@@ -1,5 +1,5 @@
 // Natives for the JRA soldier options (bless / threaten / shoot). Linked at a fixed ROM address by tools/gun.py.
-typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32;
+typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32; typedef short s16;
 #include "../stage2/data.h"        // g_vars[], SPLAT_SCRIPT, GFX_SPLAT
 #include "../leg2/killcount.h"     // kc_var, KC_POL_KILLS, KC_MAX
 #include "../leg2/leg2_data.h"      // T_KILLS, T_BLESS, T_KARMA, SIGN0, SIGN1
@@ -153,4 +153,24 @@ void kc_show2(void){
 // the Hall of Justice speech: Liberty Count into gStringVar1; GSV7 = 1 when there is one to mention
 void lib_text(void){
     u32 lib=*kc_var(LIB_VAR); u8* o=put_num(STRVAR1,lib); *o=0xFF; GSV(7)=lib?1:0;
+}
+
+// ---- Arceus floats: his object sprite gets this callback, which lifts it up to half a tile and back, never below its rest position (his tile)
+#define GSPRITES 0x0202063C
+#define OBJEVENTS 0x02036E38
+#define SPRITE_ORIG_CB 0x080609D5
+static const u8 BOB[90]={0,0,0,0,0,0,0,0,1,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,6,6,6,6,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,7,7,7,7,7,6,6,6,6,5,5,5,5,4,4,4,4,3,3,3,3,2,2,2,2,1,1,1,1,1,0,0,0,0,0,0,0};
+void arc_cb(u8* s){
+    ((void(*)(u8*))SPRITE_ORIG_CB)(s);
+    s16* ph=(s16*)(s+0x3C); int i=*ph; if(i<0||i>=90) i=0;
+    *ph=(s16)(i+1>=90?0:i+1);
+    *(s16*)(s+0x26)=(s16)(-(int)BOB[i]);
+}
+void arc_install(void){
+    for(int i=0;i<16;i++){
+        u8* o=(u8*)(OBJEVENTS+0x24*i);
+        if(!(o[0]&1)||o[5]!=ARC_GFX) continue;
+        u8* sp=(u8*)(GSPRITES+0x44*o[4]);
+        *(u32*)(sp+0x1C)=((u32)(void*)arc_cb)|1;
+    }
 }
