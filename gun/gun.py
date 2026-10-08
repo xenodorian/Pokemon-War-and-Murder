@@ -175,6 +175,31 @@ def hell(r,giratina_gfx):
     sc=0x08000000+put_script(r,S)
     add_obj(r,*HELL,GIRATINA_AT[0],GIRATINA_AT[1],giratina_gfx,sc)
 
+
+# ---------------------------------------------------------------- two fixes to earlier work
+def fix_shot_sound(r):
+    """the gunshot track ended with note + FINE, and FINE releases every sounding note at once (release time 0), so the shot was silent.
+    The track now waits out the note (W96) before FINE."""
+    b=r.b; new=r32(r,0x1dd11c)-0x08000000
+    sp=r32(r,new+8*347)-0x08000000
+    old=r32(r,sp+8)-0x08000000
+    cur=bytes(b[old:old+12])
+    if cur.endswith(bytes([0xff,60,0x7f,0xb0,0xb1])): return
+    assert cur==bytes([0xbc,0x00,0xbb,0x3c,0xbd,0x00,0xbe,0x7f,0xff,60,0x7f,0xb1]),cur.hex()
+    trk=r.alloc(bytes([0xbc,0x00,0xbb,0x3c,0xbd,0x00,0xbe,0x7f,0xff,60,0x7f,0xb0,0xb1]),4)
+    r.w32(sp+8,0x08000000+trk)
+def feather_black(r):
+    """the black feather (object graphic 155) was drawn with the dark red / grey-blue entries of the shared slot-10 palette (indices 4, 5).
+    It now uses the black / charcoal / grey entries (2, 10, 15), so it reads as a black feather. Done once; idempotent."""
+    b=r.b; gt=r32(r,0x5f2f4)-0x08000000
+    info=r32(r,gt+4*155)-0x08000000; im=r32(r,info+28)-0x08000000; tp=r32(r,im)-0x08000000
+    px=gfx.tiles_to_pixels(bytes(b[tp:tp+128]),2,2); used={v for row in px for v in row}
+    if used<={0,2,10,15}: return
+    assert used<={0,2,4,5},used
+    mp={0:0,2:2,4:10,5:15}
+    out=[[mp[v] for v in row] for row in px]
+    b[tp:tp+128]=gfx.pixels_to_tiles(out,2,2)
+
 # ---------------------------------------------------------------- natives
 def build_native(r):
     b=r.b
@@ -369,6 +394,7 @@ def install(r):
     HEAVEN_WARP=(hg,hn,start[0],start[1]); HELL_WARP=(HELL[0],HELL[1],11,23)
     hell(r,gir)
     nat=build_native(r)
+    fix_shot_sound(r); feather_black(r)
     menus=add_menus(r,[(0,0,0,0),(0,0,1,0),(1,1,0,0),(1,1,1,0)])
     sc=trainer_script(r,fns,nat,menus)
     assert r32(r,0x1a4ed9)>=0x08000000
