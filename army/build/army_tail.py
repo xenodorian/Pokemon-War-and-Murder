@@ -210,6 +210,7 @@ def flag_lock_script(r,flag,text):
     S.applymovement(0xff,0x08000000+r.alloc(bytes([0x10,0xfe]),1)); S.waitmovement(0xff); S.releaseall(); S.end()
     S.lab('open'); S.releaseall(); S.end()
     return 0x08000000+put_script(r,S)
+HALL_OF_JUSTICE=(81,5,6)     # map number in group 2 (built by gun.py right after Heaven), arrival tile
 def general_script(r,tid,flag_cleared):
     L=army_text.GENERAL_LINES
     S=SB(); S.raw(0x5c,1); S._add(struct.pack('<HH',tid,0)); S.ptr(TXB(r,L['intro'])); S.ptr(TXB(r,L['defeat'])); S.ref('cont')
@@ -218,10 +219,9 @@ def general_script(r,tid,flag_cleared):
     S.raw(0x2b); S._add(struct.pack('<H',flag_cleared)); S.goto_if(1,'again')
     S.setflag(flag_cleared)
     for c_ in CITIES: S.setflag(FLAG_CLEARED0+c_['idx'])             # the army collapses: every patrol and base soldier leaves
-    S.raw(0x44); S._add(struct.pack('<HH',68,5))                     # 5 RARE CANDY
     S.msg(TXT(r,L['won'][0])); S.msg(TXT(r,L['won'][1]))
-    S.msg(TXT(r,"You received 5 RARE CANDY!"),4)
-    S.msg(TXT(r,L['final']),6); S.end()
+    S.msg(TXT(r,L['final']),4)
+    S.raw(0x97,1); S.raw(0x39,2,HALL_OF_JUSTICE[0],0xff); S._add(struct.pack('<HH',HALL_OF_JUSTICE[1],HALL_OF_JUSTICE[2])); S.raw(0x27); S.end()   # the Hall of Justice (built by gun.py)
     S.lab('again'); S.msg(TXT(r,L['after']),6); S.end()
     return 0x08000000+put_script(r,S)
 def install_camp(r,fns,gf,g_general,house,flag_champ):

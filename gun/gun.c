@@ -2,7 +2,8 @@
 typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32;
 #include "../stage2/data.h"        // g_vars[], SPLAT_SCRIPT, GFX_SPLAT
 #include "../leg2/killcount.h"     // kc_var, KC_POL_KILLS, KC_MAX
-#include "gun_data.h"              // J_IDS[], NJ, ROB_WRAP_LOAD, ROB_WRAP_SCRIPTS
+#include "../leg2/leg2_data.h"      // T_KILLS, T_BLESS, T_KARMA, SIGN0, SIGN1
+#include "gun_data.h"              // J_IDS[], NJ, ROB_WRAP_LOAD, ROB_WRAP_SCRIPTS, KILL_CHECK, T_LIB, T_HIDDEN
 #define SB1 (*(u8* volatile*)0x03005008)
 #define GSV(n) (*(volatile u16*)(0x020370b8+2*(n)))
 #define LASTTALKED (*(volatile u16*)0x020370d2)
@@ -17,6 +18,12 @@ typedef void (*fn_create)(void*,u16,u8,u8,u8,u32,u8,u32);
 #define SetDexFlag     ((u32(*)(u16,u8))(0x08088e74|1))
 #define AddMoney       ((void(*)(u32*,u32))(0x0809fda0|1))
 #define TRAINERS 0x08798790
+#define LIB_VAR 0x40AA              /* Liberty Count: JRA troopers shot (never touches Karma) */
+#define DEAL_VAR 0x40AB             /* bit0: the police made their offer, bit1: the player took the deal */
+#define BLESS_VAR 0x40F4
+#define POL0 55
+#define NPOL 24
+#define POL_HIDE 0x4AD
 #define JB 417                      /* first spare rank in the shoot record (ranks 0..416 belong to the original trainers) */
 
 static u16* varp(u32 bit){ return (u16*)(SB1+0x1000+((g_vars[bit>>4]-0x4000)<<1)); }
@@ -48,8 +55,34 @@ static void japply(void){
         if(bit_get(512+JB+j)) kill_tmpl(t);
     }
 }
-void gw_load(void){ ((void(*)(void))ROB_WRAP_LOAD)(); japply(); }
-void gw_scripts(void){ ((void(*)(void))ROB_WRAP_SCRIPTS)(); japply(); }
+static int deal_on(void){ return (*kc_var(DEAL_VAR)&2)!=0; }
+// with the deal made, the generated officers never show up
+static void police_off(void){
+    if(!deal_on()) return;
+    u8 n=EVENTS[0]; u8* t=SB1+0x8E0;
+    for(int i=0;i<n&&i<64;i++,t+=0x18){
+        if(t[1]==GFX_SPLAT) continue;
+        int id=tmpl_trainer(t); if(id<POL0||id>=POL0+NPOL) continue;
+        SB1[0xEE0+(POL_HIDE>>3)]|=(u8)(1<<(POL_HIDE&7)); *(u16*)(t+0x14)=POL_HIDE;
+    }
+}
+void gw_load(void){ ((void(*)(void))ROB_WRAP_LOAD)(); japply(); police_off(); }
+void gw_scripts(void){ ((void(*)(void))ROB_WRAP_SCRIPTS)(); japply(); police_off(); }
+// the police's kill check, as before, but silent once the deal is made
+void kill_check2(void){ ((void(*)(void))KILL_CHECK)(); if(deal_on()) GSV(7)=0; }
+// GSV7: 1 = the officer in front of the player should make the offer now. GSV6: 1 = a generated officer (they vanish after the deal)
+void deal_info(void){
+    u32 id=GSV(4)?GSV(4):OPP; GSV(7)=0; GSV(6)=0; GSV(4)=0;
+    if(id<50||id>=POL0+NPOL) return;
+    if(id>=POL0) GSV(6)=1;
+    if(*kc_var(DEAL_VAR)&3) return;
+    if(*kc_var(LIB_VAR)>10 && kc_total()>0) GSV(7)=1;
+}
+void deal_accept(void){ *kc_var(DEAL_VAR)|=3; }
+void deal_refuse(void){ *kc_var(DEAL_VAR)|=1; }
+void deal_state(void){ GSV(7)=deal_on()?1:0; }
+// after rob_info: once the deal is made, only the military can be shot
+void deal_gate(void){ if(deal_on()) GSV(5)=0; }
 
 // GSV3: 0 not a JRA trooper, 1 soldier, 2 Captain, 3 General
 void jra_info(void){
@@ -76,7 +109,7 @@ void jra_shoot(void){
     u32 id=OPP; int j=jidx(id); if(j<0) return;
     bit_set(512+JB+j);
     u8* t=tmpl_for((u8)LASTTALKED); if(t) kill_tmpl(t);
-    u16* p=kc_var(KC_POL_KILLS); if(*p<KC_MAX) (*p)++;
+    u16* p=kc_var(LIB_VAR); if(*p<KC_MAX) (*p)++;
     u8* tr=(u8*)(TRAINERS+40*id);
     u8 pf=tr[0], n=tr[32]; u8* party=*(u8**)(tr+36);
     u32 sz=(pf&1)?16:8;
@@ -96,4 +129,23 @@ void jra_shoot(void){
         u8 res=GiveMonToPlayer(mon);
         if(res<=1){ u16 dn=SpeciesToNat(sp); SetDexFlag(dn,2); SetDexFlag(dn,3); }
     }
+}
+
+// the KILLS screen: Kill Count (hidden once the deal is made), Liberty Count, Bless Count, Karma. Text is built at gStringVar1.
+static u8* put_str(u8* o,const u8* s){ while(*s!=0xFF) *o++=*s++; return o; }
+static u8* put_num(u8* o,u32 v){
+    static const u32 pw[5]={10000,1000,100,10,1};
+    int started=0;
+    for(int i=0;i<5;i++){ u32 d=0; while(v>=pw[i]){v-=pw[i];d++;} if(d||started||i==4){ *o++=(u8)(0xA1+d); started=1; } }
+    return o;
+}
+void kc_show2(void){
+    u32 n=kc_total(); u32 b=*kc_var(BLESS_VAR); int k=(int)b-(int)n; u32 lib=*kc_var(LIB_VAR);
+    u8* o=STRVAR1;
+    o=put_str(o,T_KILLS); if(deal_on()) o=put_str(o,T_HIDDEN); else o=put_num(o,n); *o++=0xFE;
+    o=put_str(o,T_LIB); o=put_num(o,lib); *o++=0xFB;
+    o=put_str(o,T_BLESS); o=put_num(o,b); *o++=0xFE;
+    o=put_str(o,T_KARMA);
+    if(k<0){ *o++=SIGN0; if(SIGN1) *o++=SIGN1; k=-k; }
+    o=put_num(o,(u32)k); *o++=0x00; *o=0xFF;
 }

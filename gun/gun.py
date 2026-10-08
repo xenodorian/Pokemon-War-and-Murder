@@ -200,6 +200,88 @@ def feather_black(r):
     out=[[mp[v] for v in row] for row in px]
     b[tp:tp+128]=gfx.pixels_to_tiles(out,2,2)
 
+
+# ---------------------------------------------------------------- the police offer: runs in front of every trainer battle
+BATTLE_START=0x1a4fc7        # special 34; waitmessage; waitbuttonpress   (then special 187 at 0x1a4fcc)
+def police_offer(r,nat):
+    b=r.b; assert bytes(b[BATTLE_START:BATTLE_START+5])==bytes([0x25,0x34,0x00,0x66,0x6d]),bytes(b[BATTLE_START:BATTLE_START+5]).hex()
+    assert bytes(b[BATTLE_START+5:BATTLE_START+8])==bytes([0x25,0x87,0x01])
+    T=lambda s: T_(r,s)
+    S=SB()
+    S.setvar(0x8004,0); S.raw(0x23); S.ptr(nat['deal_info']); S.compare(0x8007,1); S.goto_if(1,'offer')
+    S.lab('go'); S.raw(0x25,0x34,0x00,0x66,0x6d); S.raw(0x05); S.ptr(0x08000000+BATTLE_START+5)
+    S.lab('offer')
+    S.msg(T("OFFICER: Hold it. I know your record. Plenty of civilians, and plenty of JRA soldiers."),4)
+    S.raw(0x0f,0); S.ptr(T("Keep killing soldiers, stop killing civilians, and we look the other way on the murders. Deal?")); S.raw(0x09,5)
+    S.compare(0x800d,0); S.goto_if(1,'refuse')
+    S.raw(0x23); S.ptr(nat['deal_accept'])
+    S.msg(T("OFFICER: Smart. Soldiers only from now on. This never happened."),4)
+    S.compare(0x8006,0); S.goto_if(1,'stay')
+    S.raw(0x29); S._add(struct.pack('<H',0x4AD)); S.raw(0x53); S._add(struct.pack('<H',0x800f))
+    S.lab('stay'); S.raw(0x6b); S.end()
+    S.lab('refuse')
+    S.raw(0x23); S.ptr(nat['deal_refuse'])
+    S.msg(T("OFFICER: You're making a mistake."),4)
+    S.goto('go')
+    sc=put_script(r,S)
+    b[BATTLE_START:BATTLE_START+5]=bytes([0x05])+struct.pack('<I',0x08000000+sc)
+
+
+def story_offers(r,nat):
+    """the five story officers: after their kill check says 'fight', the offer is made first"""
+    b=r.b; T=lambda s: T_(r,s)
+    for site in nat['_story_sites']:
+        k=bytes(b).rfind(bytes([0x6a,0x5a,0x60]),site-300,site); assert k>=0
+        oid=b[k+3]|(b[k+4]<<8); assert 50<=oid<55,oid
+        S=SB()
+        S.raw(0x23); S.ptr(nat['kill_check2'])
+        S.compare(0x8007,1); S.goto_if(5,'back')
+        S.setvar(0x8004,oid); S.raw(0x23); S.ptr(nat['deal_info']); S.compare(0x8007,1); S.goto_if(5,'fight')
+        S.msg(T("OFFICER: Hold it. I know your record. Plenty of civilians, and plenty of JRA soldiers."),4)
+        S.raw(0x0f,0); S.ptr(T("Keep killing soldiers, stop killing civilians, and we look the other way on the murders. Deal?")); S.raw(0x09,5)
+        S.compare(0x800d,0); S.goto_if(1,'refuse')
+        S.raw(0x23); S.ptr(nat['deal_accept'])
+        S.msg(T("OFFICER: Smart. Soldiers only from now on. This never happened."),4)
+        S.release(); S.end()
+        S.lab('refuse'); S.raw(0x23); S.ptr(nat['deal_refuse']); S.msg(T("OFFICER: You're making a mistake."),4)
+        S.lab('fight'); S.setvar(0x8007,1)
+        S.lab('back'); S.raw(0x05); S.ptr(0x08000000+site+5)
+        sc=put_script(r,S)
+        b[site:site+5]=bytes([0x05])+struct.pack('<I',0x08000000+sc)
+
+# ---------------------------------------------------------------- HALL OF JUSTICE (a copy of the Hall of Fame room, reached after General Gore falls)
+def hall_of_justice(r):
+    b=r.b; hof=header(r,1,80); lay=r32(r,hof)-0x08000000
+    w,h=r32(r,lay),r32(r,lay+4)
+    T=lambda s: T_(r,s)
+    S=SB(); S.lockall(); S.raw(0xc7,2)
+    S.raw(0x4f); S._add(struct.pack('<H',0xff)); S.ptr(0x08162dcd); S.raw(0x51); S._add(struct.pack('<H',0))
+    S.raw(0x4f); S._add(struct.pack('<H',0xff)); S.ptr(0x081a75e7); S.raw(0x4f); S._add(struct.pack('<H',1)); S.ptr(0x081a75eb); S.raw(0x51); S._add(struct.pack('<H',0))
+    S.raw(0x28); S._add(struct.pack('<H',0x12))
+    S.msg(T("COMMISSIONER: So it is true. GENERAL GORE has fallen, and the JRA is finished. KANTO owes you a debt it cannot pay."),4)
+    S.msg(T("COMMISSIONER: This is the HALL OF JUSTICE. Those who end a war are recorded here, along with the POK\u00e9MON that fought it."),4)
+    S.msg(T("COMMISSIONER: Whatever else you have done, today you stood for KANTO. Let us record your team."),4)
+    S.raw(0x68)                               # closemessage
+    S.raw(0x98,1,0x18)                        # fadescreenspeed 1, 0x18
+    S.raw(0x25,0x10,0x01); S.raw(0x27); S.raw(0x6b); S.end()   # special 0x110 (the Hall of Fame screen), waitstate
+    sc=0x08000000+put_script(r,S)
+    ft=r.alloc(struct.pack('<HHI',0x4001,0,sc)+struct.pack('<H',0),4)
+    # warp-into-map script of the Hall of Fame (turns the player to face the room)
+    ms_old=r32(r,hof+8)-0x08000000; wi=None; k=ms_old
+    while b[k]!=0:
+        if b[k]==4: wi=r32(r,k+1)
+        k+=5
+    assert wi
+    ms=r.alloc(bytes([2])+struct.pack('<I',0x08000000+ft)+bytes([4])+struct.pack('<I',wi)+b'\x00',4)
+    # one officer where Oak stands in the Hall of Fame
+    po=r32(r,r32(r,hof+4)-0x08000000+4)-0x08000000; ox,oy=struct.unpack('<hh',b[po+4:po+8])
+    t=bytearray(b[po:po+24]); t[1]=60; t[9]=0; t[10]=0; t[16:20]=struct.pack('<I',0x08000000+put_script(r,(lambda q:(q.lab('x'),q.msg(T("COMMISSIONER: Take your time. History is watching."),2),q.end(),q)[-1])(SB())))
+    objs=r.alloc(bytes(t),4)
+    ev=r.alloc(bytes([1,0,0,0])+struct.pack('<IIII',0x08000000+objs,0,0,0),4)
+    NAME=0x63; r.w32(0x3f1cac+4*(NAME-0x58),0x08000000+r.alloc(leg1.enc('HALL OF JUSTICE'),1))
+    (g,n),hh=new_map(r,hof,lay,ev,NAME,scripts=ms)
+    return (g,n),(w//2,h//2)
+
 # ---------------------------------------------------------------- natives
 def build_native(r):
     b=r.b
@@ -207,7 +289,13 @@ def build_native(r):
     assert len(ids)==94
     wl=r32(r,0x3af284); ws=r32(r,0x3af294)
     for v in (wl,ws): assert 0x08000000<=v<0x0a000000
-    open(W+'/gun_data.h','w').write('#define NJ %d\nstatic const u16 J_IDS[]={%s};\n#define ROB_WRAP_LOAD 0x%08x\n#define ROB_WRAP_SCRIPTS 0x%08x\n'%(len(ids),','.join(map(str,ids)),wl,ws))
+    import re
+    kb=int(re.search(r'0x([0-9a-f]+)',open('/home/claude/work/police/kills.ld').read()).group(1),16)
+    kb_bin=open('/home/claude/work/police/kills.bin','rb').read(); assert bytes(b[kb-0x08000000:kb-0x08000000+len(kb_bin)])==kb_bin,'police kill_check differs from kills.bin'
+    kc=[int(l.split()[0],16) for l in subprocess.run(['nm','/home/claude/work/police/kills.elf'],capture_output=True,text=True,check=True).stdout.split('\n') if l.endswith(' kill_check')][0]|1
+    arr=lambda t: ','.join(str(ENC_[c]) for c in t)+',255'
+    from g3 import ENC as ENC_
+    open(W+'/gun_data.h','w').write('#define NJ %d\nstatic const u16 J_IDS[]={%s};\n#define ROB_WRAP_LOAD 0x%08x\n#define ROB_WRAP_SCRIPTS 0x%08x\n#define KILL_CHECK 0x%08x\nstatic const u8 T_LIB[]={%s};\nstatic const u8 T_HIDDEN[]={%s};\n'%(len(ids),','.join(map(str,ids)),wl,ws,kc,arr('LIBERTY COUNT: '),arr('???')))
     r.cur=(r.cur+3)&~3; base=0x08000000+r.cur
     open(W+'/gun.ld','w').write('ENTRY(gw_load)\nSECTIONS { . = 0x%08x; .all : { *(.text*) *(.rodata*) *(.data*) } /DISCARD/ : { *(.ARM.exidx*) *(.comment) *(.note*) *(.ARM.attributes) } }\n'%base)
     subprocess.run(['clang','--target=thumbv4t-none-eabi','-mthumb','-Os','-ffreestanding','-fno-builtin','-fno-pic','-fno-stack-protector','-nostdlib','-fno-unwind-tables','-fno-asynchronous-unwind-tables','-c',W+'/gun.c','-o',W+'/gun.o'],check=True)
@@ -217,9 +305,25 @@ def build_native(r):
     out={}
     for ln in subprocess.run(['nm',W+'/gun.elf'],capture_output=True,text=True,check=True).stdout.split('\n'):
         f=ln.split()
-        if len(f)==3 and f[2] in ('gw_load','gw_scripts','jra_info','jra_pay','jra_shoot'): out[f[2]]=(int(f[0],16)&~1)|1
-    assert len(out)==5
+        if len(f)==3 and f[2] in ('gw_load','gw_scripts','jra_info','jra_pay','jra_shoot','kill_check2','deal_info','deal_accept','deal_refuse','deal_state','deal_gate','kc_show2'): out[f[2]]=(int(f[0],16)&~1)|1
+    assert len(out)==12,out.keys()
     r.w32(0x3af284,out['gw_load']); r.w32(0x3af294,out['gw_scripts'])
+    # police scripts call kill_check: they now call the version that goes quiet after the deal
+    pat=bytes([0x23])+struct.pack('<I',kc); sites=[]; i=0
+    while True:
+        i=bytes(b).find(pat,i)
+        if i<0: break
+        sites.append(i); i+=5
+    assert len(sites)==5,len(sites)
+    for i in sites: r.w32(i+1,out['kill_check2'])
+    out['_story_sites']=sites
+    # the KILLS screen script calls kc_show: swap in the version with the Liberty Count
+    fns=json.load(open('/home/claude/work/leg2/fns.json')); pat=bytes([0x23])+struct.pack('<I',fns['kc_show']); i=0; ks=0
+    while True:
+        i=bytes(b).find(pat,i)
+        if i<0: break
+        r.w32(i+1,out['kc_show2']); ks+=1; i+=5
+    assert ks>=1,ks
     # the JRA classes pay nothing for winning a battle
     m=0x24f220; k=0
     while b[m+4*k]!=0xff:
@@ -255,6 +359,7 @@ def trainer_script(r,fns,nat,menus):
     t_notag=T("You have no BLESS TAG.")
     t_noshoot=T("You need a GLOCK and a 9MM ROUND to shoot.")
     t_done=T("They have nothing left for you.")
+    t_promise=T("You gave the police your word:\nsoldiers only.")
     t_cant=T("You can't shoot this one.")
     t_dont=T("Don't shoot! Here, take\neverything I have!")
     t_took=0x08000000+r.alloc(leg1.enc('You took $')[:-1]+b'\xfd\x02'+leg1.enc('!'),1)
@@ -278,7 +383,7 @@ def trainer_script(r,fns,nat,menus):
     S.raw(0x47); S._add(pk(BLESS_ITEM)+pk(1)); S.compare(0x800d,0); S.goto_if(5,'nmenu')
     S.raw(0x47); S._add(pk(ITEM_GLOCK)+pk(1)); S.compare(0x800d,0); S.goto_if(1,'normal')
     S.lab('nmenu')
-    S.raw(0x23); S.ptr(SYM['rob_info'])
+    S.raw(0x23); S.ptr(SYM['rob_info']); S.raw(0x23); S.ptr(nat['deal_gate'])
     S.compare(0x8004,0); S.goto_if(1,'nm_a')
     S.compare(0x8005,0); S.goto_if(1,'nm_b')
     S.raw(0x6f,0,0,menus[2],0); S.goto('nres')
@@ -321,7 +426,10 @@ def trainer_script(r,fns,nat,menus):
     S.compare(0x8007,0); S.goto_if(1,'noprt'); S.raw(0x53); S._add(pk(0x8007)); S.raw(0x55); S._add(pk(0x8007))
     S.lab('noprt'); S.msg(t_mons)
     S.lab('done'); S.release(); S.end()
-    S.lab('n_cant'); S.msg(t_cant,4); S.goto('nmenu')
+    S.lab('n_cant')
+    S.raw(0x23); S.ptr(nat['deal_state']); S.compare(0x8007,1); S.goto_if(1,'n_promise')
+    S.msg(t_cant,4); S.goto('nmenu')
+    S.lab('n_promise'); S.msg(t_promise,4); S.goto('nmenu')
     S.lab('n_noammo'); S.msg(t_noshoot,4); S.goto('nmenu')
     # ---- JRA troopers
     S.lab('jra')
@@ -367,6 +475,7 @@ def trainer_script(r,fns,nat,menus):
     # ---- officers (generated police) and everything else, as before
     S.lab('pol')
     S.raw(0x23); S.ptr(fns['police_info']); S.compare(0x8007,0); S.goto_if(1,'normal')
+    S.raw(0x23); S.ptr(nat['deal_state']); S.compare(0x8007,1); S.goto_if(1,'normal')
     S.raw(0x47); S._add(pk(ITEM_GLOCK)+pk(1)); S.compare(0x800d,0); S.goto_if(1,'normal')
     S.raw(0x47); S._add(pk(ITEM_9MM)+pk(1)); S.compare(0x800d,0); S.goto_if(1,'normal')
     S.msg(t_askpol,5); S.compare(0x800d,0); S.goto_if(1,'normal')
@@ -395,6 +504,8 @@ def install(r):
     hell(r,gir)
     nat=build_native(r)
     fix_shot_sound(r); feather_black(r)
+    police_offer(r,nat); story_offers(r,nat)
+    (jg,jn),jstart=hall_of_justice(r); assert (jg,jn)==(2,81),(jg,jn); print('hall of justice',(jg,jn),jstart)
     menus=add_menus(r,[(0,0,0,0),(0,0,1,0),(1,1,0,0),(1,1,1,0)])
     sc=trainer_script(r,fns,nat,menus)
     assert r32(r,0x1a4ed9)>=0x08000000

@@ -15,7 +15,7 @@ W='/home/claude/work/army'
 T=0x798790; GROUPS=0x3526A8
 # trainer ids that no script or special uses: Hoenn leftovers (1-29 without 3, which is the hack's AIDE), the unused channelers, and gym trainers the hack removed.
 # 492-515 (Trainer Tower, player pictures) and 326-331 (rival) are in use and stay out.
-ID_POOL=[1,2]+list(range(4,30))+list(range(50,55))+list(range(79,89))+list(range(454,462))+[101,113,124,147,161,174,175,176,200,210,211,212,217,257,263,275,284,299,311,312,370,372,395,397,398,399,405,407,408,409,424,425,428,430,433,434,437,439,440,530,533,593,594]
+ID_POOL=[1,2]+list(range(4,30))+[326,327,328,329,330]+list(range(79,89))+list(range(454,462))+[101,113,124,147,161,174,175,176,200,210,211,212,217,257,263,275,284,299,311,312,370,372,395,397,398,399,405,407,408,409,424,425,428,430,433,434,437,439,440,530,533,593,594]
 FLAG_CLEARED0=0x4C0          # + city index: the base was cleared (soldiers leave). 0x4B0-0x4BC are the vanilla FLAG_DEFEATED_<leader> flags, so they are not used
 VICTIM_VARS=[0x40F9,0x40FA,0x40FB,0x40FC,0x40FD,0x40FE,0x40FF,0x40E0,0x40E1,0x40E2]     # by city index: bit k set = the NPC with local id k was shot by a patrol (unnamed vanilla vars)
 MAX_VICTIMS=3
@@ -478,6 +478,7 @@ def flag_lock_script(r,flag,text):
     S.applymovement(0xff,0x08000000+r.alloc(bytes([0x10,0xfe]),1)); S.waitmovement(0xff); S.releaseall(); S.end()
     S.lab('open'); S.releaseall(); S.end()
     return 0x08000000+put_script(r,S)
+HALL_OF_JUSTICE=(81,5,6)     # map number in group 2 (built by gun.py right after Heaven), arrival tile
 def general_script(r,tid,flag_cleared):
     L=army_text.GENERAL_LINES
     S=SB(); S.raw(0x5c,1); S._add(struct.pack('<HH',tid,0)); S.ptr(TXB(r,L['intro'])); S.ptr(TXB(r,L['defeat'])); S.ref('cont')
@@ -486,10 +487,9 @@ def general_script(r,tid,flag_cleared):
     S.raw(0x2b); S._add(struct.pack('<H',flag_cleared)); S.goto_if(1,'again')
     S.setflag(flag_cleared)
     for c_ in CITIES: S.setflag(FLAG_CLEARED0+c_['idx'])             # the army collapses: every patrol and base soldier leaves
-    S.raw(0x44); S._add(struct.pack('<HH',68,5))                     # 5 RARE CANDY
     S.msg(TXT(r,L['won'][0])); S.msg(TXT(r,L['won'][1]))
-    S.msg(TXT(r,"You received 5 RARE CANDY!"),4)
-    S.msg(TXT(r,L['final']),6); S.end()
+    S.msg(TXT(r,L['final']),4)
+    S.raw(0x97,1); S.raw(0x39,2,HALL_OF_JUSTICE[0],0xff); S._add(struct.pack('<HH',HALL_OF_JUSTICE[1],HALL_OF_JUSTICE[2])); S.raw(0x27); S.end()   # the Hall of Justice (built by gun.py)
     S.lab('again'); S.msg(TXT(r,L['after']),6); S.end()
     return 0x08000000+put_script(r,S)
 def install_camp(r,fns,gf,g_general,house,flag_champ):

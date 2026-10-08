@@ -72,7 +72,7 @@ GENERAL_LINES=dict(
  intro="GENERAL %s: So the rat who broke my ten bases stands before me at last. I am the sword of Johto, and these are the legends that built it.\n\nPEACE THROUGH CONQUEST!"%GENERAL,
  defeat="GENERAL %s: Impossible... the legends of Johto fell to a KANTO child?"%GENERAL,
  won=["GENERAL %s: Then the Revolution is over. My legends would not have followed a loser anyway."%GENERAL,
-      "GENERAL %s: Take these. Johto's great dream dies with me today. Tell KANTO it was never about peace."%GENERAL],
+      "GENERAL %s: It is over. Johto's great dream dies with me today. Tell KANTO it was never about peace."%GENERAL],
  final="The JRA is collapsing! Soldiers across KANTO are laying down their arms and going home.",
  after="GENERAL %s: Go. I have no army left to command."%GENERAL)
 LOCK_LEAGUE="The door is locked. A plate beside it reads:\n\nSEALED UNTIL THE POKéMON LEAGUE FALLS."
