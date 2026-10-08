@@ -15,7 +15,7 @@ def tileset(d,p):
     return dict(comp=comp,sec=sec,tiles=tiles,pals=pals,mt=mt,at=at,p=p)
 def rgb555(v): return (((v&31)*255//31),(((v>>5)&31)*255//31),(((v>>10)&31)*255//31))
 if __name__=='__main__':
-    d,lay=load(sys.argv[1])
+    d,lay=load(sys.argv[1],int(sys.argv[3]) if len(sys.argv)>3 else 3,int(sys.argv[4]) if len(sys.argv)>4 else 0)
     r32=lambda o:struct.unpack('<I',d[o:o+4])[0]
     w,h=r32(lay),r32(lay+4); border=r32(lay+8)-0x08000000; mp=r32(lay+12)-0x08000000
     pp=r32(lay+16)-0x08000000; sp=r32(lay+20)-0x08000000
