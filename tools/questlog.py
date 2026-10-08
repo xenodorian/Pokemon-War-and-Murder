@@ -7,6 +7,8 @@ import qconsts
 FLAGS,VARS,ITEMS=qconsts.consts()
 RESULT=0x800D; TRACK_VAR=0x40A0
 VAR_LEAGUE=0x40F3
+import json
+FN=json.load(open('/home/claude/work/leg2/fns.json'))
 def F(n): return FLAGS[n]
 def I(n): return ITEMS[n]
 def f(n,want=True): return ('f',F(n),want)
@@ -77,6 +79,7 @@ SIDE=[
  dict(title='SAFARI ZONE',done=[f('FLAG_WORLD_MAP_SAFARI_ZONE_CENTER')],stages=[(None,'The SAFARI ZONE in FUCHSIA CITY.','Pay the entrance fee and look for the SECRET HOUSE.')]),
  dict(title='MANSION',done=[f('FLAG_WORLD_MAP_POKEMON_MANSION_1F')],stages=[(None,'The POKéMON MANSION on CINNABAR ISLAND.','Search the burnt mansion. A SECRET KEY lies on B1F.')]),
  dict(title='CERULEAN CAVE',done=[f('FLAG_WORLD_MAP_CERULEAN_CAVE_1F')],stages=[(None,'CERULEAN CAVE, across the water by CERULEAN CITY.','Enter the cave. It holds the strongest POKéMON in KANTO.')]),
+ dict(title='CONFESSION',done=[('f',0x4AC,True)],stages=[(None,'The CHURCH in PALLET TOWN, south of the lab.','Talk to the PRIEST. He forgives your kills for a donation: 1,000 per kill, 9,999 at most. Your KILL COUNT drops to zero.')])
 ]
 ALL=MAIN+[REAPER]+SIDE
 for i,q in enumerate(ALL): q['id']=i+1
@@ -141,7 +144,7 @@ def text(s):
         else: o.append(ENC[c])
     o.append(0xFF); return bytes(o)
 def page_titles(page): return [q['title'] for q in page]
-MENU_ENTRIES=['CURRENT QUEST','STORY QUEST','THE REAPER','SIDE QUESTS','CLOSE']
+MENU_ENTRIES=['KILL COUNT','CURRENT QUEST','STORY QUEST','THE REAPER','SIDE QUESTS','CLOSE']
 def build(r):
     b=r.b; A=Asm(); S={}
     def st(k,t):
@@ -207,7 +210,8 @@ def build(r):
         A.msg(st(('done',i),'QUEST: %s\nThis quest is complete.'%q['title'])); A.closemsg(); A.goto(back)
     A.lab('entry'); A.lockall()
     A.lab('menu'); A.multichoice(ids['menu'])
-    A.if_res(0,'m_cur'); A.if_res(1,'m_story'); A.if_res(2,'m_reaper'); A.if_res(3,'page0'); A.goto('m_exit')
+    A.if_res(0,'m_kill'); A.if_res(1,'m_cur'); A.if_res(2,'m_story'); A.if_res(3,'m_reaper'); A.if_res(4,'page0'); A.goto('m_exit')
+    A.lab('m_kill'); A.ptrc([0x23],FN['kc_show']-0x08000000); A.msg(0x02021cd0-0x08000000); A.closemsg(); A.goto('menu')
     A.lab('m_cur'); A.call('current'); A.closemsg(); A.goto('menu')
     A.lab('m_story'); A.call('main_obj'); A.closemsg(); A.goto('menu')
     A.lab('m_reaper'); A.goto('view%d'%REAPER['id'])
