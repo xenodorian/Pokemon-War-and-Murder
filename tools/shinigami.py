@@ -7,7 +7,7 @@ from leg1 import enc,r32,header,free_tile
 import gfx
 from PIL import Image
 TR_ID=49; TR_PIC=63; TR_CLASS=30; T=0x798790
-GFX_POLICE=60; GFX_SPLAT=0x98
+GFX_POLICE=60; GFX_SPLAT=0x98; GFX_BODY=0x99   # 0x98 = splatter left by the player's shots; 0x99 = story victims (never counted as player kills)
 VAR_SCENE=0x40F2
 F_GUARD,F_POLICE_GONE,F_SPLAT_HIDDEN,F_SHINI_GONE=0x4A7,0x4A8,0x4A9,0x4AA
 SE_SHOT=347
@@ -213,7 +213,9 @@ def lavender(r,gfx_shini):
     # 4. objects: Shinigami, 8 police, 8 splatters
     sid=add_obj(r,g,n,18,9,gfx_shini,sc_shi,8,F_POLICE_GONE)
     pids=[add_obj(r,g,n,x,y,GFX_POLICE,sc_talk,mv,F_POLICE_GONE) for x,y,mv in POLICE]
-    spl=[add_obj(r,g,n,x,y,GFX_SPLAT,0,0,F_SPLAT_HIDDEN) for x,y,mv in POLICE]
+    t_vic=text(r,"A bloody mess.\nBest not to look.")
+    V_=SB(); V_.msg(t_vic,6); V_.end(); sc_vic=0x08000000+put_script(r,V_)
+    spl=[add_obj(r,g,n,x,y,GFX_BODY,sc_vic,0,F_SPLAT_HIDDEN) for x,y,mv in POLICE]
     # 5. cutscene
     mv_up=0x08000000+r.alloc(bytes([0x11,0x11,0x11,0xfe]),1)
     S=SB(); S.lockall()
