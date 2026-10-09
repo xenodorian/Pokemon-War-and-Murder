@@ -579,6 +579,91 @@ def trainer_script(r,fns,nat,menus):
     S.lab('normal'); S.raw(0x5e)
     return put_script(r,S)
 HEAVEN_WARP=None; HELL_WARP=None
+def fix_splat_layer(r):
+    """the splatter (gfx 0x98 and its army alias) is a 16x16 object, which sorts 8 pixels nearer than the 16x32 player standing on the same tile,
+    so it was drawn over the player. Re-made as a 16x32 object (art in the bottom half) it sorts like the player and goes under them."""
+    b=r.b; gt=r32(r,0x5f2f4)-0x08000000; mx=b[0x5f2e0]
+    old=r32(r,gt+4*0x98)-0x08000000; npc=r32(r,gt)-0x08000000
+    oi=bytes(b[old:old+36]); ni=bytearray(b[npc:npc+36])
+    assert struct.unpack('<HH',oi[8:12])==(16,16) and struct.unpack('<HH',ni[8:12])==(16,32)
+    im=r32(r,old+0x1c)-0x08000000; tiles=bytes(b[r32(r,im)-0x08000000:r32(r,im)-0x08000000+128])
+    art_=r.alloc(bytes(128)+tiles,4)
+    imgt=r.alloc(b''.join(struct.pack('<IHH',0x08000000+art_,256,0) for _ in range(9)),4)
+    ni[2:6]=oi[2:6]; ni[12:14]=oi[12:14]; ni[24:28]=oi[24:28]; ni[0x1c:0x20]=struct.pack('<I',0x08000000+imgt)
+    a=r.alloc(bytes(ni),4)
+    n=0
+    for i in range(mx+1):
+        if r32(r,gt+4*i)-0x08000000==old: r.w32(gt+4*i,0x08000000+a); n+=1
+    assert n>=2,n
+# ---------------------------------------------------------------- Dark Spirits: appear only once asked for, vanish when caught or defeated, half pay for a defeat
+SP_CAUGHT=0x4D0; SP_INTRO=0x4DA; SP_DEF=0x4DB; SP_HIDE=0x4E5; SP_PROG=0x40F5
+def spirits_fix(r):
+    import spirits as SP
+    b=r.b; Q=SP.QUESTS; lids={}
+    def T(t): return SP.T(r,t)
+    for k,(g,n,city,sp,spn,lv) in enumerate(Q):
+        h=header(r,g,n); ev=r32(r,h+4)-0x08000000; po=r32(r,ev+4)-0x08000000
+        for i in range(b[ev]):
+            o=po+24*i
+            if struct.unpack('<H',b[o+20:o+22])[0]==SP_CAUGHT+k and b[o+9]==1:
+                S=SB(); S.lock()
+                S.msg(T("A dark presence lingers here...\n\nA level %d %s lashes out of the shadows!"%(lv,spn)))
+                S.raw(0xb6); S._add(struct.pack('<HBH',sp,lv,0)); S.raw(0xb7)
+                S.raw(0x26); S._add(struct.pack('<HH',0x800d,SP.SP_BATTLE_OUTCOME))
+                S.compare(0x800d,7); S.goto_if(1,'caught')
+                S.compare(0x800d,1); S.goto_if(1,'beaten')
+                S.release(); S.end()
+                S.lab('caught'); S.setflag(SP_CAUGHT+k); S.setflag(SP_HIDE+k); S.raw(0x53); S._add(struct.pack('<H',0x800f))
+                S.msg(T("The dark spirit is bound to you.\n\nThe SPIRIT WITCH will want to hear of this.")); S.release(); S.end()
+                S.lab('beaten'); S.setflag(SP_DEF+k); S.setflag(SP_HIDE+k); S.raw(0x53); S._add(struct.pack('<H',0x800f))
+                S.msg(T("The dark spirit is destroyed.\n\nThe SPIRIT WITCH will pay less for a spirit that was not bound.")); S.release(); S.end()
+                b[o+16:o+20]=struct.pack('<I',0x08000000+put_script(r,S)); b[o+20:o+22]=struct.pack('<H',SP_HIDE+k); lids[k]=b[o]
+                break
+        else: raise Exception('spirit %d not found'%k)
+    # the Spirit Witch
+    h=header(r,3,6); ev=r32(r,h+4)-0x08000000; po=r32(r,ev+4)-0x08000000; wo=None
+    for i in range(b[ev]):
+        o=po+24*i; sc=struct.unpack('<I',b[o+16:o+20])[0]-0x08000000
+        if 0<=sc<len(b) and bytes(b[sc:sc+2])==b'\x6a\x5a' and bytes(b[sc+2:sc+3])==b'\x23' and b[o+9]==8 and b[o+1]!=0x9d: wo=o
+    assert wo is not None
+    fns=json.load(open('/home/claude/work/leg2/fns.json'))
+    S=SB(); S.lock(); S.faceplayer()
+    S.raw(0x23); S.ptr(fns['karma_check'])
+    S.compare(0x8007,1); S.goto_if(1,'hell')
+    S.compare(0x8007,0); S.goto_if(1,'zero')
+    S.raw(0x2b); S._add(struct.pack('<H',SP_INTRO)); S.goto_if(1,'intro_done')
+    S.msg(T("SPIRIT WITCH: Your soul is clean from good KARMA. You may work for me.\n\nBring me the dark spirits that haunt this region. Catch each one and return to me.")); S.setflag(SP_INTRO)
+    S.lab('intro_done')
+    S.compare(SP_PROG,10); S.goto_if(1,'alldone')
+    for k in range(10): S.compare(SP_PROG,k); S.goto_if(1,'q%d'%k)
+    S.release(); S.end()
+    def nxt(k):
+        if k<9:
+            g2,n2,city2,sp2,spn2,lv2=Q[k+1]
+            S.msg(T("SPIRIT WITCH: Next, a level %d %s haunts %s. Catch it and return."%(lv2,spn2,city2)))
+            if (g2,n2)==(3,6):             # the spirit is in this very town: bring it onto the map now
+                S.raw(0x2a); S._add(struct.pack('<H',SP_HIDE+k+1)); S.raw(0x55); S._add(struct.pack('<H',lids[k+1]))
+        else:
+            S.msg(T("SPIRIT WITCH: That was the last of them. The dead rest easier because of you."))
+        S.release(); S.end()
+    for k,(g,n,city,sp,spn,lv) in enumerate(Q):
+        price=1000*(k+1)
+        S.lab('q%d'%k)
+        S.raw(0x2b); S._add(struct.pack('<H',SP_CAUGHT+k)); S.goto_if(1,'d%d'%k)
+        S.raw(0x2b); S._add(struct.pack('<H',SP_DEF+k)); S.goto_if(1,'h%d'%k)
+        S.msg(T("SPIRIT WITCH: Quest %d of 10.\n\nA dark spirit haunts %s. It is a level %d %s. Catch it, then come back to me."%(k+1,city,lv,spn)))
+        S.release(); S.end()
+        S.lab('d%d'%k)
+        S.msg(T("SPIRIT WITCH: Ah, the spirit of %s. Well done.\n\nTake $%d for your trouble."%(city,price)))
+        S.raw(0x90); S._add(struct.pack('<IB',price,0)); S.setvar(SP_PROG,k+1); nxt(k)
+        S.lab('h%d'%k)
+        S.msg(T("SPIRIT WITCH: You destroyed the spirit of %s instead of binding it. A broken spirit is only worth half.\n\nTake $%d."%(city,price//2)))
+        S.raw(0x90); S._add(struct.pack('<IB',price//2,0)); S.setvar(SP_PROG,k+1); nxt(k)
+    S.lab('alldone'); S.msg(T("SPIRIT WITCH: You have freed every spirit I asked for. Walk in light, child.")); S.release(); S.end()
+    S.lab('zero'); S.msg(T("SPIRIT WITCH: Your soul is neither clean nor stained. Come back when you have done some good.")); S.release(); S.end()
+    S.lab('hell'); S.msg(T("SPIRIT WITCH: Your soul is impure from bad KARMA. Begone from my sight, devil!"))
+    S.raw(0x3d,SP.HELL[0],SP.HELL[1],0xff); S._add(struct.pack('<HH',SP.HELL[2],SP.HELL[3])); S.raw(0x27); S.end()
+    b[wo+16:wo+20]=struct.pack('<I',0x08000000+put_script(r,S))
 def install(r):
     global HEAVEN_WARP,HELL_WARP
     fns=json.load(open('/home/claude/work/leg2/fns.json'))
@@ -587,6 +672,8 @@ def install(r):
     lb=open('/home/claude/work/leg2/leg2.bin','rb').read(); assert bytes(r.b[base:base+len(lb)])==lb,'leg2 natives differ from fns.json'
     for k in ('karma_check','bless_do','police_info','police_shoot'): assert fns[k]&1
     assert bytes(r.b[(fns['karma_check']&~1)-0x08000000:(fns['karma_check']&~1)-0x08000000+2])!=b'\xff\xff'
+    fix_splat_layer(r)
+    spirits_fix(r)
     # art
     ai,ap=art.sprite64(W+'/src22.png'); gi,gp=art.sprite64(W+'/src21.png')
     arc,gir=add_gfx(r,[([ai],ap,None),([gi],gp,None)],[0x1122,0x1123])

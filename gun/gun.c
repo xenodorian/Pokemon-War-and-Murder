@@ -66,8 +66,21 @@ static void police_off(void){
         SB1[0xEE0+(POL_HIDE>>3)]|=(u8)(1<<(POL_HIDE&7)); *(u16*)(t+0x14)=POL_HIDE;
     }
 }
-void gw_load(void){ ((void(*)(void))ROB_WRAP_LOAD)(); japply(); police_off(); }
-void gw_scripts(void){ ((void(*)(void))ROB_WRAP_SCRIPTS)(); japply(); police_off(); }
+// Dark Spirits: a spirit is on the map only once the Spirit Witch has asked for it, and never after it was caught or defeated.
+// Its template carries its own hide flag, which is recomputed on every map load.
+#define SP_PROG 0x40F5
+#define SP_INTRO 0x4DA
+#define SP_CAUGHT 0x4D0
+#define SP_DEF 0x4DB
+#define SP_HIDE 0x4E5
+static int fget(u32 f){ return (SB1[0xEE0+(f>>3)]>>(f&7))&1; }
+static void fput(u32 f,int v){ u8* p=SB1+0xEE0+(f>>3); if(v) *p|=(u8)(1<<(f&7)); else *p&=(u8)~(1<<(f&7)); }
+static void spirits_vis(void){
+    u16 prog=*kc_var(SP_PROG);
+    for(int k=0;k<10;k++) fput(SP_HIDE+k,!(fget(SP_INTRO)&&prog==k&&!fget(SP_CAUGHT+k)&&!fget(SP_DEF+k)));
+}
+void gw_load(void){ ((void(*)(void))ROB_WRAP_LOAD)(); japply(); police_off(); spirits_vis(); }
+void gw_scripts(void){ ((void(*)(void))ROB_WRAP_SCRIPTS)(); japply(); police_off(); spirits_vis(); }
 // the police's kill check, as before, but silent once the deal is made
 void kill_check2(void){ ((void(*)(void))KILL_CHECK)(); if(deal_on()) GSV(7)=0; }
 // GSV7: 1 = the officer in front of the player should make the offer now. GSV6: 1 = a generated officer (they vanish after the deal)
