@@ -1,3 +1,5 @@
 *.gba
 *.state
 *.mgba
+!roms/*.gba
+!saves/**/*.state

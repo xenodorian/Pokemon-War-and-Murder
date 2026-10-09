@@ -15,3 +15,10 @@ Open order of work:
 2. Check the remaining tiling: paved slab paths must use middle blocks with the edge block only at the end; user reported seams in a paving screenshot.
 3. In-game tests: church/base warps, custom interiors, story officer shooting, police Gen 1 teams, KARMA label, priest text, grey house tile glitch.
 4. Port the user's VBA .sav and .sgm to R36S mGBA .srm and .state (not started; use an existing .state as template).
+
+## Uploaded binaries (added 2026-10-09)
+roms/: original hack ROM, c3_build_base.gba (input of tools/build_full.sh as out/c3.gba), m_final_latest_build.gba (latest build; still has the old extend_right comb/seam bug).
+saves/user_uploads/: current user files only: 00b1f3bc .sav and 19c47a6d .sgm (VBA, to be ported), f676643d .srm and 56898276/3a41f949/319d9027 states (R36S mGBA templates).
+saves/delivered/: last delivered sav, sgm8, ini, Spirits Splatter state.
+shots/: screenshots from 2026-10-09 only. ref_uploads/: FireRed reference zip and earlier handoff bundle.
+Left out as outdated: 530 older ROM builds, older states/saves (453db1b1 .sav, be23eecc .state), shots before 2026-10-09.
