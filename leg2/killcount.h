@@ -1,3 +1,6 @@
+// NOTE: kills made before the Kill Count existed are included. They live in the same shoot record (bits 512+rank of the shoot variables) that the
+// original GLOCK system has always written, so an old save counts them as long as the trainer's defeat flag is still set (shot trainers are
+// always defeated first). Only kills forgiven at the church (defeat flag cleared) stop counting.
 // Shared kill counting: shot trainers whose defeat flag is still set, plus officers shot (counter variable), capped at 999.
 #ifndef KILLCOUNT_H
 #define KILLCOUNT_H

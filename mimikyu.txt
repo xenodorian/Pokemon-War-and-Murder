@@ -1,0 +1,950 @@
+
+Mimikyu Pokédex: stats, moves, evolution & locations | Pokémon Database
+Skip to main content
+Data
+Pokémon data
+Pokédex
+Moves
+Type chart
+Abilities
+Items
+Evolution chains
+Pokémon locations
+Sprite gallery
+Quick links
+National Pokédex
+Pokémon list with stats
+Legends: Arceus Pokédex
+Scarlet & Violet Pokédex
+Mechanics
+Game mechanics
+Breeding & egg groups
+Move Tutors
+Dual type chart
+Effort Values (EVs)
+Natures
+IVs/Personality
+Useful tools
+Moveset searcher
+Type coverage checker
+Text list generator
+Games
+Pokémon games
+Winds & Waves
+Pokémon GO
+Legends: Z-A
+Scarlet & Violet
+Legends: Arceus
+Brilliant Diamond & Shining Pearl
+Sword & Shield
+Let's Go Pikachu & Let's Go Eevee
+Ultra Sun & Ultra Moon
+Sun & Moon
+Omega Ruby & Alpha Sapphire
+X & Y
+Black 2 & White 2
+Black & White
+HeartGold & SoulSilver
+Platinum
+Diamond & Pearl
+Emerald
+FireRed & LeafGreen
+Ruby & Sapphire
+Crystal
+Gold & Silver
+Yellow
+Red & Blue
+Spin-off games
+Other
+Community/Other
+Pokémon Q&A
+Pokémon Rate My Team
+Chat Room
+Meta (Suggestion Box)
+Other pages
+Pokémon News
+Maps/Puzzles
+Pokémon name origins
+About/Contact us
+Search
+Mimikyu
+#0777 Togedemaru
+#0779 Bruxish
+Contents
+Info
+Base stats
+Evolution chart
+Pokédex entries
+Moves learned
+Sprites
+Locations
+Language
+Mimikyu
+ is a 
+Ghost
+/
+Fairy
+ type Pokémon introduced in 
+Generation 7
+. It is known as the 
+Disguise Pokémon
+.
+Mimikyu
+ lives its life completely covered by its cloth and is always hidden. People believe that anybody who sees its true form beneath the cloth will be stricken with a mysterious illness. People in the Alola region are convinced that you must never try to peek beneath its covering. 
+Mimikyu's
+ health fails when it’s bathed in the rays of the sun, so it prefers to stick to dark places. It’s rumored that the reason it covers itself with a cloth is to avoid sunlight.
+Mimikyu
+Additional artwork
+Pokédex data
+National №
+0778
+Type
+Ghost
+Fairy
+Species
+Disguise Pokémon
+Height
+0.2 m (0′08″)
+Weight
+0.7 kg (1.5 lbs)
+Abilities
+1. 
+Disguise
+Local №
+0242 
+(Sun/Moon — Alola dex)
+0315 
+(U.Sun/U.Moon — Alola dex)
+0301 
+(Sword/Shield)
+0239 
+(Scarlet/Violet)
+0046 
+(The Crown Tundra)
+0189 
+(The Teal Mask)
+0068 
+(Mega Dimension)
+Training
+EV yield
+			2 Sp. Def		
+Catch rate
+					45 
+(5.9% with PokéBall, full HP)
+Base 
+Friendship
+					50 
+(normal)
+Base Exp.
+167
+Growth Rate
+Medium Fast
+Breeding
+Egg Groups
+Amorphous
+Gender
+50% male
+, 
+50% female
+Egg cycles
+20				
+(4,884–5,140 steps)
+Base stats
+HP
+55
+220
+314
+Attack
+90
+166
+306
+Defense
+80
+148
+284
+Sp. Atk
+50
+94
+218
+Sp. Def
+105
+193
+339
+Speed
+96
+177
+320
+Total
+476
+Min
+Max
+The ranges shown on the right are for a level 100 Pokémon. Maximum values are based on a beneficial nature, 252 EVs, 31 IVs; minimum values are based on a hindering nature, 0 EVs, 0 IVs.
+Type defenses
+The effectiveness of each type on 
+Mimikyu
+.
+Nor
+Fir
+Wat
+Ele
+Gra
+Ice
+Fig
+Poi
+Gro
+0
+0
+Fly
+Psy
+Bug
+Roc
+Gho
+Dra
+Dar
+Ste
+Fai
+¼
+2
+0
+2
+Evolution chart
+Mimikyu
+ does not evolve.
+Mimikyu changes
+In 
+Generation 7
+, 
+Mimikyu
+ has a base Friendship value of 70.
+Pokédex entries
+Busted Form
+Sun
+After going to all the effort of disguising itself, its neck was broken. Whatever is inside is probably unharmed, but it’s still feeling sad.
+Moon
+If its neck is broken or its rag torn during an attack, it works through the night to patch it.
+Ultra Sun
+It stands in front of a mirror, trying to fix its broken neck as if its life depended on it. It has a hard time getting it right, so it’s crying inside.
+Ultra Moon
+Sad that its true identity may be exposed, Mimikyu will mercilessly seek revenge on any opponent that breaks its neck.
+Sword
+There will be no forgiveness for any who reveal that it was pretending to be Pikachu. It will bring the culprit down, even at the cost of its own life.
+Shield
+Its disguise made from an old rag allowed it to avoid an attack, but the impact broke the neck of the disguise. Now everyone knows it’s a Mimikyu.
+Scarlet
+Even as it struggles beneath the cloth to repair the broken neck of its disguise, Mimikyu keeps up its impersonation of Pikachu.
+Violet
+It has taken damage and can no longer hold the head of its cloth disguise upright. For as long as it lives, Mimikyu will never forget its attacker.
+Disguised Form
+Sun
+Its actual appearance is unknown. A scholar who saw what was under its rag was overwhelmed by terror and died from the shock.
+Moon
+A lonely Pokémon, it conceals its terrifying appearance beneath an old rag so it can get closer to people and other Pokémon.
+Ultra Sun
+Although it’s a quiet, lonely Pokémon, if you try to look at what’s under its rag, it will become agitated and resist violently.
+Ultra Moon
+A gust of wind revealed what hides under this Pokémon’s rag to a passing Trainer, who went home and died painfully that very night.
+Sword
+It wears a rag fashioned into a Pikachu costume in an effort to look less scary. Unfortunately, the costume only makes it creepier.
+Shield
+There was a scientist who peeked under Mimikyu’s old rag in the name of research. The scientist died of a mysterious disease.
+Scarlet
+This Pokémon lives in dark places untouched by sunlight. When it appears before humans, it hides itself under a cloth that resembles a Pikachu.
+Violet
+Mimikyu was only recently identified as a Pokémon. Previously, people thought it was just a ghost wearing a cloth.
+Moves learned by Mimikyu
+In other generations
+7
+8
+9
+Legends: Z-A
+Scarlet/Violet
+Moves learnt by level up
+Mimikyu
+ learns the following moves in Pokémon Legends: Z-A at the levels specified.
+Lv.
+Move
+Type
+Cat.
+Power
+Acc.
+1
+Splash
+Normal
+—
+—
+1
+Tackle
+Normal
+40
+100
+6
+Shadow Sneak
+Ghost
+40
+100
+12
+Double Team
+Normal
+—
+—
+24
+Mimic
+Normal
+—
+—
+28
+Slash
+Normal
+70
+100
+34
+Shadow Claw
+Ghost
+70
+100
+42
+Wood Hammer
+Grass
+120
+100
+48
+Charm
+Fairy
+—
+100
+54
+Play Rough
+Fairy
+90
+90
+60
+Phantom Force
+Ghost
+90
+100
+Moves learnt by TM
+Mimikyu
+ is compatible with these Technical Machines in Pokémon Legends: Z-A:
+TM
+Move
+Type
+Cat.
+Power
+Acc.
+08
+Thunder Wave
+Electric
+—
+90
+11
+Bulk Up
+Fighting
+—
+—
+16
+Light Screen
+Psychic
+—
+—
+17
+Protect
+Normal
+—
+—
+20
+Play Rough
+Fairy
+90
+90
+30
+Swords Dance
+Normal
+—
+—
+32
+Double Team
+Normal
+—
+—
+34
+Night Slash
+Dark
+70
+100
+35
+Endure
+Normal
+—
+—
+42
+Giga Drain
+Grass
+75
+100
+44
+Hyper Beam
+Normal
+150
+90
+55
+Giga Impact
+Normal
+150
+90
+57
+Will-O-Wisp
+Fire
+—
+85
+61
+Shadow Claw
+Ghost
+70
+100
+63
+Psychic
+Psychic
+90
+100
+67
+Thunderbolt
+Electric
+90
+100
+74
+Shadow Ball
+Ghost
+80
+100
+81
+X-Scissor
+Bug
+80
+100
+85
+Substitute
+Normal
+—
+—
+90
+Dark Pulse
+Dark
+80
+100
+91
+Curse
+Ghost
+—
+—
+92
+Dazzling Gleam
+Fairy
+80
+100
+95
+Taunt
+Dark
+—
+100
+103
+Work Up
+Normal
+—
+—
+106
+Thunder
+Electric
+110
+70
+109
+Facade
+Normal
+70
+100
+115
+Trailblaze
+Grass
+50
+100
+125
+Mimic
+Normal
+—
+—
+131
+Drain Punch
+Fighting
+75
+100
+Moves learnt by level up
+Mimikyu
+ learns the following moves in Pokémon Scarlet & Violet at the levels specified.
+Lv.
+Move
+Type
+Cat.
+Power
+Acc.
+1
+Astonish
+Ghost
+30
+100
+1
+Copycat
+Normal
+—
+—
+1
+Scratch
+Normal
+40
+100
+1
+Splash
+Normal
+—
+—
+1
+Wood Hammer
+Grass
+120
+100
+6
+Shadow Sneak
+Ghost
+40
+100
+12
+Double Team
+Normal
+—
+—
+18
+Baby-Doll Eyes
+Fairy
+—
+100
+24
+Mimic
+Normal
+—
+—
+30
+Hone Claws
+Dark
+—
+—
+36
+Slash
+Normal
+70
+100
+42
+Shadow Claw
+Ghost
+70
+100
+48
+Charm
+Fairy
+—
+100
+54
+Play Rough
+Fairy
+90
+90
+60
+Pain Split
+Normal
+—
+—
+Egg moves
+Mimikyu
+ learns the following moves via breeding or picnics in Pokémon Scarlet & Violet. Details and compatible parents can be found on the 
+Mimikyu gen 9 learnset
+ page.
+Move
+Type
+Cat.
+Power
+Acc.
+Curse
+Ghost
+—
+—
+Destiny Bond
+Ghost
+—
+—
+Moves learnt by TM
+Mimikyu
+ is compatible with these Technical Machines in Pokémon Scarlet & Violet:
+TM
+Move
+Type
+Cat.
+Power
+Acc.
+01
+Take Down
+Normal
+90
+85
+02
+Charm
+Fairy
+—
+100
+07
+Protect
+Normal
+—
+—
+17
+Confuse Ray
+Ghost
+—
+100
+18
+Thief
+Dark
+60
+100
+20
+Trailblaze
+Grass
+50
+100
+21
+Pounce
+Bug
+50
+100
+25
+Facade
+Normal
+70
+100
+29
+Hex
+Ghost
+65
+100
+37
+Draining Kiss
+Fairy
+50
+100
+42
+Night Shade
+Ghost
+—
+100
+43
+Fling
+Dark
+—
+100
+47
+Endure
+Normal
+—
+—
+49
+Sunny Day
+Fire
+—
+—
+50
+Rain Dance
+Water
+—
+—
+61
+Shadow Claw
+Ghost
+70
+100
+64
+Bulk Up
+Fighting
+—
+—
+70
+Sleep Talk
+Normal
+—
+—
+73
+Drain Punch
+Fighting
+75
+100
+75
+Light Screen
+Psychic
+—
+—
+79
+Dazzling Gleam
+Fairy
+80
+100
+82
+Thunder Wave
+Electric
+—
+90
+85
+Rest
+Psychic
+—
+—
+87
+Taunt
+Dark
+—
+100
+88
+Swords Dance
+Normal
+—
+—
+94
+Dark Pulse
+Dark
+80
+100
+95
+Leech Life
+Bug
+80
+100
+103
+Substitute
+Normal
+—
+—
+105
+X-Scissor
+Bug
+80
+100
+107
+Will-O-Wisp
+Fire
+—
+85
+109
+Trick
+Psychic
+—
+100
+111
+Giga Drain
+Grass
+75
+100
+114
+Shadow Ball
+Ghost
+80
+100
+120
+Psychic
+Psychic
+90
+100
+126
+Thunderbolt
+Electric
+90
+100
+127
+Play Rough
+Fairy
+90
+90
+139
+Misty Terrain
+Fairy
+—
+—
+151
+Phantom Force
+Ghost
+90
+100
+152
+Giga Impact
+Normal
+150
+90
+161
+Trick Room
+Psychic
+—
+—
+163
+Hyper Beam
+Normal
+150
+90
+166
+Thunder
+Electric
+110
+70
+171
+Tera Blast
+Normal
+80
+100
+177
+Spite
+Ghost
+—
+100
+195
+Burning Jealousy
+Fire
+70
+100
+202
+Pain Split
+Normal
+—
+—
+203
+Psych Up
+Normal
+—
+—
+224
+Curse
+Ghost
+—
+—
+In other generations
+7
+8
+9
+Mimikyu sprites
+Type
+Generation 7
+Generation 8
+Generation 9
+Normal
+Shiny
+							—
+							—
+See all Mimikyu sprites
+Where to find Mimikyu
+Sun
+Moon
+Thrifty Megamart
+Ultra Sun
+Ultra Moon
+Thrifty Megamart
+, 
+Heahea Beach
+Let's Go Pikachu
+Let's Go Eevee
+Not available in this game
+Sword
+Shield
+Giant's Mirror
+, 
+Slippery Slope
+, 
+Frostpoint Field
+, 
+Giant's Bed
+, 
+Old Cemetery
+, 
+Snowslide Slope
+, 
+Giant's Foot
+, 
+Frigid Sea
+, 
+Three-Point Pass
+, 
+Ballimere Lake
+Brilliant Diamond
+Shining Pearl
+Legends: Arceus
+Not available in this game
+Scarlet
+Violet
+Tagtree Thicket
+, 
+East Province (Area Two)
+Legends: Z-A
+Location data not yet available
+Answers to Mimikyu questions
+What is a good moveset for Mimikyu?
+Is there a way to kill Mimikyu in a single hit (for SOS hunting)?
+Can you get the Mimikyu Z crystal in Ultra Sun with a Mimikyu you trade over?
+Can weakness policy activate the same turn Disguise activates?
+What Pokémon should I use to fight totem mimikyu from ultra moon?
+Which should I bring to the Battle Tower in Pokémon Sword: Adamant Mimikyu or Mild Gengar?
+How viable is Z-Splash Mimikyu in Gen 7 OU?
+Can Disguise work on self-inflicted damage in Gen 8?
+Can I  find a Mimikins? (Acerola's Flying Mimikyu) on any games?
+View more questions on PokéBase »
+Other languages
+English
+Mimikyu
+Japanese
+ミミッキュ (Mimikkyu)
+German
+Mimigma
+French
+Mimiqui
+Italian
+Mimikyu
+Spanish
+Mimikyu
+Korean
+따라큐 (ttarakyu)
+Chinese (Simplified)
+谜拟丘
+Chinese (Traditional)
+謎擬Ｑ
+English
+																	Disguise Pokémon
+Japanese
+ばけのかわポケモン
+German
+Kostümspuk-Pokémon
+French
+Pokémon Fantômasque
+Italian
+Pokémon Fantasmanto
+Spanish
+Pokémon Disfraz
+Korean
+탈포켓몬
+Chinese (Simplified)
+画皮宝可梦
+Chinese (Traditional)
+畫皮寶可夢
+Name origin
+mimic
+imitate
+you
+as in ‘mimic you’
+#0777 Togedemaru
+#0779 Bruxish
+Privacy Policy
+		All content & design © Pokémon Database, 2008-2026.
+		Pokémon images & names © 1995-2026 Nintendo/Game Freak.
+×
+×
+Auto-saved
+No file open
+Close window
