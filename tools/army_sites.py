@@ -15,25 +15,41 @@ def get_block(r,g,n,x,y):
 def set_block(r,g,n,x,y,v):
     w,h=dims(r,g,n); assert 0<=x<w and 0<=y<h,(x,y,w,h)
     o=map_off(r,g,n)+2*(y*w+x); r.b[o:o+2]=struct.pack('<H',v)
+LEFT={0x0e,0x14,0x16,0x1c,0x1e,0x24,0x26}
+RIGHT={0x0f,0x15,0x17,0x1d,0x1f,0x25,0x27}
+HOLE={0,1}   # blank metatiles. The original hack uses them as holes. They are not terrain to copy outward.
+
+def _continue(body, n):
+    """n tiles that carry on the pattern at the end of body."""
+    if n<=0: return []
+    if len(body)>=4 and body[-1]==body[-3] and body[-2]==body[-4] and body[-1]!=body[-2]:
+        return [body[-2+(i%2)] for i in range(n)]
+    return [body[-1]]*n
+def extend_row(row, N):
+    """columns appended east of row, length len(row)+N.
+    A tree pair keeps alternating. A one-tile lip (path edge, cliff edge) moves to the new eastern edge and the tile
+    just west of it fills the gap. A trailing run of blank holes is not copied outward."""
+    w=len(row); a,b=row[w-2],row[w-1]
+    if (a&0x3ff) in LEFT and (b&0x3ff) in RIGHT:
+        return row+[row[w-2+(i%2)] for i in range(N)]
+    end=w
+    while end>0 and (row[end-1]&0x3ff) in HOLE: end-=1
+    if end<w and end>=1:
+        return row[:end]+_continue(row[:end], (w-end)+N)
+    if w>=4 and b!=row[w-2] and b!=row[w-3]:
+        seq=_continue(row[:-1], N+1); seq[-1]=b
+        return row[:-1]+seq
+    if w>=4 and row[-1]==row[-3] and row[-2]==row[-4]:
+        return row+[row[w-2+(i%2)] for i in range(N)]
+    return row+[b]*N
 def extend_right(r,g,n,N):
-    """append N columns; each new column repeats the old east edge (two columns, alternating), so trees stay trees and an exit road carries on to the new edge.
-    The east connection (if any) is anchored to the new edge, so the road still leads to the neighbour."""
+    """append N columns. See extend_row. The map's east connection is left where it was."""
     lay=layout_of(r,g,n); w,h=r32(r,lay),r32(r,lay+4); mp=r32(r,lay+12)-0x08000000
     old=[[struct.unpack('<H',r.b[mp+2*(y*w+x):mp+2*(y*w+x)+2])[0] for x in range(w)] for y in range(h)]
-    nw=w+N; rows=[]
-    for y in range(h):
-        o=old[y]; a,b=o[w-2],o[w-1]
-        if o[w-3]==b:                       # period-2 pattern (trees, tessellated ground): alternate the last pair
-            ext=[o[w-2+((x-w)%2)] for x in range(w,nw)]
-        elif o[w-3]==a:                     # flat run closed by an edge block (paving, shore): repeat the flat block, edge block only at the very end
-            ext=[a]*(nw-w-1)+[b]; 
-            o=o[:w-1]+[a]
-        else:                               # edge block then flat block (rock face): repeat the flat block
-            ext=[b]*(nw-w)
-        rows.append(o+ext)
-    new=r.alloc(b''.join(struct.pack('<%dH'%nw,*row) for row in rows),4)
-    r.w32(lay,nw); r.w32(lay+12,0x08000000+new)
-    return nw
+    rows=[extend_row(old[y], N) for y in range(h)]
+    new=r.alloc(b''.join(struct.pack('<%dH'% (w+N),*row) for row in rows),4)
+    r.w32(lay,w+N); r.w32(lay+12,0x08000000+new)
+    return w+N
 def fill(r,g,n,x0,y0,x1,y1,v):
     for y in range(y0,y1+1):
         for x in range(x0,x1+1): set_block(r,g,n,x,y,v)

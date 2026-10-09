@@ -106,7 +106,7 @@ EXT={
  'CELADON':  dict(ext=12,ground=(46,16),carve=[],clear=[(60,7,70,11)],bx=62,by=8,guards=[(61,12,10),(67,12,9)],sign=(68,12),start=(56,13)),
  'SAFFRON':  dict(ext=0, ground=(11,25),carve=[],clear=[],bx=9,by=21,guards=[(10,28,7),(13,26,9)],sign=(9,26),start=(13,27)),
  'FUCHSIA':  dict(ext=0, ground=(34,17),carve=[],clear=[],bx=35,by=13,guards=[(34,17,10),(40,17,9)],sign=(33,17),start=(34,18)),
- 'CINNABAR': dict(ext=0, ground=(11,14),carve=[],clear=[],bx=10,by=16,guards=[(9,20,10),(15,20,9)],sign=(16,20),start=(12,13),insert=(15,10,[14])),
+ 'CINNABAR': dict(ext=0, ground=(11,14),carve=[],clear=[],bx=10,by=16,guards=[(9,20,10),(15,20,9)],sign=(16,20),start=(12,13),insert=(15,10,[14]),beach=1),
 }
 def carve_exterior(r,c,house):
     """rebuilds the town map for city c: extension, cleared land, the grafted house, tileset; returns door tile, front tile, door warp index placeholder"""
@@ -114,7 +114,13 @@ def carve_exterior(r,c,house):
     ts=army_tiles.Tileset(r,g,n)
     gv=army_sites.get_block(r,g,n,*e['ground'])
     if e['ext']: army_sites.extend_right(r,g,n,e['ext'])
-    if e.get('insert'): army_sites.insert_rows(r,g,n,*e['insert'])
+    if e.get('insert'):
+        at,M,pattern=e['insert']; army_sites.insert_rows(r,g,n,at,M,pattern)
+        if e.get('beach'):
+            # the copied row still holds the rock formation that ends there. The new rows are beach: the ground tile, east border kept.
+            bw,_=army_sites.dims(r,g,n)
+            for yy in range(at,at+M):
+                for xx in range(bw-1): army_sites.set_block(r,g,n,xx,yy,gv)
     pre=army_sites.get_grid(r,g,n)          # the map before any cut (forests are repaired against it)
     rects=list(e['carve'])+list(e['clear'])+[(x0,y0,x1,y1) for (x0,x1,y0,y1,sx) in e.get('rowfill',[])]+[(e['bx'],e['by'],e['bx']+4,e['by']+3)]
     for (x0,y0,x1,y1) in e['carve']+e['clear']: army_sites.fill(r,g,n,x0,y0,x1,y1,gv)

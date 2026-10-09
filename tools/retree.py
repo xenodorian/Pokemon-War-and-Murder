@@ -113,6 +113,7 @@ def _key(grid,w,h,x,y):
             if (grid[ny][nx]&0x3ff) in TREE: k.append(i)
         elif BORDER_TREE[0]: k.append(i)
     return frozenset(k)
+HOLE={0,1}   # blank metatiles in the original hack. Not lawn edges; never learn them or paint them onto a cut.
 def learn_lawn(pre,w,h,gv):
     """key -> block for non-tree cells, restricted to blocks that sit next to the plain lawn block somewhere (the lawn family)"""
     gvb=gv&0x3ff; fam={gvb}; sec=gvb>=640
@@ -121,7 +122,7 @@ def learn_lawn(pre,w,h,gv):
             if (pre[y][x]&0x3ff)!=gvb: continue
             for dx,dy in ((1,0),(-1,0),(0,1),(0,-1)):
                 nx,ny=x+dx,y+dy
-                if 0<=nx<w and 0<=ny<h and (pre[ny][nx]&0x3ff) not in TREE and ((pre[ny][nx]&0x3ff)>=640)==sec: fam.add(pre[ny][nx]&0x3ff)
+                if 0<=nx<w and 0<=ny<h and (pre[ny][nx]&0x3ff) not in TREE and (pre[ny][nx]&0x3ff) not in HOLE and ((pre[ny][nx]&0x3ff)>=640)==sec: fam.add(pre[ny][nx]&0x3ff)
     for _ in range(2):          # corners sit next to edge blocks, not next to the plain lawn
         add=set()
         for y in range(h):
@@ -131,7 +132,7 @@ def learn_lawn(pre,w,h,gv):
                     nx,ny=x+dx,y+dy
                     if 0<=nx<w and 0<=ny<h:
                         nb=pre[ny][nx]&0x3ff
-                        if nb not in TREE and nb not in fam and (nb>=640)==sec and _key(pre,w,h,nx,ny): add.add(nb)
+                        if nb not in TREE and nb not in HOLE and nb not in fam and (nb>=640)==sec and _key(pre,w,h,nx,ny): add.add(nb)
         fam|=add
     import collections
     tab=collections.defaultdict(collections.Counter)
