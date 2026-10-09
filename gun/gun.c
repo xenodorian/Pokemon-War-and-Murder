@@ -79,8 +79,55 @@ static void spirits_vis(void){
     u16 prog=*kc_var(SP_PROG);
     for(int k=0;k<10;k++) fput(SP_HIDE+k,!(fget(SP_INTRO)&&prog==k&&!fget(SP_CAUGHT+k)&&!fget(SP_DEF+k)));
 }
-void gw_load(void){ ((void(*)(void))ROB_WRAP_LOAD)(); japply(); police_off(); spirits_vis(); }
-void gw_scripts(void){ ((void(*)(void))ROB_WRAP_SCRIPTS)(); japply(); police_off(); spirits_vis(); }
+// Police persistence: 24 generated officers (trainer ids 55..78) and the 5 story officers; a shot officer stays a splatter (2 vars, 29 bits)
+#define PVAR 0x40E8
+static const u8 STORY_MAP[5]={0,1,2,3,5};
+static const u8 STORY_LID[5]={6,13,9,14,11};
+static int pbit(u32 i){ return (*kc_var(PVAR+(i>>4))>>(i&15))&1; }
+static void pset(u32 i){ *kc_var(PVAR+(i>>4))|=(u16)(1<<(i&15)); }
+static int story_idx(u8 lid){
+    if(SB1[4]!=3) return -1;
+    for(int k=0;k<5;k++) if(STORY_MAP[k]==SB1[5]&&STORY_LID[k]==lid) return 24+k;
+    return -1;
+}
+static void police_apply(void){
+    u8 n=EVENTS[0]; u8* t=SB1+0x8E0;
+    for(int i=0;i<n&&i<64;i++,t+=0x18){
+        if(t[1]==GFX_SPLAT) continue;
+        int id=tmpl_trainer(t);
+        if(id>=POL0&&id<POL0+NPOL){ if(pbit(id-POL0)) kill_tmpl(t); continue; }
+        int k=story_idx(t[0]); if(k>=0&&pbit(k)) kill_tmpl(t);
+    }
+}
+// after leg2's police_shoot: remember the kill
+void pol_mark(void){ u32 id=OPP; if(id>=POL0&&id<POL0+NPOL) pset(id-POL0); }
+// shooting a story officer (no party, no cash): splatter, Kill Count +1
+void npc_shoot(void){
+    u8 lid=(u8)LASTTALKED; u8* t=tmpl_for(lid); int k=story_idx(lid);
+    if(k>=0) pset(k);
+    if(t) kill_tmpl(t);
+    u16* p=kc_var(KC_POL_KILLS); if(*p<KC_MAX) (*p)++;
+}
+#define RMAP ((const u8*)RMAP_ADDR)
+// Town Map: maps with a Sevii section (the Slums, the JRA bases, the church, Heaven ...) report their Kanto town to the region map code, so the map opens on Kanto with the marker in that town.
+// Only region map lookups go through here; the name popup still uses the map's own section.
+static const u8 PTAB[256]={
+#define R4(n) n,n+1,n+2,n+3
+#define R16(n) R4(n),R4(n+4),R4(n+8),R4(n+12)
+#define R64(n) R16(n),R16(n+16),R16(n+32),R16(n+48)
+R64(0),R64(64),R64(128),R64(192)
+};
+u32 regsec(void){
+    u8 sec=*(volatile u8*)(0x02036dfc+0x14); u8 g=SB1[4], n=SB1[5];
+    for(int i=0;RMAP[i]!=0xff;i+=3) if(RMAP[i]==g&&RMAP[i+1]==n) return RMAP[i+2];
+    return sec;
+}
+// the three region map readers of gMapHeader.regionMapSectionId (picking the Kanto or Sevii map, and placing the player marker) call these in place of their own two-instruction read
+__attribute__((naked)) void regthunk_a(void){ __asm__ volatile("push {r1,r3,lr}\n bl regsec\n ldr r2,=0x02036dfc\n pop {r1,r3,pc}\n .ltorg"); }
+__attribute__((naked)) void regthunk_b(void){ __asm__ volatile("push {r2,r3,lr}\n bl regsec\n ldr r1,=0x02036dfc\n pop {r2,r3,pc}\n .ltorg"); }
+__attribute__((naked)) void regthunk_c(void){ __asm__ volatile("push {r0,r2,r3,lr}\n bl regsec\n adds r1,r0,#0\n pop {r0,r2,r3,pc}\n .ltorg"); }
+void gw_load(void){ ((void(*)(void))ROB_WRAP_LOAD)(); japply(); police_off(); spirits_vis(); police_apply(); }
+void gw_scripts(void){ ((void(*)(void))ROB_WRAP_SCRIPTS)(); japply(); police_off(); spirits_vis(); police_apply(); }
 // the police's kill check, as before, but silent once the deal is made
 void kill_check2(void){ ((void(*)(void))KILL_CHECK)(); if(deal_on()) GSV(7)=0; }
 // GSV7: 1 = the officer in front of the player should make the offer now. GSV6: 1 = a generated officer (they vanish after the deal)

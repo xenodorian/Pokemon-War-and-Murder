@@ -215,3 +215,21 @@ Bag opens on the Key Items pocket; press Left once for Items, Down many times to
 - Outputs must be sent with SendUserFile; the user cannot see the working directory.
 - The user attached images of fusions made on japeal.com. Art-source and licensing questions are theirs
   to judge; do not claim anything about licensing.
+
+=====================================================================
+STATUS UPDATE 2026-10-09 (work in progress, NOT yet rebuilt or tested in game)
+=====================================================================
+Source of truth is tools/ (full chain: tools/build_full.sh PREFIX; needs out/c3.gba, not in repo).
+Done in source, built once as out/m_final.gba and checked in emulator only where noted:
+ - Town Map region fix for custom maps (gun.py regmap_fix, gun.c regsec/regthunk); verified for Slums.
+ - Spirits splatter/visibility, KARMA menu label, priest intro text, police Gen 1 teams (patrol.py police_team).
+ - Pallet/forest-town lawn borders (retree.py learn_lawn/apply_lawn), verified by screenshot.
+ - Custom base interiors (army_rooms.py), church/base door warps with arrival one tile outside. UNTESTED in game.
+ - Story officers shootable (gun.c police_apply/pol_mark/npc_shoot, gun.py story_cops). UNTESTED in game.
+Just edited, UNBUILT, UNTESTED: army_sites.extend_right now picks a rule per row:
+   period-2 (trees) alternates last pair; flat run + edge block (paving, shore) repeats flat block and puts
+   the edge block only at the last column; edge+flat (Lavender rock) repeats the flat block.
+   Reason: the old rule alternated the last two columns, producing combs on rock and seams on paved paths.
+   Next: rebuild (army -> questlog -> gun), render Celadon/Lavender/Vermilion/Cerulean east edges, check
+   collision bits stay set on rock, fall back to plain lawn for anything that still looks wrong.
+Still open: in-game tests listed above; port of user's VBA .sav/.sgm to R36S mGBA .srm/.state (not started).
