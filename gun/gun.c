@@ -18,7 +18,7 @@ typedef void (*fn_create)(void*,u16,u8,u8,u8,u32,u8,u32);
 #define SetDexFlag     ((u32(*)(u16,u8))(0x08088e74|1))
 #define AddMoney       ((void(*)(u32*,u32))(0x0809fda0|1))
 #define TRAINERS 0x08798790
-#define LIB_VAR 0x40AA              /* Liberty Count: JRA troopers shot (never touches Karma) */
+#define LIB_VAR 0x40AC              /* Liberty Count: JRA troopers shot (never touches Karma). Not 0x40AA: that is the quest log's own backup variable */
 #define DEAL_VAR 0x40AB             /* bit0: the police made their offer, bit1: the player took the deal */
 #define BLESS_VAR 0x40F4
 #define POL0 55
@@ -52,7 +52,7 @@ static void japply(void){
         if(t[1]==GFX_SPLAT) continue;
         int id=tmpl_trainer(t); if(id<0) continue;
         int j=jidx(id); if(j<0) continue;
-        if(bit_get(512+JB+j)) kill_tmpl(t);
+        if(bit_get(JB+j)) kill_tmpl(t);
     }
 }
 static int deal_on(void){ return (*kc_var(DEAL_VAR)&2)!=0; }
@@ -107,7 +107,7 @@ void jra_pay(void){
 // shooting a JRA trooper: splatter, Kill Count +1, the player takes their whole party
 void jra_shoot(void){
     u32 id=OPP; int j=jidx(id); if(j<0) return;
-    bit_set(512+JB+j);
+    bit_set(JB+j);
     u8* t=tmpl_for((u8)LASTTALKED); if(t) kill_tmpl(t);
     u16* p=kc_var(LIB_VAR); if(*p<KC_MAX) (*p)++;
     u8* tr=(u8*)(TRAINERS+40*id);
@@ -176,8 +176,8 @@ void arc_install(void){
 }
 
 // ---- the Hall of Justice record: the team (species and level) at the moment General Gore fell, kept in its own variables (0x40AC..0x40B4), apart from the Hall of Fame
-#define JH_SP 0x40AC
-#define JH_LV 0x40B2
+static const u16 JH_SPV[6]={0x40AD,0x40AF,0x40B0,0x40B1,0x40B2,0x40B3};   /* species of the six slots */
+static const u16 JH_LVV[3]={0x40EC,0x40ED,0x40EE};                          /* levels, two to a variable */
 #define PARTY 0x02024284
 #define PARTYCOUNT 0x02024029
 #define GETMON ((u32(*)(void*,u32,void*))(0x0803FBE8|1))
@@ -187,23 +187,23 @@ void jh_record(void){
     for(u32 i=0;i<6;i++){
         u32 sp=0, lv=0;
         if(i<n){ void* mon=(void*)(PARTY+100*i); sp=GETMON(mon,11,0); lv=GETMON(mon,56,0); }
-        *kc_var(JH_SP+i)=(u16)sp;
-        u16* lp=kc_var(JH_LV+(i>>1));
+        *kc_var(JH_SPV[i])=(u16)sp;
+        u16* lp=kc_var(JH_LVV[i>>1]);
         if(i&1) *lp=(u16)((*lp&0x00FF)|(lv<<8)); else *lp=(u16)((*lp&0xFF00)|(lv&0xFF));
     }
 }
-static u32 jh_level(u32 i){ u16 v=*kc_var(JH_LV+(i>>1)); return (i&1)?(v>>8):(v&0xFF); }
+static u32 jh_level(u32 i){ u16 v=*kc_var(JH_LVV[i>>1]); return (i&1)?(v>>8):(v&0xFF); }
 // GSV1 = species of slot GSV4 (0 = none), gStringVar1 = its level
 void jh_slot(void){
     u32 i=GSV(4); if(i>5){ GSV(1)=0; return; }
-    GSV(1)=*kc_var(JH_SP+i);
+    GSV(1)=*kc_var(JH_SPV[i]);
     u8* o=put_num(STRVAR1,jh_level(i)); *o=0xFF;
 }
 // the roll of honour: "NAME Lv45" lines, two to a page, in gStringVar1. GSV7 = 1 when a team is recorded
 void jh_roll(void){
     u8* o=STRVAR1; u32 k=0;
     for(u32 i=0;i<6;i++){
-        u32 sp=*kc_var(JH_SP+i); if(!sp) continue;
+        u32 sp=*kc_var(JH_SPV[i]); if(!sp) continue;
         if(k){ *o++=(k&1)?0xFE:0xFB; }
         const u8* nm=(const u8*)(SPNAMES+11*sp);
         while(*nm!=0xFF) *o++=*nm++;

@@ -15,7 +15,7 @@ W='/home/claude/work/army'
 T=0x798790; GROUPS=0x3526A8
 # trainer ids that no script or special uses: Hoenn leftovers (1-29 without 3, which is the hack's AIDE), the unused channelers, and gym trainers the hack removed.
 # 492-515 (Trainer Tower, player pictures) and 326-331 (rival) are in use and stay out.
-ID_POOL=[1,2]+list(range(4,30))+[36,37,38,39,40]+list(range(79,89))+list(range(454,462))+[101,113,124,147,161,174,175,176,200,210,211,212,217,257,263,275,284,299,311,312,370,372,395,397,398,399,405,407,408,409,424,425,428,430,433,434,437,439,440,530,533,593,594]
+ID_POOL=[1,2]+list(range(4,30))+[33,34,35,442,739]+list(range(79,89))+list(range(454,462))+[101,113,124,147,161,174,175,176,200,210,211,212,217,257,263,275,284,299,311,312,370,372,395,397,398,399,405,407,408,409,424,425,428,430,433,434,437,439,440,530,533,593,594]
 FLAG_CLEARED0=0x4C0          # + city index: the base was cleared (soldiers leave). 0x4B0-0x4BC are the vanilla FLAG_DEFEATED_<leader> flags, so they are not used
 VICTIM_VARS=[0x40F9,0x40FA,0x40FB,0x40FC,0x40FD,0x40FE,0x40FF,0x40E0,0x40E1,0x40E2]     # by city index: bit k set = the NPC with local id k was shot by a patrol (unnamed vanilla vars)
 MAX_VICTIMS=3
