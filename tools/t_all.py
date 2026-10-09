@@ -6,7 +6,7 @@ def make(rom,out,g,n,x,y,give=None):
     d=bytearray(open(rom,'rb').read())
     end=max(i for i in range(0xA00000,len(d)) if d[i]!=0xff)+1; a=(end+3)&~3
     gv=b''
-    if give: gv=bytes([0x79])+struct.pack('<H',give[0])+bytes([give[1]])+bytes(2)+bytes(9)
+    if give: gv=bytes([0x44])+struct.pack('<HH',give[0],give[1])
     sc=gv+bytes([0x39,g,n,0xff])+struct.pack('<HH',x,y)+bytes([0x27,0x02]); d[a:a+len(sc)]=sc
     d[0xa01a38:0xa01a3c]=struct.pack('<I',0x08000000+a); open(out,'wb').write(d)
 def run(name,rom,g,n,x,y,pokes=(),keys=(),shots=(),rams=(),end=700,flags=True,give=None,state='out/base.state'):

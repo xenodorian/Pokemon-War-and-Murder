@@ -5,10 +5,10 @@ def load(d,g,n):
     G=0x3526A8; gp=r32(G+4*g)-0x08000000; h=r32(gp+4*n)-0x08000000; lay=r32(h)-0x08000000
     w,hh=r32(lay),r32(lay+4); mp=r32(lay+12)-0x08000000
     P=r32(lay+16)-0x08000000; S=r32(lay+20)-0x08000000
-    pa=r32(P+16)-0x08000000; sa=r32(S+16)-0x08000000
+    pa=r32(P+20)-0x08000000; sa=r32(S+20)-0x08000000
     def beh(m):
         a=struct.unpack('<I',d[(pa+4*m) if m<640 else (sa+4*(m-640)):][:4])[0]
-        return a&0xff
+        return a&0x1ff
     ev=r32(h+4)-0x08000000; po=r32(ev+4)-0x08000000
     objs={}
     for i in range(d[ev]): objs[struct.unpack('<hh',d[po+24*i+4:po+24*i+8])]=d[po+24*i+1]

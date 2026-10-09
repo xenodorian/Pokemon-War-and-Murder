@@ -40,28 +40,37 @@ REAPER=dict(title='THE REAPER',done=[var(VAR_LEAGUE,1)],stages=[
  ([tr(348,False)],'ROCKET HIDEOUT, under the CELADON GAME CORNER.','Face GIOVANNI. Someone is hunting his men and he fears he is next.'),
  (None,'POKéMON LEAGUE, past ROUTE 23.',"SHINIGAMI hunts LANCE too. Reach LANCE's room and meet SHINIGAMI at the entrance.")])
 def hm(title,item,where,todo): return dict(title=title,done=[it(item)],stages=[(None,where,todo)])
-SPIRIT_QUEST=dict(title='SPIRIT WITCH',done=[('v',0x40F5,10)],stages=[
-   ([('f',0x4DA,False)],'CELADON CITY, by the pond.','Talk to the SPIRIT WITCH. She only works with people who have good KARMA.'),
-   ([('v',0x40F5,0),('f',0x4D0,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the GASTLY in PALLET TOWN.'),
-   ([('v',0x40F5,0)],'PALLET TOWN.','Catch the level 5 GASTLY that haunts it, then return to the SPIRIT WITCH.'),
-   ([('v',0x40F5,1),('f',0x4D1,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the HOUNDOUR in VIRIDIAN CITY.'),
-   ([('v',0x40F5,1)],'VIRIDIAN CITY.','Catch the level 10 HOUNDOUR that haunts it, then return to the SPIRIT WITCH.'),
-   ([('v',0x40F5,2),('f',0x4D2,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the MURKROW in PEWTER CITY.'),
-   ([('v',0x40F5,2)],'PEWTER CITY.','Catch the level 15 MURKROW that haunts it, then return to the SPIRIT WITCH.'),
-   ([('v',0x40F5,3),('f',0x4D3,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the SNEASEL in CERULEAN CITY.'),
-   ([('v',0x40F5,3)],'CERULEAN CITY.','Catch the level 20 SNEASEL that haunts it, then return to the SPIRIT WITCH.'),
-   ([('v',0x40F5,4),('f',0x4D4,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the HAUNTER in VERMILION CITY.'),
-   ([('v',0x40F5,4)],'VERMILION CITY.','Catch the level 25 HAUNTER that haunts it, then return to the SPIRIT WITCH.'),
-   ([('v',0x40F5,5),('f',0x4D5,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the MISDREAVUS in LAVENDER TOWN.'),
-   ([('v',0x40F5,5)],'LAVENDER TOWN.','Catch the level 30 MISDREAVUS that haunts it, then return to the SPIRIT WITCH.'),
-   ([('v',0x40F5,6),('f',0x4D6,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the HOUNDOOM in CELADON CITY.'),
-   ([('v',0x40F5,6)],'CELADON CITY.','Catch the level 35 HOUNDOOM that haunts it, then return to the SPIRIT WITCH.'),
-   ([('v',0x40F5,7),('f',0x4D7,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the GENGAR in SAFFRON CITY.'),
-   ([('v',0x40F5,7)],'SAFFRON CITY.','Catch the level 40 GENGAR that haunts it, then return to the SPIRIT WITCH.'),
-   ([('v',0x40F5,8),('f',0x4D8,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the UMBREON in FUCHSIA CITY.'),
-   ([('v',0x40F5,8)],'FUCHSIA CITY.','Catch the level 45 UMBREON that haunts it, then return to the SPIRIT WITCH.'),
-   ([('v',0x40F5,9),('f',0x4D9,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the TYRANITAR in CINNABAR ISLAND.'),
-   ([('v',0x40F5,9)],'CINNABAR ISLAND.','Catch the level 50 TYRANITAR that haunts it, then return to the SPIRIT WITCH.')])
+_SP=[('PALLET TOWN','GASTLY',5,'PALLET TOWN'),('VIRIDIAN CITY','HOUNDOUR',10,'VIRIDIAN CITY'),('PEWTER CITY','MURKROW',15,'PEWTER CITY'),('CERULEAN CITY','SNEASEL',20,'CERULEAN CITY'),
+ ('VERMILION CITY','HAUNTER',25,'VERMILION CITY'),('LAVENDER TOWN','MISDREAVUS',30,'LAVENDER TOWN'),('CELADON CITY','HOUNDOOM',35,'CELADON CITY'),('SAFFRON CITY','GENGAR',40,'SAFFRON CITY'),
+ ('FUCHSIA CITY','UMBREON',45,'FUCHSIA CITY'),('CINNABAR ISLAND','TYRANITAR',50,'CINNABAR ISLAND')]
+_st=[([('f',0x4DA,False)],'CELADON CITY, by the pond.','Talk to the SPIRIT WITCH. She only works with people who have good KARMA.')]
+for _k,(_c,_n,_l,_w) in enumerate(_SP):
+    _st.append(([('v',0x40F5,_k),('f',0x4D0+_k,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH for your reward. You caught the %s in %s.'%(_n,_c)))
+    _st.append(([('v',0x40F5,_k),('f',0x4DB+_k,True)],'CELADON CITY, the SPIRIT WITCH.','Return to the SPIRIT WITCH. You defeated the %s in %s instead of catching it, so she pays half.'%(_n,_c)))
+    _st.append(([('v',0x40F5,_k)],'%s.'%_c,'Catch the level %d %s that haunts it, then return to the SPIRIT WITCH.'%(_l,_n)))
+SPIRIT_QUEST=dict(title='SPIRIT WITCH',done=[('v',0x40F5,10)],stages=_st)
+
+JRA_WHERE={'PALLET':'PALLET TOWN, a grey JRA building through the east trees.','VIRIDIAN':'VIRIDIAN CITY, a grey JRA building in the east forest.','PEWTER':'PEWTER CITY, the grey JRA building north-east of the Gym.',
+ 'CERULEAN':'CERULEAN CITY, a grey JRA building on the east road.','VERMILION':'VERMILION CITY, a grey JRA building on the east road.','LAVENDER':'LAVENDER TOWN, a grey JRA building through the east cliff.',
+ 'CELADON':'CELADON CITY, a grey JRA building on the east road.','SAFFRON':'SAFFRON CITY, a grey JRA building by the west gate.','FUCHSIA':'FUCHSIA CITY, a grey JRA building north of the pond.','CINNABAR':'CINNABAR ISLAND, a grey JRA building on the south beach.'}
+def jra_quests():
+    allc=sorted(json.load(open('/home/claude/work/army/cities.json')),key=lambda c:c['num'])
+    cities=[c for c in allc if c['name']!='GENERAL']; gen=[c for c in allc if c['name']=='GENERAL'][0]
+    out=[]
+    for c in cities:
+        door='This door is unlocked.' if c['num']==1 else 'You need the %s to open the door.'%cities[c['num']-2]['medal']
+        out.append(dict(title='JRA: '+c['name'],done=[('f',c['flag'],True)],stages=[(None,JRA_WHERE[c['name']],'The JOHTO REVOLUTIONARY ARMY holds %s. Beat CAPT. %s for the %s. %s'%(c['name'],c['captain'],c['medal'],door))]))
+    out.append(dict(title='JRA: GENERAL',done=[('f',gen['flag'],True)],stages=[
+      ([f('FLAG_DEFEATED_CHAMP',False)],'The POKéMON LEAGUE, past ROUTE 23.','The JRA headquarters on SEVEN ISLAND is sealed until the CHAMPION falls.'),
+      (None,'SEVEN ISLAND, a grey JRA building through the east lawn.','Beat GENERAL %s and his six legendary POKéMON to end the JOHTO REVOLUTIONARY ARMY. The HALL OF JUSTICE records your team when he falls.'%gen['captain'])]))
+    out.append(dict(title='HALL OF JUSTICE',done=[('f',0x4CB,True)],stages=[
+      ([('f',gen['flag'],False)],'SEVEN ISLAND, the JRA headquarters.','Beat GENERAL %s first. The HALL OF JUSTICE opens for you when he falls.'%gen['captain']),
+      (None,'The HALL OF JUSTICE, where you stood when GORE fell.','Let the COMMISSIONER record your team, then read the statue plaque to see the roll.')]))
+    out.append(dict(title='POLICE DEAL',done=[('v',0x40AB,3)],stages=[
+      ([('v',0x40AB,1)],'Anywhere the police find you.','You refused the deal. The offer will not come again.'),
+      (None,'Any police officer, once the police are after you.','Kill more than 10 people and more than 10 JRA soldiers. An officer offers to look the other way if you stop killing civilians.')]))
+    return out
+JRA_QUESTS=jra_quests()
 SIDE=[
  dict(title='S.S. TICKET',done=[f('FLAG_GOT_SS_TICKET')],stages=[(None,"BILL's SEA COTTAGE on ROUTE 25. ROUTE 24 leads north from CERULEAN CITY.",'Meet BILL and get the S.S. TICKET.')]),
  hm('CUT (HM01)','ITEM_HM01',"S.S. ANNE at VERMILION CITY: the CAPTAIN's office.",'Talk to the CAPTAIN to get HM01 CUT. You need the S.S. TICKET to board.'),
@@ -103,7 +112,7 @@ SIDE=[
  dict(title='CERULEAN CAVE',done=[f('FLAG_WORLD_MAP_CERULEAN_CAVE_1F')],stages=[(None,'CERULEAN CAVE, across the water by CERULEAN CITY.','Enter the cave. It holds the strongest POKéMON in KANTO.')]),
  dict(title='CONFESSION',done=[('f',0x4AC,True)],stages=[(None,'The CHURCH in PALLET TOWN, south of the lab.','Talk to the PRIEST. He forgives your kills for a donation: 1,000 per kill, 9,999 at most. Your KILL COUNT drops to zero.')]),
  SPIRIT_QUEST,
- dict(title='JRA: PEWTER',done=[('f',0x4C0,True)],stages=[(None,'PEWTER CITY, the grey JRA building north-east of the Gym.','The JOHTO REVOLUTIONARY ARMY holds PEWTER. Fight through the base and beat CAPT. MARLOW. This door is unlocked.')])
+ *JRA_QUESTS,
 ]
 ALL=MAIN+[REAPER]+SIDE
 for i,q in enumerate(ALL): q['id']=i+1

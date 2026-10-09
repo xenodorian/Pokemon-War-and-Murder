@@ -145,7 +145,7 @@ def install(r,fns,gfx_id):
     lay=r.alloc(struct.pack('<IIIIII',w,h,0x08000000+border,0x08000000+blocks,r32(r,hlay+16),0x08000000+sec)+bytes([2,2,0,0]),4)
     # priest script
     t_none=shinigami.text(r,"PRIEST: Welcome to the church, child.\n\nI see no blood on your hands. Go in peace.")
-    t_intro=shinigami.text(r,"PRIEST: Welcome, child. I can see the blood on your hands.\n\nThe church can forgive any sin. The donation is $1,000 for every life you took, up to $9,999.")
+    t_intro=shinigami.text(r,"PRIEST: Welcome, child. I can see the blood on your hands.\n\nThe church can forgive any sin.\n\nFor a small donation, of course.")
     t_ask=r.alloc(leg1.enc("PRIEST: Your donation is $")[:-1]+b'\xfd\x02'+leg1.enc(".\n\nWill you give it?"),1); t_ask=0x08000000+t_ask
     t_no=shinigami.text(r,"PRIEST: Then the weight stays with you. The church will wait.")
     t_poor=shinigami.text(r,"PRIEST: You cannot afford the donation. Come back when you can.")
@@ -168,10 +168,10 @@ def install(r,fns,gfx_id):
     # events
     ob=bytearray(24); ob[0]=1; ob[1]=gfx_id; ob[4:6]=struct.pack('<h',4); ob[6:8]=struct.pack('<h',3); ob[8]=3; ob[9]=8; ob[16:20]=struct.pack('<I',0x08000000+sc)
     oa=r.alloc(bytes(ob),4)
-    PAL_WARP=4
-    wb=b''.join(struct.pack('<hhBBBB',x,9,0,PAL_WARP+(0 if x!=5 else 1),0,3) for x in (3,4,5))
+    PAL_WARP=6
+    wb=b''.join(struct.pack('<hhBBBB',x,9,0,PAL_WARP+(0 if x!=5 else 1),0,3) for x in (3,4,5))+struct.pack('<hhBBBB',4,8,0,PAL_WARP,0,3)   # exits on the mat row; warp 3 is the arrival tile one step inside the door
     wa=r.alloc(wb,4)
-    ev=r.alloc(bytes([1,3,0,0])+struct.pack('<IIII',0x08000000+oa,0x08000000+wa,0,0),4)
+    ev=r.alloc(bytes([1,4,0,0])+struct.pack('<IIII',0x08000000+oa,0x08000000+wa,0,0),4)
     ms=r.alloc(b'\x00',1)
     hb=bytearray(b[hh:hh+28]); hb[0:4]=struct.pack('<I',0x08000000+lay); hb[4:8]=struct.pack('<I',0x08000000+ev); hb[8:12]=struct.pack('<I',0x08000000+ms); hb[12:16]=bytes(4)
     # layout id + group table
@@ -213,8 +213,8 @@ def install(r,fns,gfx_id):
     assert found==1
     nw=b[pev+1]; assert nw==4
     wp=r32(r,pev+8)-0x08000000
-    ws=bytes(b[wp:wp+8*nw])+b''.join(struct.pack('<hhBBBB',x,15,0,1,NEWNUM,NEWGRP) for x in (7,8))
-    b[pev+1]=6; r.w32(pev+8,0x08000000+r.alloc(ws,4))
+    ws=bytes(b[wp:wp+8*nw])+b''.join(struct.pack('<hhBBBB',x,15,0,3,NEWNUM,NEWGRP) for x in (7,8))+b''.join(struct.pack('<hhBBBB',x,16,0,3,NEWNUM,NEWGRP) for x in (7,8))   # doors, then the plain tiles in front of them (where people leaving the church arrive)
+    b[pev+1]=8; r.w32(pev+8,0x08000000+r.alloc(ws,4))
     pl=r32(r,ph)-0x08000000; pmp=r32(r,pl+12)-0x08000000; pw=r32(r,pl)
     for x in (7,8):
         o=pmp+2*(15*pw+x); v=struct.unpack('<H',b[o:o+2])[0]; b[o:o+2]=struct.pack('<H',(v&0x3ff)|0x3000)

@@ -12,6 +12,24 @@ CLASS_POLICE=91; PIC_POLICE=126; GFX_POLICE=60
 CITIES=[((3,1),[350],'VIRIDIAN CITY'),((3,2),[414],'PEWTER CITY'),((3,3),[234],'CERULEAN CITY'),((3,5),[141,423],'VERMILION CITY'),
         ((3,6),[132,265,160,266,267,133,402],'CELADON CITY'),((3,7),[418],'FUCHSIA CITY'),((3,10),[280,283,462,463,464,281],'SAFFRON CITY'),((3,8),[213,177,178,214,179,215,180],'CINNABAR ISLAND')]
 NAMES=['JACK','HANK','BOB','DAN','LEE','RAY','TOM','MIKE','FRED','GUS','NED','PAUL','SAM','TIM','VIC','WADE','ZACH','CARL','DEAN','ELI','GREG','IVAN','JOEL','OWEN']
+# Gen 1 species and the level at which each is a natural pick (basic forms 1, evolutions near their evolution level, stone forms at a typical level); legendaries left out
+GEN1=[(1,1),(2,16),(3,32),(4,1),(5,16),(6,36),(7,1),(8,16),(9,36),(10,1),(11,7),(12,10),(13,1),(14,7),(15,10),(16,1),(17,18),(18,36),(19,1),(20,20),(21,1),(22,20),(23,1),(24,22),(25,1),(26,30),
+ (27,1),(28,22),(29,1),(30,16),(31,30),(32,1),(33,16),(34,30),(35,1),(36,30),(37,1),(38,30),(39,1),(40,30),(41,1),(42,22),(43,1),(44,21),(45,30),(46,1),(47,24),(48,1),(49,31),(50,1),(51,26),
+ (52,1),(53,28),(54,1),(55,33),(56,1),(57,28),(58,1),(59,30),(60,1),(61,25),(62,30),(63,1),(64,16),(65,30),(66,1),(67,28),(68,36),(69,1),(70,21),(71,30),(72,1),(73,30),(74,1),(75,25),(76,36),
+ (77,1),(78,40),(79,1),(80,37),(81,1),(82,30),(83,1),(84,1),(85,31),(86,1),(87,34),(88,1),(89,38),(90,1),(91,30),(92,1),(93,25),(94,36),(95,1),(96,1),(97,26),(98,1),(99,28),(100,1),(101,30),
+ (102,1),(103,30),(104,1),(105,28),(106,20),(107,20),(108,1),(109,1),(110,35),(111,1),(112,42),(113,1),(114,1),(115,1),(116,1),(117,32),(118,1),(119,33),(120,1),(121,30),(122,1),(123,1),(124,1),
+ (125,1),(126,1),(127,1),(128,1),(129,1),(130,20),(131,1),(132,1),(133,1),(134,30),(135,30),(136,30),(137,1),(138,1),(139,40),(140,1),(141,40),(142,1),(143,1),(147,1),(148,30),(149,55)]
+# town level cap and the gym leader's party size (the soldiers' rules): a soldier has 1..lead Pokemon, each 3-8 levels below the cap (never under 2)
+CAPS={(3,1):(10,4),(3,2):(15,2),(3,3):(20,2),(3,5):(25,3),(3,6):(35,3),(3,7):(45,4),(3,10):(40,4),(3,8):(50,4)}
+def police_team(g,n,tid):
+    import random
+    cap,lead=CAPS[(g,n)]; rng=random.Random('police-%d'%tid)
+    k=rng.randint(1,lead); levels=sorted(max(2,cap-rng.randint(3,8)) for _ in range(k)); team=[]; used=set()
+    for lv in levels:
+        elig=[sp for sp,mn in GEN1 if mn<=lv]; near=[sp for sp,mn in GEN1 if lv-20<=mn<=lv]
+        pool=[x for x in (near or elig) if x not in used] or elig
+        sp=rng.choice(pool); used.add(sp); team.append((sp,lv))
+    return team
 def install(r):
     b=r.b; k=0
     t_intro=0x08000000+r.alloc(leg1.enc("OFFICER: Halt! You have killed too many people. You're under arrest!"),1)
@@ -23,6 +41,8 @@ def install(r):
             tid=POL0+k; src=pool[j%len(pool)]
             e=bytearray(b[T+40*src:T+40*src+40]); e[1]=CLASS_POLICE; e[3]=PIC_POLICE
             nm=bytes(leg1.ENC[c] for c in NAMES[k]); e[4:16]=nm+b'\xff'*(12-len(nm))
+            team=police_team(g,n,tid); pd=b''.join(struct.pack('<HBBHH',160,lv,0,sp,0) for sp,lv in team)
+            e[0]=0; e[32]=len(team); e[36:40]=struct.pack('<I',0x08000000+r.alloc(pd,4))
             b[T+40*tid:T+40*tid+40]=e
             S=SB(); S.raw(0x5c,0); S._add(struct.pack('<HH',tid,0)); S.ptr(t_intro); S.ptr(t_lost); S.msg(t_after,6); S.end()
             sc=put_script(r,S)
