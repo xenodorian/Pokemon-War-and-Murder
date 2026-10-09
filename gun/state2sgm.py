@@ -80,7 +80,7 @@ wb(V,bool(io16(0x50)&0x3f)); wb(V,bool(io16(0)&0xe000))      # fxOn, windowOn
 wb(V,cpsr&(1<<31)); wb(V,cpsr&(1<<29)); wb(V,cpsr&(1<<30)); wb(V,cpsr&(1<<28))   # N C Z V
 wb(V,armState); wb(V,not (cpsr&0x80))
 nextpc=(gp[15]-(4 if armState else 2))&0xffffffff
-w32(V,nextpc); wi(V,mode); wi(V,3)           # armNextPC, armMode, saveType = flash
+w32(V,nextpc); wi(V,mode); wi(V,0)           # armNextPC, armMode, saveType = automatic (old VBA rejects 3)
 body+=V
 wi(body,1 if halted and False else 0)          # stopState
 wi(body,0)                                     # IRQTicks
