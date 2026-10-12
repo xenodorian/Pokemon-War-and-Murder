@@ -51,3 +51,6 @@ Finds blocks repeated along one axis, or alternated as A B A B, for longer than 
 
 ## Rock comb scan (2026-10-12), tools/rock_comb_scan.py
 Flags rock side faces repeated across their edge, top/bottom faces repeated vertically, corner blocks repeated in a line, and rock blocks alternated A B A B, in patched cells only, over every map. Current ROM: 0 hits. The pre-fix ROM (commit 15edbff) shows hits in Lavender (117/113, 125/113, 179/113, 187/113 alternated, x=22..37) and Vermilion's water island (113/114 and 124/122 alternated, x=46..59), which confirms the scanner works. Cave and interior rock tilesets use other block ids and are not covered.
+
+## Comb fixes (2026-10-12, ROM patch, 78 bytes)
+Seven Island (3,18): pale-rim stripes 199/207 at x=23..37 rows 14..19 replaced by the dark lawn pattern (9 on even rows, 17 on odd); row 13 pale-band bottom rim 206 across x=23..36; ledge posts 230 continue along row 21 to x=36, tall end post 232/243 at x=37, grass above. Cerulean (3,3): row 16 x=57..61 was 244 (vertical pole) repeated; now corner 252 at x=57 and horizontal fence 231 at x=58..61. Scanners report no remaining candidates of the listed kinds.
