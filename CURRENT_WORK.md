@@ -39,3 +39,6 @@ Vermilion side edges (2026-10-12): trees whose side now faces lawn use the edge 
 
 ## Rock rules (2026-10-12)
 See tools/rock_rules.py. Route 23 (3,42) mound logic: two nested rings around 113; concave corners 179 (left) and 178 (right). Verified by render: a 3x3 and a T-shaped mound. Lavender's rock should be rebuilt with these rules, not by repeating column pairs.
+
+## Lavender rock comb fix (2026-10-12, patched into roms/m_final_latest_build.gba, Lavender map only)
+Rows 0..5 x=23..36 = 113 (flat); row 6 x=22..35 = 121 (outer bottom face) and (36,6) = 179 (concave corner under the right wall); row 19 x=23..35 = 105 (top edge) and (36,19) = 187. Rock bits copied from (37,0). The yard, house, fences and the 112/113 right wall are untouched. Source (army_sites.extend_row) still produces the comb on a full rebuild: apply tools/rock_rules.py logic there.
