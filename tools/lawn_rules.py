@@ -18,6 +18,9 @@ def border_block(D,x,y):
     if any(k): raise ValueError('unhandled neighbourhood %s at %s'%(k,(x,y)))
     for (a,b),v in CONVEX.items():
         if d(a,b):
+            # below the end of a 686 column (dark west of the cell above, and that cell is not dark itself): 652
+            if (a,b)==(-1,-1) and (x-1,y-1) in D and (x,y-1) not in D and (x-1,y-2) in D:
+                return 652
             return v
     return None
 def dark_block(x,y): return ([8,9] if y%2==0 else [16,17])[x%2]
