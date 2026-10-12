@@ -45,3 +45,6 @@ Rows 0..5 x=23..36 = 113 (flat); row 6 x=22..35 = 121 (outer bottom face) and (3
 
 ## Lavender Tower fence runs (2026-10-12, ROM patch, Lavender map only, 11 cells)
 The vertical runs used the horizontal fence block 231. Now x=15 rows 7..11 = 244 (pole on the block's left), x=21 rows 8..11 = 245 (pole on the right), corners (15,12) = 252 and (21,12) = 253 (post rising to meet the pole). The horizontal row 12 and every other fence are untouched. Vertical fence blocks use tile 0x202f, which the first fence scan missed.
+
+## Comb scan (2026-10-12), tools/comb_scan.py
+Finds blocks repeated along one axis, or alternated as A B A B, for longer than the original game ever does, only where the patched ROM differs from the original. Candidates still open in roms/m_final_latest_build.gba: Seven Island (3,18) lawn columns x=23..37 rows 14..19 (199/9/17 stripes) and its ledge rows 19..21; Cerulean (3,3) row 16 x=57..61 (block 244, a vertical-pole fence block, repeated horizontally). Lavender and Vermilion were fixed above. Tree and plain-grass alternation is expected and filtered out.
