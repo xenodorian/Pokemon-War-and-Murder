@@ -36,3 +36,6 @@ Cells changed (x,y): (48..57,11) tree bottom row 0x24|0x25; (48..57,12..13) lawn
 Cause in source, not yet fixed in tools/army_sites.py extend_row/retree: the stack at x=48..57 was left with a wrong-variant bottom row, orphan right halves at y=12..13, and the roof blocks of the old row copy at x=55..57.
 The .state files are paired to the old ROM CRC and must be re-paired after the next full rebuild.
 Vermilion side edges (2026-10-12): trees whose side now faces lawn use the edge variants. (47,12..15) right halves 0x1d,0x15,0x1d,0x25 -> 0x1f,0x17,0x1f,0x27; (58,12..15) left halves 0x1c,0x14,0x1c,0x24 -> 0x1e,0x16,0x1e,0x26. 8 cells.
+
+## Rock rules (2026-10-12)
+See tools/rock_rules.py. Route 23 (3,42) mound logic: two nested rings around 113; concave corners 179 (left) and 178 (right). Verified by render: a 3x3 and a T-shaped mound. Lavender's rock should be rebuilt with these rules, not by repeating column pairs.
