@@ -3,3 +3,5 @@
 *.mgba
 !roms/*.gba
 !saves/**/*.state
+__pycache__/
+*.pyc
