@@ -62,3 +62,6 @@ tools/orphan_scan.py lists orphaned road, rock and tree-variant cells in patched
 
 ## Pallet base lawn and house ground (2026-10-12, ROM patch)
 Pallet (3,0) lawn rim cells re-set by tools/lawn_rules.py: (35,12)=655, (35,15)=663, (35,16)=703, (37,16)=655, (24,16)=652, (21,15)=663, (21,16)=703. The grafted house metatiles 1008..1023 had Pewter dark grass as their ground layer; those entries now use the pale lawn tiles (Tileset.commit rewrote the Pallet tileset, so about 11 KB of the ROM differs). Image 1 of the review (Pallet rock hut at (5,16) and the pond) is vanilla art, also in the original ROM; the user wants its corners reviewed. Vermilion island corner (59,28) is vanilla.
+
+## Pallet pond corners (2026-10-12, ROM patch, 2 cells)
+(7,17) 721 -> 288 and (10,17) 722 -> 289: the original corner blocks leave grass-coloured notches in the rock rim; 288 and 289 are the primary tileset's rock-rimmed deep water corners and line up with the 298/300 sides and the 291 top.
