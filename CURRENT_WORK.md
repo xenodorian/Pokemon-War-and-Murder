@@ -30,3 +30,8 @@ Left out as outdated: 530 older ROM builds, older states/saves (453db1b1 .sav, b
 See tools/lawn_rules.py. A dark-lawn region (blocks 8/9/16/17, trees on top) in a pale lawn (662) gets its border from the 4 cardinal neighbours (654/670/663/686, concave 678/655/671/679) and diagonal neighbours (convex 711/710/703/702). Pairings come from Pallet's own map: 661 with 710/702, 686 with 652 below. All 15 fence blocks are drawn on dark lawn, so fences must not be drawn on pale lawn; the user said to draw no fences.
 Reference scratch layout (not applied to any map): grey house on a pale yard, forest belt of whole trees on the back and sides, no fence.
 Next: replace retree.learn_lawn/apply_lawn with these rules (the old table is learned from Pallet only and leaves corners unfilled), rebuild Vermilion's forest, re-render all extended towns.
+
+## Vermilion base fix (2026-10-12, patched in place into roms/m_final_latest_build.gba, 70 bytes changed, Vermilion map only)
+Cells changed (x,y): (48..57,11) tree bottom row 0x24|0x25; (48..57,12..13) lawn; (48,49,55,56,57 at y=14,15) lawn. Lawn = the town's own pattern: odd x 1, even x 8 (even y) or 16 (odd y). The house (x=50..54,y=14..17), the fences (row 17 and others) and every other town are untouched.
+Cause in source, not yet fixed in tools/army_sites.py extend_row/retree: the stack at x=48..57 was left with a wrong-variant bottom row, orphan right halves at y=12..13, and the roof blocks of the old row copy at x=55..57.
+The .state files are paired to the old ROM CRC and must be re-paired after the next full rebuild.
