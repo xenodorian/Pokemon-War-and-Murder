@@ -48,3 +48,6 @@ The vertical runs used the horizontal fence block 231. Now x=15 rows 7..11 = 244
 
 ## Comb scan (2026-10-12), tools/comb_scan.py
 Finds blocks repeated along one axis, or alternated as A B A B, for longer than the original game ever does, only where the patched ROM differs from the original. Candidates still open in roms/m_final_latest_build.gba: Seven Island (3,18) lawn columns x=23..37 rows 14..19 (199/9/17 stripes) and its ledge rows 19..21; Cerulean (3,3) row 16 x=57..61 (block 244, a vertical-pole fence block, repeated horizontally). Lavender and Vermilion were fixed above. Tree and plain-grass alternation is expected and filtered out.
+
+## Rock comb scan (2026-10-12), tools/rock_comb_scan.py
+Flags rock side faces repeated across their edge, top/bottom faces repeated vertically, corner blocks repeated in a line, and rock blocks alternated A B A B, in patched cells only, over every map. Current ROM: 0 hits. The pre-fix ROM (commit 15edbff) shows hits in Lavender (117/113, 125/113, 179/113, 187/113 alternated, x=22..37) and Vermilion's water island (113/114 and 124/122 alternated, x=46..59), which confirms the scanner works. Cave and interior rock tilesets use other block ids and are not covered.
