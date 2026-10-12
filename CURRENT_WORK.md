@@ -65,3 +65,6 @@ Pallet (3,0) lawn rim cells re-set by tools/lawn_rules.py: (35,12)=655, (35,15)=
 
 ## Pallet pond corners (2026-10-12, ROM patch, 2 cells)
 (7,17) 721 -> 288 and (10,17) 722 -> 289: the original corner blocks leave grass-coloured notches in the rock rim; 288 and 289 are the primary tileset's rock-rimmed deep water corners and line up with the 298/300 sides and the 291 top.
+
+## Pond corners, corrected (2026-10-12)
+Original ROM logic for rock-rimmed water corners: the corner block follows what lies outside the corner. Square corners (288/289, 419/420, 582/583, 616/617) are used when the outside is rock or cliff (Cerulean (4,2): rock 124/117/178 around; Vermilion's rocky pond). Rounded corners show lawn: 290/292 and 421/423 have dark-grass pixels (115,205,164) in the corner, used where grass 1/8/9/16/17 lies outside (Vermilion, Celadon, Viridian); 721/722 are Pallet's own versions with pale-lawn pixels (189,238,213), used where pale lawn 662 lies outside. Pallet's pond sits on pale lawn, so 721/722 were already right; the earlier change to 288/289 was reverted. Bottom corners exist only as the rounded variants 548/550 (and 784/786 in some tilesets).
