@@ -42,3 +42,6 @@ See tools/rock_rules.py. Route 23 (3,42) mound logic: two nested rings around 11
 
 ## Lavender rock comb fix (2026-10-12, patched into roms/m_final_latest_build.gba, Lavender map only)
 Rows 0..5 x=23..36 = 113 (flat); row 6 x=22..35 = 121 (outer bottom face) and (36,6) = 179 (concave corner under the right wall); row 19 x=23..35 = 105 (top edge) and (36,19) = 187. Rock bits copied from (37,0). The yard, house, fences and the 112/113 right wall are untouched. Source (army_sites.extend_row) still produces the comb on a full rebuild: apply tools/rock_rules.py logic there.
+
+## Lavender Tower fence runs (2026-10-12, ROM patch, Lavender map only, 11 cells)
+The vertical runs used the horizontal fence block 231. Now x=15 rows 7..11 = 244 (pole on the block's left), x=21 rows 8..11 = 245 (pole on the right), corners (15,12) = 252 and (21,12) = 253 (post rising to meet the pole). The horizontal row 12 and every other fence are untouched. Vertical fence blocks use tile 0x202f, which the first fence scan missed.
