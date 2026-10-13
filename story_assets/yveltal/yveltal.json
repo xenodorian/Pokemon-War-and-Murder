@@ -1,0 +1,274 @@
+{
+  "national_dex": 717,
+  "name": "Yveltal",
+  "types": [
+    "DARK",
+    "FLYING"
+  ],
+  "base_stats": {
+    "hp": 126,
+    "attack": 131,
+    "defense": 95,
+    "speed": 99,
+    "sp_attack": 131,
+    "sp_defense": 98
+  },
+  "ev_yield": {
+    "hp": 3,
+    "attack": 0,
+    "defense": 0,
+    "speed": 0,
+    "sp_attack": 0,
+    "sp_defense": 0
+  },
+  "abilities": [
+    "Dark Aura"
+  ],
+  "catch_rate": 45,
+  "base_exp_yield": 306,
+  "growth_rate": "Slow",
+  "egg_groups": [
+    "Undiscovered"
+  ],
+  "gender_ratio": "genderless",
+  "height_dm": 58,
+  "weight_hg": 2030,
+  "category": "Destruction",
+  "pokedex_text": "Wings and tail feathers spread\nwide and glow red, it absorbs\nthe life force of living things.",
+  "learnset": [
+    [
+      1,
+      "Razor Wind"
+    ],
+    [
+      1,
+      "Taunt"
+    ],
+    [
+      1,
+      "Air Cutter"
+    ],
+    [
+      5,
+      "Double Team"
+    ],
+    [
+      18,
+      "Bite"
+    ],
+    [
+      26,
+      "Fly"
+    ],
+    [
+      35,
+      "Disable"
+    ],
+    [
+      44,
+      "Crunch"
+    ],
+    [
+      51,
+      "Thief"
+    ],
+    [
+      55,
+      "Shadow Ball"
+    ],
+    [
+      59,
+      "Psychic"
+    ],
+    [
+      63,
+      "Dragon Claw"
+    ],
+    [
+      72,
+      "Focus Punch"
+    ],
+    [
+      80,
+      "Feint Attack"
+    ],
+    [
+      80,
+      "Hyper Beam"
+    ]
+  ],
+  "learnset_detail": [
+    {
+      "level": 1,
+      "move": "Razor Wind",
+      "gen3_id": 13,
+      "source": "x-y level 1: Razor Wind"
+    },
+    {
+      "level": 1,
+      "move": "Taunt",
+      "gen3_id": 269,
+      "source": "x-y level 1: Taunt"
+    },
+    {
+      "level": 1,
+      "move": "Air Cutter",
+      "gen3_id": 314,
+      "source": "x-y Hurricane (level 1 in x-y, id 542) is not Gen 3; Air Cutter substituted (Flying special)"
+    },
+    {
+      "level": 5,
+      "move": "Double Team",
+      "gen3_id": 104,
+      "source": "x-y level 5: Double Team"
+    },
+    {
+      "level": 18,
+      "move": "Bite",
+      "gen3_id": 44,
+      "source": "x-y Snarl (id 555) is not Gen 3; Bite substituted (Dark physical)"
+    },
+    {
+      "level": 26,
+      "move": "Fly",
+      "gen3_id": 19,
+      "source": "x-y Oblivion Wing (id 613) is not Gen 3; Fly substituted (Flying)"
+    },
+    {
+      "level": 35,
+      "move": "Disable",
+      "gen3_id": 50,
+      "source": "x-y level 35: Disable"
+    },
+    {
+      "level": 44,
+      "move": "Crunch",
+      "gen3_id": 242,
+      "source": "x-y Dark Pulse (id 399) is not Gen 3; Crunch substituted (Dark)"
+    },
+    {
+      "level": 51,
+      "move": "Thief",
+      "gen3_id": 168,
+      "source": "x-y Foul Play (id 492) is not Gen 3; Thief substituted (Dark physical)"
+    },
+    {
+      "level": 55,
+      "move": "Shadow Ball",
+      "gen3_id": 247,
+      "source": "x-y Phantom Force (id 566) is not Gen 3; Shadow Ball substituted (Ghost)"
+    },
+    {
+      "level": 59,
+      "move": "Psychic",
+      "gen3_id": 94,
+      "source": "x-y level 59: Psychic"
+    },
+    {
+      "level": 63,
+      "move": "Dragon Claw",
+      "gen3_id": 337,
+      "source": "x-y Dragon Rush (id 407) is not Gen 3; Dragon Claw substituted"
+    },
+    {
+      "level": 72,
+      "move": "Focus Punch",
+      "gen3_id": 264,
+      "source": "x-y Focus Blast (id 411) is not Gen 3; Focus Punch substituted (Fighting)"
+    },
+    {
+      "level": 80,
+      "move": "Feint Attack",
+      "gen3_id": 185,
+      "source": "x-y Sucker Punch (id 389) is not Gen 3; Feint Attack substituted (Dark physical)"
+    },
+    {
+      "level": 80,
+      "move": "Hyper Beam",
+      "gen3_id": 63,
+      "source": "x-y level 88 moved to 80 to stay in the 1-80 range: Hyper Beam"
+    }
+  ],
+  "tm_hm_compatible": [
+    {
+      "tm": "TM02",
+      "move": "Dragon Claw",
+      "gen3_id": 337,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM12",
+      "move": "Taunt",
+      "gen3_id": 269,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM15",
+      "move": "Hyper Beam",
+      "gen3_id": 63,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM27",
+      "move": "Return",
+      "gen3_id": 216,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM30",
+      "move": "Shadow Ball",
+      "gen3_id": 247,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM32",
+      "move": "Double Team",
+      "gen3_id": 104,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM40",
+      "move": "Aerial Ace",
+      "gen3_id": 332,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM41",
+      "move": "Torment",
+      "gen3_id": 259,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM42",
+      "move": "Facade",
+      "gen3_id": 263,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM44",
+      "move": "Rest",
+      "gen3_id": 156,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM46",
+      "move": "Thief",
+      "gen3_id": 168,
+      "verified_frlg_machine": true
+    },
+    {
+      "tm": "TM47",
+      "move": "Steel Wing",
+      "gen3_id": 211,
+      "verified_frlg_machine": true
+    }
+  ],
+  "notes": [
+    "Sources: stats, types, abilities, EV yield, catch rate, base exp, growth rate, egg group (API 'no-eggs' = Undiscovered), gender, height, weight, category from PokeAPI api-data pokemon/717 and pokemon-species/717 (cross-checked against pokemondb.net/pokedex/yveltal). Dex text is a shortened line-broken version of the Omega Ruby entry (pokemondb / API flavor text).",
+    "Yveltal does not exist in Gen 3. No Gen 3 learnset or Gen 3 TM compatibility exists for it. The learnset is built from its Gen 6 X/Y level-up list (PokeAPI version group x-y) with Gen 6+ moves swapped for Gen 3 moves of similar type and role. This is a design choice, not game data. Moves kept from x-y: Razor Wind 1, Taunt 1, Double Team 5, Disable 35, Psychic 59. Hyper Beam is x-y level 88, moved to 80 to fit the 1-80 range. Sky Attack (x-y 93) was dropped for the same reason. Air Cutter replaces Hurricane (x-y level 1), so the level-1 slot is Air Cutter.",
+    "Each learnset move id was checked against PokeAPI move/1..354 (ids match the Gen 3 move range). Move names come from the PokeAPI en names. Feint Attack (id 185) is PokeAPI's name; the Gen 3 in-game display name was not verified.",
+    "TM list: 12 entries were checked against PokeAPI machine data for version group firered-leafgreen (TM02, TM12, TM15, TM27, TM30, TM32, TM40, TM41, TM42, TM44, TM46, TM47). The choice of which TMs to list was made by type fit and was not checked against any Yveltal-specific TM list in Gen 3 (none exists).",
+    "HM02 Fly was not included: no FRLG HM entries appeared in the PokeAPI machine data (only the 50 TMs were found), so HM compatibility could not be verified. Fly is still in the learnset at level 26 as a substitute for Oblivion Wing.",
+    "Sprites: PokeAPI default front (pokemon/717.png) and back (pokemon/back/717.png), both 96x96. The generation-v black-white files are byte-identical to the defaults (same md5), so they add nothing. The firered-leafgreen sprite paths return 404. These are modern-art sources, reduced with a LANCZOS downscale and a 15-colour quantize, not Gen 3 pixel art. The red eye detail is faint at 64 px."
+  ]
+}
