@@ -122,3 +122,6 @@ My earlier review dismissed this cell wrongly. The original has 654 (dark north 
 ## Cerulean fence connected (2026-10-13)
 The west fence (row 17, x=42..44) stopped short of the base-lot pole (245 at x=48, rows 13..15). Now (45..47,17)=231, (48,16)=245 and (48,17)=253 (bottom-right corner: pole above, rail to the left), so the fence runs unbroken from the x=41 pole to the lot pole, as in the original. The pole cells (48,13..16) had no collision (walkable, raw>>10 = 12); all fence cells now collide (raw>>10 = 1). The east piece ((57,13..16), (58..61,16)) and the stray 231 at (61,17) are unchanged. Not walk-tested. ROM CRC32 3be71115, md5 e0a5e8f06f397956ff37b106c60642b3; patch regenerated and verified.
 Lavender (22,16): false alarm (lawn variant 8 vs 1, former cliff column); no change.
+
+## Cerulean fence end caps (2026-10-13)
+Pole tops (48,12)=238 (cap of the 245 pole) and (57,12)=239 (cap of the 244 pole, same block the x=41 pole uses at (41,11)), solid. The lone 231 at (61,17) is left as is (user: not wrong). ROM CRC32 d15a7735, md5 56c67ab1391602826e638a736be8ae01; patch regenerated and verified.
