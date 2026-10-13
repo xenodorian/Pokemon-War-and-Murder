@@ -155,3 +155,15 @@ ROM CRC32 0xdbe235f4, md5 054ab2d97b0be82bc517f8db278b9780; patch regenerated an
 - Cinnabar sea rocks: the collision of every rock and rim cell matches what the original uses for the same block; water is collision 0 as in the original. Data check only, no Surf walk. The patch does remove some original rocks (x 2..9, y 16..19), which is the earlier inserted-base reshaping.
 - Celadon sign (68,12): looked at again. The sign stands on the same pavement tone as the road around it; changing the block to the lawn variant (a review agent tried) draws green corners in a road row and is worse. Left as is.
 - Town edge check: every flagged cell is a sign on pavement (block 2, the sign-on-road tile), plus one rule artifact; no real defects found. (edge_check.py skips town maps whose grid equals another map's; note kept.)
+
+## Clearing the board, step 2 (2026-10-13)
+- In-game checks run in the harness on the current ROM (CRC32 dbe235f4):
+  - Story officer shooting: Pallet officer at (11,14): "Shoot the officer? This uses one 9MM ROUND." YES/NO, then "The officer goes down." and a splatter. Works.
+  - KARMA menu entry: present in the start menu with its help text ("See your kills, blessings and karma."). Works.
+  - Police Gen 1 teams (trainers 55..78, data read from the ROM): all 24 teams are Gen 1 species (1..151), no duplicate species in a team, levels 2 or more, team sizes within each town's leader party size. No battle was played.
+  - Custom base interiors 2,69..2,79: all 11 load, the player arrives at the exit, tiles render, soldiers and furniture show. Exit arrow warps and the arrival one tile outside the door work (Pallet). Pot collision walk tests pass. Story fights inside the bases were not played.
+  - Grey house tile glitch: all 11 base houses render clean in every town; the only glitch seen was the roof flicker when the door animation overwrote tile slots 1008..1023, fixed by door_anim.py.
+  - Church warps: the church door warps work; arrival tiles in front of it do not re-trigger when walked over.
+- Save port (VBA to R36S mGBA). The user's VBA .sav is the raw 128 KB SRAM, identical to an mGBA .srm, so saves/ported/Pokemon War and Murder.srm is that file renamed. It loads on the current ROM (Continue works; the game resumes in front of the Cinnabar gym). The .state was made by booting the ROM with that .sav in the harness, pressing Continue, saving the raw mGBA state, and wrapping it in a RetroArch RZIP using an R36S template state (tools/make_state.py). The VBA .sgm was not converted: a VBA state holds the old ROM's RAM and is not meaningful for a changed ROM; the .sav is the last in-game save. Re-pair the state with tools/repair_state.py whenever the ROM changes again.
+- Build chain: tools/apply_all.sh rebuilds the current ROM byte for byte from the ROM at commit 16adfb2 (checked: CRC32 dbe235f4).
+- tools/field_test.py, opening_test.py, newgame_test.py, splat_test.py, walk_test.py are the harness tests; they need /home/claude/work (harness, state out/user_new.raw).
