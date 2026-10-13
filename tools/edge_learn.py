@@ -31,6 +31,7 @@ def build(rom,out=VOCAB):
         data[t]={'maps':nmaps[t],'blocks':len(blocks[t]),'pairs':sorted(pairs[t]),'k4':tab}
     with gzip.open(out,'wt') as f: json.dump(data,f,separators=(',',':'))
     return data
+LAWN={1,8,9,16,17}
 class Vocab:
     def __init__(s,path=VOCAB):
         with gzip.open(path,'rt') as f: s.d=json.load(f)
@@ -74,7 +75,7 @@ class Vocab:
                 if not(0<x<w-1 and 0<y<h-1): continue
                 g=lambda xx,yy: out[yy][xx]&0x3ff
                 r=s.suggest(P,S,g(x,y-1),g(x,y+1),g(x+1,y),g(x-1,y))
-                if r and r[1] and r[0]!=g(x,y):
+                if r and r[1] and r[0]!=g(x,y) and not (r[0] in LAWN and g(x,y) in LAWN):      # lawn variants 1/8/9/16/17 are interchangeable: the original's own parity is irregular
                     out[y][x]=(out[y][x]&0xfc00)|r[0]; ch=True; changed.append((x,y,r[0]))
             if not ch: break
         return out,changed
