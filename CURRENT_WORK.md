@@ -173,3 +173,7 @@ ROM CRC32 229fb33e, md5 37dfe10e347c2e4b5038f6106edf4dd0 (supersedes dbe235f4); 
 - Slums (user decision: Pallet only). The other towns' Slums signs, NPC lines and the Viridian cave quest stay. The three lines that sent the player "back to PALLET SLUMS" are reworded (slums_text.py). Found and fixed a miss: the FIRST POKéMON quest log entry exists four times in the ROM, not once; cry_open.update_quest_text now rewrites all four (before this the quest log could still say "Leave the SLUMS"). Checked: no copy of the old text is left.
 - tools/apply_all.sh now includes slums_text.py and rebuilds the current ROM byte for byte from commit 16adfb2.
 - Mason fight lost: only partly tested (a lv60 Pikachu build; the fight was still running when the test ended). By the script logic a loss ends the scene: no flag is set, Mason stays and talking to him or stepping on the trigger tiles starts it again.
+
+## Clearing the board, step 4 (2026-10-13)
+- Cinnabar sea rocks walk-tested (the saved game starts the player surfing, so warping onto water works): from (1,16) up is blocked by the rock at (1,15); from (3,15) left is blocked by (2,15); from (3,24) left is blocked by (2,24); the player moves freely along the open water row 16. Solid in game.
+- Pond bottoms and sides, shores and roads: there is no hand generator for these. edge_learn.Vocab (suggest / repair, learned from every original map) is the rule source for them, and edge_check.py is the check. That is the stopping point; a drawn-from-scratch pond would still need a human look at the render.
