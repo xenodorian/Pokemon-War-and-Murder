@@ -32,21 +32,32 @@ u8 shop_cmd(Ctx* ctx){
     if(rep_calc()==0){ ctx->scriptPtr=(u8*)REFUSE_SCRIPT; return 0; }
     return ((u8(*)(Ctx*))ORIG_POKEMART)(ctx);
 }
-static int usable(u8* m){ u32 sp=GetMonData(m,11,0); if(!sp||sp==412) return 0; return *(u16*)(m+0x56)>0; }
 static void drop(int i){
     int n=COUNT;
     for(int k=i;k<n-1;k++){ u32* d=(u32*)(PARTY+100*k); u32* s=(u32*)(PARTY+100*(k+1)); for(int w=0;w<25;w++) d[w]=s[w]; }
     ZeroMonData(PARTY+100*(n-1)); COUNT=(u8)(n-1);
 }
-// removes MAX (the stand-in for a trainer with nothing to fight with) from the party
+// removes MAX (the stand-in for a trainer with no POKeMON at all) from the party
 void max_remove(void){
     for(int i=0;i<COUNT;i++) if(GetMonData(PARTY+100*i,11,0)==SP_MAX){ drop(i); return; }
 }
-// before every battle: with no usable POKeMON in the party MAX (Lv 1, Caterpie stats, TACKLE) joins; once a usable one exists again she leaves
+#define GMAIN 0x030030F0
+#define SAVEDCB (*(volatile u32*)(GMAIN+8))
+#define SetMainCallback2 ((void(*)(u32))(0x08000544|1))
+#define VAR_CBLO 0x40EB
+#define VAR_CBHI 0x40F1
+// the battle's end callback is wrapped: the first frame back in the overworld removes MAX again, then the real callback runs
+void max_after(void){
+    u32 cb=(u32)*var(VAR_CBLO)|((u32)*var(VAR_CBHI)<<16);
+    max_remove();
+    SAVEDCB=cb;
+    SetMainCallback2(cb);
+}
+// before every battle: only when the party is completely empty MAX (Lv 1, Caterpie stats, TACKLE) joins, for the length of that battle
 void max_prepare(void){
-    int n=COUNT, ok=0, mx=-1;
-    for(int i=0;i<n;i++){ u8* m=PARTY+100*i; if(GetMonData(m,11,0)==SP_MAX) mx=i; else if(usable(m)) ok++; }
-    if(ok){ if(mx>=0) drop(mx); return; }
-    if(mx>=0) return;
-    if(n<6){ CreateMon(PARTY+100*n,SP_MAX,1,32,0,0,1,0); COUNT=(u8)(n+1); }
+    max_remove();
+    if(COUNT!=0) return;
+    CreateMon(PARTY,SP_MAX,1,32,0,0,1,0); COUNT=1;
+    u32 cb=SAVEDCB; u32 mine=((u32)max_after)|1;
+    if(cb!=mine){ *var(VAR_CBLO)=(u16)cb; *var(VAR_CBHI)=(u16)(cb>>16); SAVEDCB=mine; }
 }
