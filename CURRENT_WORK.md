@@ -71,3 +71,6 @@ Original ROM logic for rock-rimmed water corners: the corner block follows what 
 
 ## War and Murder ROM updated (2026-10-13)
 roms/Pokemon War and Murder.gba (CRC32 0cf5c687) is the previous War and Murder ROM (the m_final of commit 5952868 plus its own 29-byte patch) with the 11,915 bytes of ROM changes from the 16 commits since 9004b1d applied: Vermilion, Lavender, Seven Island, Cerulean, Viridian, tree variants, Pallet lawn, house ground and tileset. It does not contain the CryMon cottage opening port, which is in the old m_final of commit 9004b1d. Checked: every changed byte sat on bytes that were identical in War and Murder and in that base; the rest differs from the old m_final only by the 7,381-byte CryMon port and War and Murder's own 29 bytes; scanners give the same results as for the old m_final; the smoke harness rendered Pallet, Vermilion, Lavender and Seven Island.
+
+## Other ROMs removed (2026-10-13)
+Deleted from the working tree: Aladdin Sane.gba, c3_build_base.gba, m_final_latest_build.gba and the original hack ROM. They are still in git history (for example at commit 48c9829's parent, 982aa3c). tools/build_full.sh and tools/cry_open.py read c3_build_base.gba, m_final_latest_build.gba and the original ROM, so they need those files restored from history before they can run.
