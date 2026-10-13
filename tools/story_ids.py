@@ -16,7 +16,7 @@ F_CAPTAIN_DOWN=0x4C0   # base 1 cleared flag (existing FLAG_CLEARED0): soldiers 
 VAR_STORY=0x40EC       # 0 new game (not initialised), 1 story started, 2 Shinigami freed (go outside)  [old: 0 start, 1 left home, 2 Shinigami freed (go outside), 3 choice made, 4 Yveltal resolved, 5 Nero beaten, 6 epilogue done
 VAR_REP=0x40ED         # reputation + 100 (0..200), 100 = neutral
 VAR_NERO=0x40EE        # 0 not beaten, 1 arrested, 2 executed, 3 crowned
-VAR_YV=0x40EF          # 0 none, 1 chosen (scroll spoken), 2 tamed (caught), 3 beaten, 4 Max fell
+VAR_YV=0x40EF          # 0 grave not woken yet, 1 woke and left (ran), 2 tamed (caught), 3 beaten (Godslayer), 4 fight in progress (a blackout then is the Bloody ending), 9 not applicable (Father chosen)
 VAR_CHOICE=0x40F0      # 0 none, 1 father, 2 yveltal
 # ---- species slots (see build.py: 252 TAUNTER, 253 SLIMOSAUR)
 SP_YVELTAL=254

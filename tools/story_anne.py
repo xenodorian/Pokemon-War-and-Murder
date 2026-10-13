@@ -40,7 +40,7 @@ def anne_scene(r,nat):
     S.compare(RESULT,1); S.goto_if(1,'father')
     S.setvar(I.VAR_CHOICE,2); S.msg(ST.ptr(r,'choice_yveltal'),4); S.goto('done')
     S.lab('father')
-    S.setvar(I.VAR_CHOICE,1); S.setflag(I.F_FATHER_ALIVE); S.msg(ST.ptr(r,'choice_father'),4)
+    S.setvar(I.VAR_CHOICE,1); S.setvar(I.VAR_YV,9); S.setflag(I.F_FATHER_ALIVE); S.msg(ST.ptr(r,'choice_father'),4)
     callnative(S,nat['make']); S.msg(ST.ptr(r,'father_revived_talk'),4)
     S.lab('done')
     S.setvar(I.VAR_STORY,3)
