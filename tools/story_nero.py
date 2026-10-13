@@ -64,9 +64,20 @@ def nero_pic(r):
     assert struct.unpack('<HH',r.b[fa+4:fa+8])==(0x800,PIC)
     r.w32(fa,0x08000000+r.alloc(gfx.lz_comp(gfx.pixels_to_tiles(idx)),4))
     r.w32(pa,0x08000000+r.alloc(gfx.lz_comp(gfx.rgb_to_pal([(115,197,164)]+pal+[(0,0,0)]*(15-len(pal)))),4))
+def rename_gore(r):
+    """every text that names GENERAL GORE (quest log, Hall of Justice, the old camp lines) says NERO (same length, edited in place; 'GOREBYSS' is left alone)"""
+    pat=bytes(ENC[c] for c in 'GORE'); new=bytes(ENC[c] for c in 'NERO'); n=0; i=0
+    while True:
+        i=bytes(r.b).find(pat,i+1)
+        if i<0: break
+        nxt=r.b[i+4]
+        if 0xBB<=nxt<=0xEE: continue      # GOREBYSS
+        r.b[i:i+4]=new; n+=1
+    print('GORE -> NERO in',n,'texts')
 def install(r):
+    rename_gore(r)
     e=0x798790+40*TRAINER_ID
-    assert bytes(r.b[e+4:e+8])==bytes(ENC[c] for c in 'GORE')
+    assert bytes(r.b[e+4:e+8])==bytes(ENC[c] for c in 'NERO')      # renamed by rename_gore with the texts
     r.b[e+4:e+16]=bytes(ENC[c] for c in 'NERO')+b'\xff'*8
     nero_pic(r)
     if os.environ.get('NERO_TEST'):      # TEST BUILDS ONLY: a single level 2 CATERPIE

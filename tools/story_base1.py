@@ -125,7 +125,16 @@ def captive(r):
     i=code.index(bytes([0x53,0xFE,0xFF])); code[i+1:i+3]=struct.pack('<H',lid)
     r.cur=(r.cur+3)&~3; base=r.cur; a=r.alloc(bytes(code),1); assert a==base
     got=add_obj(r,g,n,x,y,GFX_SHINI,0x08000000+a,8,I.HIDE_CELL); assert got==lid
+def captain_intro(r):
+    """the Pewter base Captain (trainer 6) opens with the story's lines about the cell"""
+    h=header(r,2,69); ev=r32(r,h+4)-0x08000000; po=r32(r,ev+4)-0x08000000; k=0
+    for i in range(r.b[ev]):
+        t=po+24*i; sp=r32(r,t+16)-0x08000000
+        if r.b[sp]==0x5c and r.b[sp+1]==1 and struct.unpack('<H',r.b[sp+2:sp+4])[0]==6:
+            r.w32(sp+6,ST.ptr(r,'captain_defeat_intro')); k+=1
+    assert k==1
 def install(r):
+    captain_intro(r)
     new_game_init(r); print('gated',gate_crime_scenes(r))
     lavender_hold(r); tower_object(r); league(r); captive(r)
 if __name__=='__main__':
