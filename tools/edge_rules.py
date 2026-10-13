@@ -145,3 +145,16 @@ def pond_findings(grid):
 def findings(grid):
     return ([('rock-comb',)+f for f in rock_comb(grid)]+[('half-tree',)+f for f in half_trees(grid)]+[('rock-alt',)+f for f in alternating_rock(grid)]
             +list(lawn_edge_findings(grid))+list(fence_findings(grid))+list(pond_findings(grid)))
+
+# ---- every tileset: the vocabulary learned from the original maps (edge_learn.py). Warn-only, because a new building or sign legitimately makes pairs the original never has.
+def vocab_report(name,grid,before,P,S):
+    """(unseen pairs, cells the original decides otherwise) among the cells the edit changed; P,S are the map's ORIGINAL tileset pointers (read them before Tileset.commit)"""
+    import edge_learn as EL
+    V=EL.Vocab()
+    if not V.known(P,S): return None
+    h=len(grid); w=len(grid[0])
+    ch={(x,y) for y in range(h) for x in range(w) if before is None or y>=len(before) or x>=len(before[0]) or before[y][x]!=grid[y][x]}
+    if not ch: return (0,0)
+    up=V.pair_findings(grid,P,S,ch); _,rep=V.repair(grid,P,S,ch,rounds=1)
+    print('  vocabulary check %s: %d unseen pairs, %d cells the original decides otherwise %s'%(name,len(up),len(rep),rep[:6]))
+    return len(up),len(rep)

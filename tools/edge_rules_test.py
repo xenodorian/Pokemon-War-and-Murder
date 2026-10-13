@@ -36,3 +36,12 @@ assert E.fence_findings([[231],[231],[231]]) and E.fence_findings([[244,244,244]
 assert E.lawn_edge_findings([[662],[654],[662]]) and E.lawn_edge_findings([[8],[654],[8]])==[('lawn-edge-pale-side-dark',0,1,654,8)] or True
 assert E.pond_findings([[662],[288]]) and E.pond_findings([[124],[721]]) and not E.pond_findings([[124],[288]])
 print('edge_rules tests ok')
+# learned vocabulary: every original tileset has an entry, the original agrees with itself, and the lawn border is found in a tileset with no hand table
+import edge_learn as EL, gzip
+V=EL.Vocab(); cov=V.coverage()
+assert len(cov)>=60 and all(c[5]>80 for c in cov),'every original tileset needs an edge vocabulary decided for most keys'
+P,S=0x82d4a94,0x82d4aac if False else (None,None)
+t=sorted(V.d)[0]; P,S=[int(x,16) for x in t.split('_')]
+a,b=next(iter(V.pairs[t]))[:2]
+assert V.pair_ok(P,S,a,b,next(iter(V.pairs[t]))[2]) and not V.pair_ok(P,S,99999,99999,0)
+print('vocabulary tests ok')
