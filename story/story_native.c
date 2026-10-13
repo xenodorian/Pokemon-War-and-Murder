@@ -12,6 +12,8 @@ typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32;
 #define SP_MAX 255
 #define GetMonData ((u32(*)(void*,int,void*))(0x0803FBE8|1))
 #define ZeroMonData ((void(*)(void*))(0x0803D994|1))
+#define SetMonData ((void(*)(void*,u32,const void*))(0x0804037c|1))
+#define GSV(n) (*(volatile u16*)(0x020370b8+2*(n)))
 #define CreateMon ((void(*)(void*,u16,u8,u8,u8,u32,u8,u32))(0x0803DA54|1))
 static u16* var(u32 v){ return (u16*)(SB1+0x1000+((v-0x4000)<<1)); }
 // reputation 0..200, 100 = neutral: 100 + blessings - kills + story adjustments (VAR_REPADJ is stored as 1000 + adjustment). Result is also written to VAR_REP.
@@ -58,6 +60,9 @@ void max_prepare(void){
     max_remove();
     if(COUNT!=0) return;
     CreateMon(PARTY,SP_MAX,1,32,0,0,1,0); COUNT=1;
+    u16 one=1; SetMonData(PARTY,0x3a,&one); SetMonData(PARTY,0x39,&one);      // max HP 1, HP 1: one hit and she is down
     u32 cb=SAVEDCB; u32 mine=((u32)max_after)|1;
     if(cb!=mine){ *var(VAR_CBLO)=(u16)cb; *var(VAR_CBHI)=(u16)(cb>>16); SAVEDCB=mine; }
 }
+// GSV7 = 1 when the party is empty (used by the white-out script: MAX was the one who fell)
+void party_empty(void){ GSV(7)=(COUNT==0)?1:0; }

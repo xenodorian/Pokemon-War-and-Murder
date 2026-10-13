@@ -12,7 +12,7 @@ import story_text as ST
 import story_party as SP
 import story_native as SN
 RESULT=0x800D
-WHITEOUT_PTR=0x7f5ec           # literal holding the white-out script address
+WHITEOUT_PTR=0x7f5ec           # (kept for reference; whiteout() hooks both literals)
 def native(r,src):
     import capstone
     r.cur=(r.cur+3)&~3; a=r.cur; code=r.asm(src,a)
@@ -80,14 +80,24 @@ def grave(r,yv_setup,reset):
     add_coord(r,2,66,11,6,I.VAR_YV,0,0x08000000+put_script(r,S))
     h=header(r,2,66); ev=r32(r,h+4)-0x08000000; cp=r32(r,ev+12)-0x08000000; r.b[cp+16*(r.b[ev+2]-1)+4]=0      # elevation 0 = any
 def whiteout(r,reset):
-    orig=r32(r,WHITEOUT_PTR); assert orig==0x081a8dd8,hex(orig)
+    """the two after-white-out scripts of the Pokemon Center (literals 0x7f5cc and 0x7f5ec) both start with the story checks"""
     fn=SN.addrs(r)
-    S=SB(); S.raw(0x23); S.ptr(fn['max_remove'])
-    S.compare(I.VAR_YV,4); S.goto_if(1,'dead'); S.raw(0x05); S.ptr(orig)
-    S.lab('dead'); S.lockall()
-    S.msg(ST.ptr(r,'yveltal_max_dies'),4); S.msg(ST.ptr(r,'epi_bloody'),4); S.msg(ST.ptr(r,'title_bloody'),4); S.msg(ST.ptr(r,'epi_end'),4)
-    S.setvar(I.VAR_YV,5); S.raw(0x23); S.ptr(reset); S.end()
-    r.w32(WHITEOUT_PTR,0x08000000+put_script(r,S))
+    for lit,expect in ((0x7f5cc,0x081a8d97),(0x7f5ec,0x081a8dd8)):
+        orig=r32(r,lit); assert orig==expect,hex(orig)
+        S=SB(); S.raw(0x23); S.ptr(fn['max_remove'])
+        S.compare(I.VAR_YV,4); S.goto_if(1,'dead')
+        S.raw(0x23); S.ptr(fn['party_empty']); S.compare(0x8007,1); S.goto_if(1,'maxdead')
+        S.raw(0x05); S.ptr(orig)
+        # MAX (the stand-in for an empty party) fell: HEAVEN with reputation 100 or more, HELL below, like being shot (gun.py 'gotshot')
+        S.lab('maxdead'); S.lockall()
+        S.raw(0x23); S.ptr(fn['rep_calc']); S.compare(I.VAR_REP,100); S.goto_if(0,'hell')
+        S.msg(ST.ptr_s(r,["The world goes white.","Something warm lifts you up."]),4); S.raw(0x97,1); S.raw(0x39,2,80,0xff); S._add(struct.pack('<HH',8,25)); S.raw(0x27); S.releaseall(); S.end()
+        S.lab('hell')
+        S.msg(ST.ptr_s(r,["Your soul falls.","Flames rise to meet you."]),4); S.raw(0x97,1); S.raw(0x39,2,68,0xff); S._add(struct.pack('<HH',11,23)); S.raw(0x27); S.releaseall(); S.end()
+        S.lab('dead'); S.lockall()
+        S.msg(ST.ptr(r,'yveltal_max_dies'),4); S.msg(ST.ptr(r,'epi_bloody'),4); S.msg(ST.ptr(r,'title_bloody'),4); S.msg(ST.ptr(r,'epi_end'),4)
+        S.setvar(I.VAR_YV,5); S.raw(0x23); S.ptr(reset); S.end()
+        r.w32(lit,0x08000000+put_script(r,S))
 def install(r):
     yv=native(r,YV_SETUP); reset=native(r,RESET)
     grave(r,yv,reset); whiteout(r,reset)

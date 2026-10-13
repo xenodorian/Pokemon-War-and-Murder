@@ -3,7 +3,7 @@
    +1%/point below 100 and -1%/point above; at 0 the pokemart script command (table entry 0x86) refuses with the shopkeeper's line.
  - MAX fights as herself: before every battle (hook at the CreateTask call of the battle start task 0x7f6a2) with no usable POKeMON in the party MAX (species 255, Lv 1) joins
    if there is room; she leaves again once a usable POKeMON exists, and in the white-out script.
- - the table 'STORYFN1' (rep_calc, max_remove, max_prepare) tells later steps the addresses (addrs(r))."""
+ - the table 'STORYFN1' (rep_calc, max_remove, max_prepare, party_empty) tells later steps the addresses (addrs(r))."""
 import sys,struct,subprocess,os
 sys.path.insert(0,'/home/claude/work/tools'); sys.path.insert(1,os.path.dirname(os.path.abspath(__file__)))
 from inc import *
@@ -16,7 +16,7 @@ MAGIC=b'STORYFN1'
 def addrs(r):
     i=bytes(r.b).find(MAGIC,0xA00000)
     assert i>0,'story_native not applied'
-    return dict(zip(('rep_calc','max_remove','max_prepare'),struct.unpack('<3I',r.b[i+8:i+20])))
+    return dict(zip(('rep_calc','max_remove','max_prepare','party_empty'),struct.unpack('<4I',r.b[i+8:i+24])))
 def tramp(r,at,target):
     assert bytes(r.b[at:at+8])==b'\xff'*8,hex(at)
     r.b[at:at+8]=bytes([0x00,0x4b,0x18,0x47])+struct.pack('<I',target)
@@ -51,7 +51,7 @@ def install(r):
     tramp(r,TRAMP_FREE[1],0x08000000+p2+1); r.bl(BATTLE_SITE,TRAMP_FREE[1])
     # shop command
     r.w32(CMD_TABLE+4*POKEMART,fn('shop_cmd'))
-    r.alloc(MAGIC+struct.pack('<3I',fn('rep_calc'),fn('max_remove'),fn('max_prepare')),4)
+    r.alloc(MAGIC+struct.pack('<4I',fn('rep_calc'),fn('max_remove'),fn('max_prepare'),fn('party_empty')),4)
     return dict(rep_calc=fn('rep_calc'))
 def r32(r,o): return struct.unpack('<I',r.b[o:o+4])[0]
 if __name__=='__main__':
