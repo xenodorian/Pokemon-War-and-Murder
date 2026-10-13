@@ -74,3 +74,6 @@ roms/Pokemon War and Murder.gba (CRC32 0cf5c687) is the previous War and Murder 
 
 ## Other ROMs removed (2026-10-13)
 Deleted from the working tree: Aladdin Sane.gba, c3_build_base.gba, m_final_latest_build.gba and the original hack ROM. They are still in git history (for example at commit 48c9829's parent, 982aa3c). tools/build_full.sh and tools/cry_open.py read c3_build_base.gba, m_final_latest_build.gba and the original ROM, so they need those files restored from history before they can run.
+
+## Single patch (2026-10-13)
+All 34 old .ips patches were deleted (still in git history). "Pokemon War and Murder.ips" is the one patch: apply it to the original hack ROM (outlaw-2015-09-05, 16,777,240 bytes, CRC32 5e460b23, header title POKEMON FIRE, code BPRE) to get "Pokemon War and Murder.gba" (CRC32 0cf5c687, md5 7893fd07458ccd658a833d99b8b7594b). It has 473 records, 546,937 bytes, and was checked by applying it to the original and comparing byte for byte. Regenerate it whenever the ROM changes.
