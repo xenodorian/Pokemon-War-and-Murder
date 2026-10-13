@@ -148,14 +148,26 @@ def learn_lawn(pre,w,h,gv):
         best=max(c.items(),key=lambda kv:(kv[0]!=gvb and sum(1 for kk in tab if kv[0] in tab[kk])>0, kv[1]))
         out[k]=best[0]
     return out,fam
+def _fallback(tab,k):
+    """neighbourhood never seen in the town's map: an edge is decided by the cardinal neighbours (N=1 S=6 W=3 E=4 in DIRS order), a convex corner by its single diagonal.
+    Use the block learned for the cardinal part alone, else for the lone diagonal, else None (never guess a block from a different shape)."""
+    card=frozenset(i for i in k if i in (1,3,4,6))
+    if card and card in tab: return tab[card]
+    if not card:
+        diag=[i for i in k if i not in (1,3,4,6)]
+        if len(diag)==1 and frozenset(diag) in tab: return tab[frozenset(diag)]
+    return None
 def apply_lawn(grid,w,h,zone,tab,fam,gv):
-    out=[row[:] for row in grid]; gvb=gv&0x3ff; changed=0; allowed=set(tab.values())|{gvb}
+    out=[row[:] for row in grid]; gvb=gv&0x3ff; changed=0; allowed=set(tab.values())|{gvb}; unresolved=[]
     for (x,y) in sorted(zone):
         if not(0<=x<w and 0<=y<h): continue
         b=grid[y][x]&0x3ff
         if b in TREE or b not in allowed: continue
         k=_key(grid,w,h,x,y)
         nb=gvb if not k else tab.get(k)
+        if nb is None and k: nb=_fallback(tab,k)
+        if nb is None and k: unresolved.append((x,y,sorted(k)))
         if nb is None or nb==b: continue
         out[y][x]=(grid[y][x]&0xfc00)|nb; changed+=1
+    apply_lawn.unresolved=unresolved       # cells whose tree neighbourhood the town's own map never shows: the caller must report or fail, never leave a wrong block silently
     return out,changed

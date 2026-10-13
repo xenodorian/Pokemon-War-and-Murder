@@ -2,6 +2,7 @@
 import sys,struct,random,collections
 sys.path.insert(0,'/home/claude/work/tools')
 import reach
+import edge_rules
 from leg1 import r32,header
 
 def layout_of(r,g,n):
@@ -30,6 +31,8 @@ def extend_row(row, N):
     A tree pair keeps alternating. A one-tile lip (path edge, cliff edge) moves to the new eastern edge and the tile
     just west of it fills the gap. A trailing run of blank holes is not copied outward."""
     w=len(row); a,b=row[w-2],row[w-1]
+    rl=edge_rules.lip_fill(row,N)      # rock mounds: wall and corner blocks never repeat (edge_rules.py)
+    if rl is not None: return rl
     if (a&0x3ff) in LEFT and (b&0x3ff) in RIGHT:
         return row+[row[w-2+(i%2)] for i in range(N)]
     end=w

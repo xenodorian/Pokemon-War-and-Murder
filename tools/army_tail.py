@@ -154,6 +154,9 @@ def carve_exterior(r,c,house):
       extra={(x,y) for x in range(21,w_) for y in (h_-2,h_-1)} if c['name']=='PALLET' else set()
       cur=army_sites.get_grid(r,g,n); cur,ch=retree.apply_lawn(cur,w_,h_,zone|extra,tab,fam,gv); army_sites.put_grid(r,g,n,cur)
       print('lawn borders',c['name'],ch,'cells')
+      assert not retree.apply_lawn.unresolved,'lawn border: neighbourhood not in the town map at %s'%retree.apply_lawn.unresolved[:6]
+    import edge_rules
+    edge_rules.validate(c['name'],army_sites.get_grid(r,g,n),pre)      # no new rock comb, half tree or alternating rock stretch
     ts.commit()
 def place_lot_objects(r,c,e,fns,gf,item_by_num,cleared,ids,base_num,base_map):
     """door warp, lock, guards, sign, patrols in the town map; returns patrol ids"""
