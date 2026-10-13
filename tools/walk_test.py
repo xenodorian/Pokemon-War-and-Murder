@@ -1,7 +1,7 @@
 import sys,os,struct,subprocess
 sys.path.insert(0,'/home/claude/work/tools'); os.chdir('/home/claude/work')
 import gun_t3 as t
-ROM='/home/user/Pokemon-Outlaw-Mod/roms/Pokemon War and Murder.gba'
+ROM=os.environ.get('WALK_ROM','/home/user/Pokemon-Outlaw-Mod/roms/Pokemon War and Murder.gba')
 KEY={'U':'40','D':'80','L':'20','R':'10'}
 def test(name,g,n,sx,sy,k,t0=900,hold=64):
     t.mkw(ROM,'out/wt_%s.gba'%name,g,n,sx,sy,[])
@@ -22,7 +22,7 @@ CASES=[
  ('cer_fence_h',(3,3),(59,17),'U','blocked by the fence at (59,16)'),
  ('cer_fence_v',(3,3),(56,14),'R','blocked by the fence pole at (57,14)'),
  ('cer_fence_corner',(3,3),(57,17),'U','blocked by the corner at (57,16)'),
- ('cer_former_wall',(3,3),(46,18),'U','free: walks through the old invisible wall at (46,17)'),
+ ('cer_fence_connected',(3,3),(46,18),'U','blocked by the connected fence at (46,17)'),
  ('fuc_former_wall',(3,7),(36,20),'U','free: walks through the old invisible wall at (36,19)'),
  ('lav_fence_v',(3,4),(14,9),'R','blocked by the vertical fence at (15,9)'),
  ('lav_fence_v_r',(3,4),(22,9),'L','blocked by the vertical fence at (21,9)'),

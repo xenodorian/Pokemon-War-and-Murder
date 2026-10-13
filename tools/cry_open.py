@@ -1,5 +1,7 @@
-# CryMon cottage opening, ported onto the Outlaw FireRed ROM.
-# Naming screen leads with MAX. Player's house 1F uses the CryMon wood tiles.
+# CryMon cottage opening, ported onto the War and Murder ROM.
+# usage: cry_open.py IN.gba OUT.gba
+# No naming screens: the player is MAX and the rival is MASON. New games start in the player's house (the Slums are gone).
+# Player's house 1F uses the CryMon wood tiles (tools/cry_house_tiles.json, baked from the CryMon sprites).
 # Father, empty bed, shelf (Sandshrew) and crate (Potion) replace Mom's scene.
 # Oak has no starters and says he was robbed. The ultra-ball man and the
 # Pallet exit block are gone. Mason (Gary's sprite) battles on the way out.
@@ -7,18 +9,19 @@
 # Quillpup -> Sandshrew, Glimmoth -> Pikachu, linen wrap -> Potion,
 # capture crystals -> Poke Balls.
 import sys, struct
-from PIL import Image
-sys.path.insert(0, '/workspace/Pokemon-Outlaw-Mod/tools')
+import os, json
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+sys.path.insert(1, '/home/claude/work/tools')
 from inc import Rom
 from g3 import ENC
 import gfx
 
-SRC = '/workspace/Pokemon-Outlaw-Mod/roms/m_final_latest_build.gba'
-TILE = '/tmp/Psuedo-CryMon/CryMon/public/sprites'
-MARKER = b'CRYOPEN1'
+MARKER = b'CRYOPEN2'
 
-F_TOOK, F_CRATE, F_MASON, F_ANNE = 0x4E6, 0x4E7, 0x4E8, 0x4E9
-HIDE_MASON, HIDE_ANNE, HIDE_ULTRA, HIDE_MOM = 0x4EA, 0x4EB, 0x4EC, 0x4ED
+# 0x4EF..0x4F6 are unused vanilla flags (0x4D0..0x4EE belong to the spirit quests)
+F_TOOK, F_CRATE, F_MASON, F_ANNE = 0x4EF, 0x4F0, 0x4F1, 0x4F2
+HIDE_MASON, HIDE_ANNE, HIDE_ULTRA, HIDE_MOM = 0x4F3, 0x4F4, 0x4F5, 0x4F6
 # 0x406D is an unused map-scene slot. 0x40F7 is the police kill counter.
 VAR_CRY = 0x406D
 VAR_OAK_SCENE = 0x4050
@@ -123,11 +126,14 @@ class SB:
         s.raw(0x32)
         s.raw(0x25, 0x00, 0x00)
         s.raw(0x97, 0)
-    def battle(s, tid, intro, defeat):
-        s.raw(0x5c, 0)
+    def battle(s, tid, intro, defeat, cont):
+        # type 2 (TRAINER_BATTLE_CONTINUE_SCRIPT): after the battle the script goes on at `cont`. Type 0 ends the script when the battle ends.
+        s.raw(0x5c, 2)
         s.raw(*struct.pack('<HH', tid, 0))
         s.ptr(intro)
         s.ptr(defeat)
+        s.ref(cont)
+        s.lab(cont)
 
 def enc(s):
     o = bytearray()
@@ -163,52 +169,140 @@ def boxes(sb, ptrs):
         if i != len(ptrs) - 1:
             sb.close()
 
-def nearest(cols, rgb):
-    return min(range(len(cols)), key=lambda i: sum((a - b) ** 2 for a, b in zip(rgb, cols[i])))
-
-def prep(path, size, bg=(96, 68, 44)):
-    im = Image.open(path).convert('RGBA')
-    im = im.resize(size, Image.Resampling.LANCZOS)
-    base = Image.new('RGBA', size, bg + (255,))
-    base.alpha_composite(im)
-    return base.convert('RGB')
-
-def tiles_of(im, cols):
-    blobs = []
-    w, h = im.size
-    assert w % 16 == 0 and h % 16 == 0
-    for my in range(h // 16):
-        for mx in range(w // 16):
-            chunk = []
-            for ty in range(2):
-                for tx in range(2):
-                    b = bytearray(32)
-                    for y in range(8):
-                        for x in range(0, 8, 2):
-                            px = mx * 16 + tx * 8 + x
-                            py = my * 16 + ty * 8 + y
-                            c0 = nearest(cols, im.getpixel((px, py)))
-                            c1 = nearest(cols, im.getpixel((px + 1, py)))
-                            b[y * 4 + x // 2] = c0 | (c1 << 4)
-                    chunk.append(bytes(b))
-            blobs.append(chunk)
-    return blobs
-
-def palette_of(images):
-    data = []
-    for im in images:
-        data.extend(im.getdata())
-    sheet = Image.new('RGB', (len(data), 1))
-    sheet.putdata(data)
-    q = sheet.quantize(colors=16, method=Image.Quantize.MEDIANCUT)
-    pal = q.getpalette()
-    return [tuple(pal[i * 3:i * 3 + 3]) for i in range(16)]
-
 def u16(d, a):
     return struct.unpack_from('<H', d, a)[0]
 
 def u32(d, a):
     return struct.unpack_from('<I', d, a)[0]
+
+
+# ---------------------------------------------------------------------------------------------- no naming screens
+# The hack's new game goes title -> naming screen (task state 0x1303b4 calls DoNamingScreen) -> "Are you sure?" confirmation -> start.
+# Both DoNamingScreen calls in that task state are redirected to a stub that writes the names into the save and returns straight to the screen's own return
+# callback, as if the name had been typed: MAX for the player, MASON for the rival (the rival is never asked in this hack, so it is set here too).
+# The confirmation's Yes/No handler (0x130554) answers Yes by itself.
+SB2_PTR, SB1_PTR = 0x0300500C, 0x03005008
+NAMING_TASK, NAMING_TASK_END, DO_NAMING, SET_MAIN_CB2 = 0x1303B4, 0x130464, 0x0809D954, 0x08000545
+DESTROY_TASK = 0x08077509      # r6 holds the naming task's id in that state and the stub leaves r6 alone
+YESNO_CALL = 0x13055C
+RIVAL_NAME_OFF = 0x3A4C
+RIVAL_PRESETS = 0x463124      # table of 4 name pointers read by 0x131754 for the rival
+GMAIN_STATE = 0x030030F0 + 0x438      # gMain.state: the return callback is a state machine that starts at 0
+STUB_AT = 0x3B4D84
+
+def skip_naming(r):
+    d = r.b
+    sites = []
+    for o in range(NAMING_TASK, NAMING_TASK_END, 2):
+        hi, lo = u16(d, o), u16(d, o + 2)
+        if hi & 0xF800 == 0xF000 and lo & 0xF800 == 0xF800:
+            off = (((hi & 0x7FF) << 12) | ((lo & 0x7FF) << 1))
+            off = off - (1 << 23) if off & (1 << 22) else off
+            if 0x08000000 + o + 4 + off == DO_NAMING: sites.append(o)
+    assert len(sites) == 2, [hex(x) for x in sites]
+    assert u16(d, YESNO_CALL) & 0xF800 == 0xF000 and u16(d, YESNO_CALL + 2) & 0xF800 == 0xF800, 'Yes/No call not where expected'
+    mx = enc('MAX')[:-1] + b'\xff' * 5
+    ms = enc('MASON')[:-1] + b'\xff' * 3
+    pm = 0x08000000 + r.alloc(mx + ms, 4)
+    stub_src = f"""
+        push {{r4, lr}}
+        ldr r4, [sp, #12]
+        cmp r0, #0
+        bne rival
+        ldr r2, =0x{pm:x}
+        ldr r3, [r2]
+        str r3, [r1]
+        ldr r3, [r2, #4]
+        str r3, [r1, #4]
+        ldr r1, =0x{SB1_PTR:x}
+        ldr r1, [r1]
+        ldr r0, =0x{RIVAL_NAME_OFF:x}
+        adds r1, r1, r0
+        adds r2, r2, #8
+        b copy
+      rival:
+        ldr r2, =0x{pm + 8:x}
+      copy:
+        ldr r3, [r2]
+        str r3, [r1]
+        ldr r3, [r2, #4]
+        str r3, [r1, #4]
+        ldr r0, =0x{GMAIN_STATE:x}
+        movs r1, #0
+        strb r1, [r0]
+        adds r0, r4, #0
+        ldr r3, =0x{SET_MAIN_CB2:x}
+        bl callr3
+        adds r0, r6, #0
+        ldr r3, =0x{DESTROY_TASK:x}
+        bl callr3
+        pop {{r4}}
+        pop {{r0}}
+        bx r0
+      callr3:
+        bx r3
+    """
+    code = r.asm(stub_src, STUB_AT)       # BL reaches +-4 MB: the stub sits in a free run near the speech code
+    r.put(STUB_AT, code)
+    for o in sites: r.bl(o, STUB_AT)
+    # after the confirmation the speech copies rival preset 0 into the save (SetDefaultName stage 1): that preset is MASON
+    r.w32(RIVAL_PRESETS, pm + 8)
+    d[YESNO_CALL:YESNO_CALL + 4] = bytes([0x00, 0x20, 0xC0, 0x46])      # movs r0,#0 ; nop  (always Yes)
+
+# ---------------------------------------------------------------------------------------------- new game starts at home
+NEWGAME_WARP = 0x54A00        # movs r0,#6 (y); .. movs r0,#1; movs r1,#0x58; movs r3,#6 (x)
+START_X, START_Y = 4, 5
+def start_at_home(r):
+    d = r.b
+    assert bytes(d[0x54A00:0x54A0A]) == bytes([0x06, 0x20, 0x00, 0x90, 0x01, 0x20, 0x58, 0x21, 0x06, 0x23]), bytes(d[0x54A00:0x54A0A]).hex()
+    d[0x54A00:0x54A0A] = bytes([START_Y, 0x20, 0x00, 0x90, 0x04, 0x20, 0x00, 0x21, START_X, 0x23])      # map (4,0): the player's house 1F
+
+# ---------------------------------------------------------------------------------------------- the Slums are removed
+def remove_slums(r):
+    """Pallet's rock hut led down to the Slums (map 1,88). Its warp (id 3, other warps keep their ids) is parked off the walkable map and the hut becomes dark lawn."""
+    d = r.b
+    pev = 0x71d990
+    wo = u32(d, pev + 8) - 0x08000000 + 8 * 3
+    assert struct.unpack('<hhBBBB', d[wo:wo + 8]) == (4, 17, 0, 0, 88, 1), 'slums warp not where expected'
+    d[wo:wo + 4] = struct.pack('<hh', 0, 0)
+    gp = u32(d, 0x3526A8 + 12) - 0x08000000
+    lay = u32(d, u32(d, gp) - 0x08000000) - 0x08000000
+    w = u32(d, lay)
+    mp = u32(d, lay + 12) - 0x08000000
+    cell = lambda x, y: mp + 2 * (y * w + x)
+    assert [u16(d, cell(x, 16)) & 0x3ff for x in (3, 4, 5)] == [104, 105, 106] and [u16(d, cell(x, 17)) & 0x3ff for x in (3, 4, 5)] == [120, 169, 122], 'hut not where expected'
+    bits = u16(d, cell(2, 16)) & 0xfc00
+    assert bits >> 10 == 0x0c, hex(bits)         # open ground, elevation 3
+    for x in (3, 4, 5):
+        for y in (16, 17):
+            d[cell(x, y):cell(x, y) + 2] = struct.pack('<H', bits | ([8, 9] if y % 2 == 0 else [16, 17])[x % 2])
+
+
+# ---------------------------------------------------------------------------------------------- quest log text
+QUEST_TEXT_AT = 0xA00000      # first quest-log entry (FIRST POKéMON), 199 bytes including the terminator
+def update_quest_text(r):
+    d = r.b
+    assert bytes(d[QUEST_TEXT_AT + 0x46:QUEST_TEXT_AT + 0x46 + 15]) == enc('Leave the SLUMS')[:-1], 'quest text not where expected'
+    pages = ["QUEST: FIRST POKéMON", "GO TO: PALLET TOWN, then PROF.\nOAK's LAB.", "TO DO: Take your father's\nPOKéMON from the shelf at home.", "Then leave and go to OAK's LAB\nin the north of PALLET TOWN."]
+    body = b'\xfb'.join(enc(p)[:-1] for p in pages)
+    assert len(body) <= 198, len(body)
+    body += bytes([0x00]) * (198 - len(body)) + b'\xff'          # trailing spaces keep the next entry where it was
+    d[QUEST_TEXT_AT:QUEST_TEXT_AT + 199] = body
+
+
+# ---------------------------------------------------------------------------------------------- the rival is MASON everywhere
+def rename_rival(r):
+    """every trainer entry named TERRY (the rival's fights) is named MASON, same length"""
+    d = r.b
+    old, new = enc('TERRY')[:-1], enc('MASON')[:-1]
+    n = 0
+    for tid in range(0, 900):
+        o = T_TABLE + 40 * tid + 4
+        if bytes(d[o:o + 5]) == old and d[o + 5] == 0xFF:
+            d[o:o + 5] = new
+            n += 1
+    assert n >= 10, n
+    return n
 
 def free_trainer(d):
     for tid in range(700, 760):
@@ -218,68 +312,25 @@ def free_trainer(d):
     raise SystemExit('no free trainer slot')
 
 def build_tiles(r):
-    floor = prep(f'{TILE}/tiles/floor-wood-1.png', (16, 16))
-    wall = prep(f'{TILE}/tiles/wall-wood.png', (16, 16))
-    door = prep(f'{TILE}/tiles/door-wood.png', (16, 16))
-    shelf = prep(f'{TILE}/props/shelf.png', (16, 16))
-    crate = prep(f'{TILE}/props/crate.png', (16, 16))
-    fbed = prep(f'{TILE}/props/bed-father.png', (32, 32))
-    ebed = prep(f'{TILE}/props/bed-empty.png', (32, 16))
-    images = [floor, wall, door, shelf, crate, fbed, ebed]
-    cols = palette_of(images)
+    """secondary tileset of the player's house 1F with the CryMon wood floor, wall, door, shelf, crate and beds appended (baked)"""
+    j = json.load(open(os.path.join(HERE, 'cry_house_tiles.json')))
     lay = 0x2d5200
     sec_ptr = u32(r.b, lay + 20) - 0x08000000
-    hdr = bytearray(r.b[sec_ptr:sec_ptr + 24])
-    assert hdr[0] == 1 and hdr[1] == 1
-    tiles_p = u32(r.b, sec_ptr + 4) - 0x08000000
-    pals_p = u32(r.b, sec_ptr + 8) - 0x08000000
-    mt_p = u32(r.b, sec_ptr + 12) - 0x08000000
-    at_p = u32(r.b, sec_ptr + 20) - 0x08000000
-    old_tiles = gfx.lz_decomp(r.b, tiles_p) if r.b[tiles_p] == 0x10 else bytes(r.b[tiles_p:tiles_p + 63 * 32])
-    assert len(old_tiles) >= 63 * 32
-    old_tiles = old_tiles[:63 * 32]
-    chunks = []
-    for im in (floor, wall, door, shelf, crate):
-        chunks += tiles_of(im, cols)
-    chunks += tiles_of(fbed, cols)
-    chunks += tiles_of(ebed, cols)
-    # chunks: 0 floor, 1 wall, 2 door, 3 shelf, 4 crate, 5-8 father bed, 9-10 empty bed
-    raw = bytearray(old_tiles)
-    ids = []
-    base_tile = 640 + 63
-    n = 0
-    for ch in chunks:
-        four = []
-        for blob in ch:
-            raw += blob
-            four.append(base_tile + n)
-            n += 1
-        ids.append(four)
-    pals = bytearray(r.b[pals_p:pals_p + 16 * 32])
-    pals[PAL * 32:(PAL + 1) * 32] = gfx.rgb_to_pal(cols)
-    old_mt = bytes(r.b[mt_p:mt_p + 24 * 16])
-    old_at = bytes(r.b[at_p:at_p + 24 * 4])
-    extra_mt = bytearray()
-    for four in ids:
-        ents = [((PAL << 12) | t) for t in four] + [0, 0, 0, 0]
-        extra_mt += struct.pack('<8H', *ents)
-    extra_at = b'\x00' * (4 * len(ids))
-    ta = r.alloc(bytes(raw), 4)
-    pa = r.alloc(bytes(pals), 4)
-    ma = r.alloc(old_mt + bytes(extra_mt), 4)
-    aa = r.alloc(old_at + extra_at, 4)
-    nh = bytearray(hdr)
-    nh[0] = 0
-    nh[4:8] = struct.pack('<I', 0x08000000 + ta)
-    nh[8:12] = struct.pack('<I', 0x08000000 + pa)
-    nh[12:16] = struct.pack('<I', 0x08000000 + ma)
-    nh[20:24] = struct.pack('<I', 0x08000000 + aa)
-    ns = r.alloc(bytes(nh), 4)
+    assert r.b[sec_ptr] == 1 and r.b[sec_ptr + 1] == 1, 'house tileset already replaced'
+    hdr = bytearray(bytes.fromhex(j['hdr']))
+    ta = r.alloc(bytes.fromhex(j['tiles']), 4)
+    pa = r.alloc(bytes.fromhex(j['pals']), 4)
+    ma = r.alloc(bytes.fromhex(j['meta']), 4)
+    aa = r.alloc(bytes.fromhex(j['attr']), 4)
+    hdr[4:8] = struct.pack('<I', 0x08000000 + ta)
+    hdr[8:12] = struct.pack('<I', 0x08000000 + pa)
+    hdr[12:16] = struct.pack('<I', 0x08000000 + ma)
+    hdr[20:24] = struct.pack('<I', 0x08000000 + aa)
+    ns = r.alloc(bytes(hdr), 4)
     r.w32(lay + 20, 0x08000000 + ns)
     first = 640 + 24
     names = ['floor', 'wall', 'door', 'shelf', 'crate', 'f0', 'f1', 'f2', 'f3', 'e0', 'e1']
-    mid = {names[i]: first + i for i in range(len(names))}
-    return mid
+    return {names[i]: first + i for i in range(len(names))}
 
 def paint_house(r, mid):
     lay = 0x2d5200
@@ -326,27 +377,13 @@ def obj_bytes(local, gfx, x, y, script, flag=0, move=0):
     return bytes(t)
 
 def main():
+    SRC, OUT = sys.argv[1], sys.argv[2]
     r = Rom(SRC)
     if MARKER in r.b:
         print('already patched')
         return
     r.alloc(MARKER, 4)
     d = r.b
-    # ---- names: MAX is the first choice for both genders
-    MAX = 0x081C57B4
-    male = [u32(d, 0x46308c + 4 * i) for i in range(19)]
-    if male[0] != MAX:
-        male = [MAX] + [p for p in male if p != MAX]
-        assert len(male) == 19
-        for i, p in enumerate(male):
-            r.w32(0x46308c + 4 * i, p)
-    female = [u32(d, 0x4630d8 + 4 * i) for i in range(19)]
-    if female[0] != MAX:
-        female = [MAX] + [p for p in female if p != MAX]
-        female = female[:19]
-        assert len(female) == 19
-        for i, p in enumerate(female):
-            r.w32(0x4630d8 + 4 * i, p)
     # ---- house art
     mid = build_tiles(r)
     paint_house(r, mid)
@@ -554,7 +591,7 @@ def main():
     M.waitmove(0)
     boxes(M, mason_intro)
     M.close()
-    M.battle(tid, mb_in, mb_de)
+    M.battle(tid, mb_in, mb_de, 'post')
     boxes(M, mason_after)
     M.close()
     M.setflag(F_MASON)
@@ -603,8 +640,12 @@ def main():
     H.ptr(0x08165465)
     hide_scr = 0x08000000 + put_script(r, H)
     r.w32(0x16545b, hide_scr)
-    out = SRC
-    r.save(out)
+    update_quest_text(r)
+    rename_rival(r)
+    skip_naming(r)
+    start_at_home(r)
+    remove_slums(r)
+    r.save(OUT)
     print('trainer', tid, 'mason', mason_id, 'anne', anne_id, 'end', hex(r.cur))
 
 if __name__ == '__main__':

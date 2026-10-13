@@ -128,3 +128,17 @@ Pole tops (48,12)=238 (cap of the 245 pole) and (57,12)=239 (cap of the 244 pole
 
 ## Cerulean stray fence removed (2026-10-13)
 (61,17) 231 -> 9 (same value and walkable collision as (60,17)). ROM CRC32 f6051223, md5 ae8e02e83333f467462454c15d32ed47; patch regenerated and verified.
+
+## New opening, Oak robbed, no naming screens, splatter order, base 1 paintings (2026-10-13)
+ROM CRC32 f46186eb, md5 d27ae2c946d253982d6e711c637090c6; Pokemon War and Murder.ips regenerated and verified. All built by scripts in tools/, applied in this order to the previous ROM: cry_open.py, splat_order.py, base1_paintings.py (cry_open.py IN OUT; the others IN OUT too).
+- cry_open.py (ported from the old m_final build, now on this ROM; the house tiles are baked into tools/cry_house_tiles.json because the CryMon repo is gone):
+  - New games start in the player's house 1F (4,5), not the Slums. The Slums are gone from play: Pallet's rock hut (3..5,16..17) is dark lawn, its warp (id 3) is parked at (0,0) so the other warp ids keep their numbers. Map (1,88) is still in the ROM, unreachable.
+  - No naming screens. The two DoNamingScreen calls in the new-game task (0x1303B4) go to a stub (0x3B4D84) that writes MAX into the save and returns through the screen's own return callback; the "Are you sure" Yes/No answers Yes by itself. The rival is MASON: rival preset 0 (table 0x463124) and every trainer entry that was named TERRY (13) now say MASON.
+  - House 1F: CryMon wood tiles, father in the bed (2..3,3..4), empty bed, shelf (8,3) gives SANDSHREW lv3, crate (10,5) gives a POTION, the door (4,8) is locked until the shelf is used (coord events at (4,7),(5,7)).
+  - Pallet: ultra-ball man hidden, the first-exit tourist trigger removed, Mason (Gary sprite, PIKACHU lv3, trainer 743) fights at (5..7,8), the script continues after the fight (battle type 2, type 0 ended the script), Anne (Lass sprite) gives 5 POKé BALLS. Oak's lab: no starters, Oak says he was robbed.
+  - Flags moved to 0x4EF..0x4F6 (the old port used 0x4E6..0x4ED, which collide with the spirit quests' hide flags 0x4E5..0x4EE and made the shelf read as already used). VAR 0x406D = opening progress.
+  - Quest log text (first entry, in place at 0xA00000) no longer mentions the Slums or the tourist.
+- splat_order.py: the blood splatter (gfx 0x98/0x99/0xA1, one image table) gets subpriority 0xFF whenever SetObjectSubpriorityByElevation sets it (hook at 0x6832E, stub at 0x3AE340). Always over the ground, always under the player and NPCs. Checked in the harness walking over Pallet (11,12) from both sides, before and after.
+- base1_paintings.py: first base interior (2,69) loses its four framed pictures (cells 861/869, 862/863/870/871 -> wall 816/824). The same pictures and leaf tops exist in bases 2,70..79 and were not touched.
+- Tests: tools/newgame_test.py (names and start position from a cold boot), tools/opening_test.py (whole opening, plus 'lab' mode for Oak), tools/splat_test.py, tools/walk_test.py (WALK_ROM env var; the Cerulean row 17 case now expects the connected fence to block). All passed on this ROM.
+- Not done / open: the Vallejo surname and the CryMon dialogue text. The CryMon repo is deleted, so the dialogue is the earlier port's adaptation, not verbatim CryMon text.
