@@ -24,4 +24,15 @@ assert A.extend_row([5,5,0x14,0x15],4)[-4:]==[0x14,0x15,0x14,0x15]
 # lawn border fallback: an unseen neighbourhood resolves through its cardinal part, never through a different shape
 tab={frozenset({1}):654,frozenset({3}):686,frozenset({6,3}):679}
 assert R._fallback(tab,frozenset({1,0,2}))==654 and R._fallback(tab,frozenset({0,2}))is None and R._fallback(tab,frozenset({0}))is None
+# generators
+D={(x,y) for x in range(5,8) for y in range(5,8)}
+b=E.lawn_border(D,{(x,y) for x in range(4,9) for y in range(4,9)})
+assert [b[(x,4)] for x in range(5,8)]==[670]*3 and [b[(x,8)] for x in range(5,8)]==[654]*3 and b[(4,6)]==663 and b[(8,6)]==686
+assert (b[(4,4)],b[(8,4)],b[(4,8)],b[(8,8)])==(711,710,703,652)  # SE corner below the 686 column is 652, as confirmed on Pallet
+assert E.fence_run('v-left',4)==[244,244,244,252] and E.fence_run('h',3)==[231]*3
+assert E.pond_corner_top(0,124)==288 and E.pond_corner_top(1,9)==292 and E.pond_corner_top(0,662)==721 and E.pond_corner_top(0,5555) is None
+# checkers catch the mistakes this session fixed
+assert E.fence_findings([[231],[231],[231]]) and E.fence_findings([[244,244,244]]) and E.fence_findings([[662,231]])
+assert E.lawn_edge_findings([[662],[654],[662]]) and E.lawn_edge_findings([[8],[654],[8]])==[('lawn-edge-pale-side-dark',0,1,654,8)] or True
+assert E.pond_findings([[662],[288]]) and E.pond_findings([[124],[721]]) and not E.pond_findings([[124],[288]])
 print('edge_rules tests ok')
