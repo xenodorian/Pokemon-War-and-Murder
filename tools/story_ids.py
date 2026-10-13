@@ -10,9 +10,10 @@ HIDE_ANNE=0x4FB        # Anne at the Pewter base door is hidden while SET (clear
 F_FATHER_ALIVE=0x4FC   # father revived, the FATHER team box and the father NPC exist
 F_YV_RISEN=0x4FD       # Yveltal has been woken at the Tower grave
 F_ENDED=0x4FE          # the epilogue has played
+F_TOWER_HIDE=0x4FF      # the old Shinigami fight object at the Tower top is hidden while SET (set at new game)
 F_CAPTAIN_DOWN=0x4C0   # base 1 cleared flag (existing FLAG_CLEARED0): soldiers gone, Captain beaten
 # ---- vars
-VAR_STORY=0x40EC       # 0 start, 1 left home, 2 Shinigami freed (go outside), 3 choice made, 4 Yveltal resolved, 5 Nero beaten, 6 epilogue done
+VAR_STORY=0x40EC       # 0 new game (not initialised), 1 story started, 2 Shinigami freed (go outside)  [old: 0 start, 1 left home, 2 Shinigami freed (go outside), 3 choice made, 4 Yveltal resolved, 5 Nero beaten, 6 epilogue done
 VAR_REP=0x40ED         # reputation + 100 (0..200), 100 = neutral
 VAR_NERO=0x40EE        # 0 not beaten, 1 arrested, 2 executed, 3 crowned
 VAR_YV=0x40EF          # 0 none, 1 chosen (scroll spoken), 2 tamed (caught), 3 beaten, 4 Max fell
