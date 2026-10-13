@@ -279,16 +279,26 @@ def remove_slums(r):
 
 
 # ---------------------------------------------------------------------------------------------- quest log text
-QUEST_TEXT_AT = 0xA00000      # first quest-log entry (FIRST POKéMON), 199 bytes including the terminator
 def update_quest_text(r):
+    """the FIRST POKéMON quest log entry exists four times in the ROM (the quest table is copied); every copy is rewritten in place"""
     d = r.b
-    assert bytes(d[QUEST_TEXT_AT + 0x46:QUEST_TEXT_AT + 0x46 + 15]) == enc('Leave the SLUMS')[:-1], 'quest text not where expected'
+    head = enc('QUEST: FIRST POKéMON')[:-1] + b'\xfb'
     pages = ["QUEST: FIRST POKéMON", "GO TO: PALLET TOWN, then PROF.\nOAK's LAB.", "TO DO: Take your father's\nPOKéMON from the shelf at home.", "Then leave and go to OAK's LAB\nin the north of PALLET TOWN."]
     body = b'\xfb'.join(enc(p)[:-1] for p in pages)
-    assert len(body) <= 198, len(body)
-    body += bytes([0x00]) * (198 - len(body)) + b'\xff'          # trailing spaces keep the next entry where it was
-    d[QUEST_TEXT_AT:QUEST_TEXT_AT + 199] = body
-
+    n = 0
+    i = 0
+    while True:
+        i = bytes(d).find(head, i)
+        if i < 0: break
+        j = i
+        while d[j] != 0xFF: j += 1
+        old = bytes(d[i:j])
+        assert enc('Leave the SLUMS')[:-1] in old and len(body) <= len(old), (hex(i), len(body), len(old))
+        d[i:j + 1] = body + bytes([0x00]) * (len(old) - len(body)) + b'\xff'
+        n += 1
+        i = j + 1
+    assert n == 4, n
+    return n
 
 # ---------------------------------------------------------------------------------------------- the rival is MASON everywhere
 def rename_rival(r):

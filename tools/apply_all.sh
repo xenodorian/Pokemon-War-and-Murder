@@ -10,7 +10,8 @@ python3 tools/splat_order.py $T/1.gba $T/2.gba          # blood splatter always 
 python3 tools/base1_paintings.py $T/2.gba $T/3.gba      # base 1: pictures clipped by plants
 python3 tools/base_paintings_clipped.py $T/3.gba $T/4.gba   # bases 2,70..2,77
 python3 tools/door_anim.py $T/4.gba $T/5.gba            # base door animation (frees tile slots 1008..1023)
-python3 tools/priest_text.py $T/5.gba "$OUT"            # CONFESSION quest text
+python3 tools/priest_text.py $T/5.gba $T/6.gba            # CONFESSION quest text
+python3 tools/slums_text.py $T/6.gba "$OUT"             # three lines that mentioned PALLET SLUMS
 python3 - "$OUT" <<'PY'
 import sys,zlib
 d=open(sys.argv[1],'rb').read(); print('rebuilt CRC32',hex(zlib.crc32(d)))
