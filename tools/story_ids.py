@@ -18,6 +18,8 @@ VAR_REP=0x40ED         # reputation + 100 (0..200), 100 = neutral
 VAR_NERO=0x40EE        # 0 not beaten, 1 arrested, 2 executed, 3 crowned
 VAR_YV=0x40EF          # 0 grave not woken yet, 1 woke and left (ran), 2 tamed (caught), 3 beaten (Godslayer), 4 fight in progress (a blackout then is the Bloody ending), 9 not applicable (Father chosen)
 VAR_CHOICE=0x40F0      # 0 none, 1 father, 2 yveltal
+# ---- reputation: VAR_REP 100 neutral; kind title at >= 130, Bloody title at <= 40
+REP_KIND,REP_BLOODY=130,40
 # ---- species slots (see build.py: 252 TAUNTER, 253 SLIMOSAUR)
 SP_YVELTAL=254
 SP_MAX=255
