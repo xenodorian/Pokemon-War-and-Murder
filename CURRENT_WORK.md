@@ -115,3 +115,6 @@ Each case warps the player next to an obstacle, holds a direction for 64 frames 
 
 ## Review of the three vocabulary candidates (2026-10-13)
 Rendered original vs current for Pallet (19,14), Cerulean (46,17) and Lavender (22,16). None is a defect: Pallet's cell is plain pale lawn beside the house (the suggested 654 would add a dark edge that is not there); Cerulean and Lavender cells are dark-lawn variants (9 vs 8, 8 vs 1), and the original's own 8/9/16/17 parity is irregular (about 30% of its lawn cells follow any single parity), so they are interchangeable. No map changes. edge_learn.Vocab.repair now ignores swaps between lawn variants 1/8/9/16/17.
+
+## Pallet (19,14) fixed (2026-10-13)
+My earlier review dismissed this cell wrongly. The original has 654 (dark north edge) at (19,14), which closes the dark fringe under the house; an earlier edit left plain pale 662 there, leaving a notch at the fringe's right end. Set to 654 (collision bits unchanged, walkable). ROM CRC32 a4b2616e, md5 a97efb54b9eed8f2524625b6297eb2b0; Pokemon War and Murder.ips regenerated and verified. The vocabulary check had flagged it correctly.
