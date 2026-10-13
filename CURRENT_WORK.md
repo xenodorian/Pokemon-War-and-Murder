@@ -125,3 +125,6 @@ Lavender (22,16): false alarm (lawn variant 8 vs 1, former cliff column); no cha
 
 ## Cerulean fence end caps (2026-10-13)
 Pole tops (48,12)=238 (cap of the 245 pole) and (57,12)=239 (cap of the 244 pole, same block the x=41 pole uses at (41,11)), solid. The lone 231 at (61,17) is left as is (user: not wrong). ROM CRC32 d15a7735, md5 56c67ab1391602826e638a736be8ae01; patch regenerated and verified.
+
+## Cerulean stray fence removed (2026-10-13)
+(61,17) 231 -> 9 (same value and walkable collision as (60,17)). ROM CRC32 f6051223, md5 ae8e02e83333f467462454c15d32ed47; patch regenerated and verified.
