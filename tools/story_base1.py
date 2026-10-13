@@ -33,7 +33,7 @@ def new_game_init(r):
     while r.b[e]!=0x02: e+=1
     inner=bytes(r.b[old:e])
     S=SB(); S._add(inner); S.compare(I.VAR_STORY,0); S.goto_if(1,'init'); S.end()
-    S.lab('init'); S.setvar(I.VAR_STORY,1); S.setflag(I.HIDE_STORY); S.setflag(I.F_TOWER_HIDE); S.setvar(VAR_SCENE,5); S.end()
+    S.lab('init'); S.setvar(I.VAR_STORY,1); S.setflag(I.HIDE_STORY); S.setflag(I.F_TOWER_HIDE); S.setflag(I.HIDE_ANNE); S.setvar(VAR_SCENE,5); S.end()
     r.w32(lst+1,0x08000000+put_script(r,S))
 def gate_crime_scenes(r):
     n=0
