@@ -11,6 +11,7 @@ from g3 import ENC
 import gfx
 import story_ids as I
 import story_text as ST
+import story_native as SN
 RESULT=0x800D
 A=os.path.join(os.path.dirname(os.path.abspath(__file__)),'..','story_assets')
 TRAINER_ID=530; PIC=68; CAMP=(2,79)
@@ -21,13 +22,8 @@ def card(S,r,text): S.msg(ST.ptr_s(r,text),4)
 _n=[0]
 def lab(p): _n[0]+=1; return '%s%d'%(p,_n[0])
 def rep_add(S,n):
-    """VAR_REP += n (n may be negative), clamped to 0..200"""
-    if n>=0:
-        S.raw(0x17); S._add(struct.pack('<HH',I.VAR_REP,n))
-        ok=lab('ra'); S.compare(I.VAR_REP,200); S.goto_if(3,ok); S.setvar(I.VAR_REP,200); S.lab(ok)
-    else:
-        lo=lab('rl'); ok=lab('rb'); S.compare(I.VAR_REP,-n); S.goto_if(0,lo); S.raw(0x18); S._add(struct.pack('<HH',I.VAR_REP,-n)); S.goto(ok)
-        S.lab(lo); S.setvar(I.VAR_REP,0); S.lab(ok)
+    """story reputation adjustment (VAR_REPADJ is 1000 + adjustment; rep_calc folds it into VAR_REP)"""
+    S.raw(0x17 if n>=0 else 0x18); S._add(struct.pack('<HH',I.VAR_REPADJ,abs(n)))
 def epilogue(r):
     """subroutine (ends with return): the closing cards"""
     S=SB()
@@ -108,6 +104,7 @@ def install(r):
     S.lab('arrest'); S.setvar(I.VAR_NERO,1); S.msg(ST.ptr(r,'nero_arrest'),4); rep_add(S,20)
     S.lab('after')
     S.setvar(I.VAR_STORY,5)
+    S.raw(0x23); S.ptr(SN.addrs(r)['rep_calc'])
     S.raw(0x04); S.ptr(epi)
     S.setvar(I.VAR_STORY,6)
     S._add(warp); S.end()

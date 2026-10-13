@@ -10,6 +10,7 @@ from shinigami import SB,put_script,add_coord
 import story_ids as I
 import story_text as ST
 import story_party as SP
+import story_native as SN
 RESULT=0x800D
 WHITEOUT_PTR=0x7f5ec           # literal holding the white-out script address
 def native(r,src):
@@ -80,7 +81,9 @@ def grave(r,yv_setup,reset):
     h=header(r,2,66); ev=r32(r,h+4)-0x08000000; cp=r32(r,ev+12)-0x08000000; r.b[cp+16*(r.b[ev+2]-1)+4]=0      # elevation 0 = any
 def whiteout(r,reset):
     orig=r32(r,WHITEOUT_PTR); assert orig==0x081a8dd8,hex(orig)
-    S=SB(); S.compare(I.VAR_YV,4); S.goto_if(1,'dead'); S.raw(0x05); S.ptr(orig)
+    fn=SN.addrs(r)
+    S=SB(); S.raw(0x23); S.ptr(fn['max_remove'])
+    S.compare(I.VAR_YV,4); S.goto_if(1,'dead'); S.raw(0x05); S.ptr(orig)
     S.lab('dead'); S.lockall()
     S.msg(ST.ptr(r,'yveltal_max_dies'),4); S.msg(ST.ptr(r,'epi_bloody'),4); S.msg(ST.ptr(r,'title_bloody'),4); S.msg(ST.ptr(r,'epi_end'),4)
     S.setvar(I.VAR_YV,5); S.raw(0x23); S.ptr(reset); S.end()
