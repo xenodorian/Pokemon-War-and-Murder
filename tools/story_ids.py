@@ -1,6 +1,7 @@
 """Flag, var, species, item and trainer ids of the Shinigami / Yveltal / Nero storyline. One place so no script reuses an id.
 Flags 0x4EF..0x4F6 belong to the opening (cry_open.py); 0x4D0..0x4EE are the spirit quests; 0x4A7..0x4AD, 0x4C0..0x4CB are older scenes.
-Vars 0x40EC..0x40F0 are unused vanilla vars (0x4090.. is the robbery pool, 0x40E6..0x40EB and 0x40F1 are vanilla daily vars)."""
+Vars: 0x40EC..0x40EE belong to the Hall of Justice record (gun.c), 0x40E4,0x40E5,0x40E8 to rob.c and gun.c; the story uses 0x40E6 0x40E7 0x40E9 0x40EA 0x40EF 0x40F0.
+"""
 # ---- flags (0x4F7..0x4FF)
 F_FREED=0x4F7          # Shinigami is free (set when Max opens his cell in base 1)
 HIDE_STORY=0x4F8       # crime-scene objects (bodies, feathers, story officers) are hidden while this is SET; map transition scripts keep it equal to NOT F_FREED
@@ -13,9 +14,9 @@ F_ENDED=0x4FE          # the epilogue has played
 F_TOWER_HIDE=0x4FF      # the old Shinigami fight object at the Tower top is hidden while SET (set at new game)
 F_CAPTAIN_DOWN=0x4C0   # base 1 cleared flag (existing FLAG_CLEARED0): soldiers gone, Captain beaten
 # ---- vars
-VAR_STORY=0x40EC       # 0 new game (not initialised), 1 story started, 2 Shinigami freed (go outside)  [old: 0 start, 1 left home, 2 Shinigami freed (go outside), 3 choice made, 4 Yveltal resolved, 5 Nero beaten, 6 epilogue done
-VAR_REP=0x40ED         # reputation + 100 (0..200), 100 = neutral
-VAR_NERO=0x40EE        # 0 not beaten, 1 arrested, 2 executed, 3 crowned
+VAR_STORY=0x40E6       # 0 new game (not initialised), 1 story started, 2 Shinigami freed (go outside)  [old: 0 start, 1 left home, 2 Shinigami freed (go outside), 3 choice made, 4 Yveltal resolved, 5 Nero beaten, 6 epilogue done
+VAR_REP=0x40E7         # reputation + 100 (0..200), 100 = neutral
+VAR_NERO=0x40EA        # 0 not beaten, 1 arrested, 2 executed, 3 crowned
 VAR_YV=0x40EF          # 0 grave not woken yet, 1 woke and left (ran), 2 tamed (caught), 3 beaten (Godslayer), 4 fight in progress (a blackout then is the Bloody ending), 9 not applicable (Father chosen)
 VAR_REPADJ=0x40E9       # story reputation adjustment, stored as 1000 + adjustment (set at new game)
 VAR_CHOICE=0x40F0      # 0 none, 1 father, 2 yveltal

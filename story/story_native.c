@@ -6,7 +6,7 @@ typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32;
 #define SB1 (*(u8* volatile*)0x03005008)
 #define PARTY ((u8*)0x02024284)
 #define COUNT (*(volatile u8*)0x02024029)
-#define VAR_REP 0x40ED
+#define VAR_REP 0x40E7
 #define VAR_REPADJ 0x40E9
 #define BLESS_VAR 0x40F4
 #define SP_MAX 255
