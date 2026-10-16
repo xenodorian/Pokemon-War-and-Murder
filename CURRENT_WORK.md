@@ -228,3 +228,21 @@ Plan and decisions: docs/STORY_PLAN.md. Ids: tools/story_ids.py. Text: story_ass
 ## Battle test (2026-10-16): passes
 - tools/battle_test.py builds a TEST ROM where stepping onto the house door starts a wild Pidgey battle (cry_open.py, gated on TEST_BATTLE=1; release builds are unaffected and verified byte-identical).
 - Result: wild PIDGEY appears, LEAF (stand-in, Lv 1, 1 HP) goes out, the move menu shows BITCH SLAP 1/20 PP TYPE/FIGHT. LEAF faints to Tackle and the white-out runs without a crash. Damage from Bitch Slap was not read from RAM.
+
+## Progress status (2026-10-16)
+Done and pushed to main:
+- Repo: outlaw base ROM restored; Aladdin Sane removed. c3_build_base and m_final_latest_build are still in the repo (their removal was blocked; not deleted). /home/claude/work symlink to the repo; out/ and shots/*.ppm ignored.
+- Build: tools/apply_all.sh rebuilds the release ROM byte for byte (`roms/Pokemon War and Murder.gba`, CRC32 4b9023d6), and the IPS patch reproduces it from the outlaw base.
+- Protagonist is LEAF (save name, story text). Stand-in species 255 is LEAF: Hitmonchan stats and Fighting type, Leaf art.
+- Three new move slots: 355 BITCH SLAP, 356 BALL THROW, 357 HYPERPUNCH (tools/moves_extend.py). Hitmonchan (107) and LEAF (255) learnsets set to the spec list.
+- Anne: little girl sprite, six Poke Balls and a Potion, CryMon wording.
+- Mason: Pallet intro and after-battle text are CryMon's lines.
+- Battle test: passes (tools/battle_test.py, TEST_BATTLE hook on the house door). Wild Pidgey battle, LEAF stand-in out, BITCH SLAP shown with 1/20 PP, TYPE/FIGHT.
+
+Not done:
+- Throw animations (Ball Throw first, then the other seven reference moves). Only the reference notes in leaf_throw_anims/ exist.
+- Bitch Slap / Ball Throw / Hyperpunch use TACKLE's battle animation. Damage not yet read from RAM.
+- Max as an NPC (child sprite), the Viridian arrest cutscene, double battles with Max's Pikachu and then Raichu, the soldier fights and outcomes, the XP Share and gun pickup.
+- Reputation-based death (Arceus or Giratina), PC-or-withdraw prompt for a full party, normal white-out.
+- Hyperpunch's type is set to Fighting; confirm.
+- Leaf back art is the top frame of pret's back sheet; revisit later.
