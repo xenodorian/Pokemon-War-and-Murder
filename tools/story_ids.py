@@ -27,3 +27,10 @@ SP_YVELTAL=254
 SP_MAX=255
 # ---- epilogue
 TITLE_KIND,TITLE_KINGSLAYER,TITLE_GODSLAYER,TITLE_BLOODY=1,2,3,4
+# ---- Viridian arrest (flags in the unused tail of the trainer-flag range; no vars needed). HIDE_* flags are SET while the object is hidden.
+HIDE_VS1,HIDE_VS2,HIDE_VMAX,HIDE_VSPL2,HIDE_VSPLM,HIDE_VGUN=0x840,0x841,0x842,0x843,0x844,0x845
+F_ARREST=0x846         # the arrest scene has started (the one-time trigger)
+F_VWON=0x847           # the soldiers were beaten (soldier 2 shot himself, MAX left)
+F_VLOST=0x848          # the soldiers won (MAX is a splatter for the rest of the game)
+VAR_VIRI=0x4090       # coord-event trigger of the arrest scene: 0 not played, 1 played (vanilla VAR_0x4090, unused by the ROM)
+F_GUNTAKEN=0x849       # LEAF took the GLOCK from the splatter

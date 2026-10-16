@@ -20,7 +20,9 @@ python3 tools/story_yveltal.py $T/10b.gba $T/11.gba       # YVELTAL grave in the
 python3 tools/moves_extend.py $T/11.gba $T/11m.gba       # three new move slots (355 BITCH SLAP, 356 BALL THROW, 357 HYPERPUNCH), Hitmonchan and LEAF learnsets
 python3 tools/anim_throw.py $T/11m.gba $T/11a.gba       # battle animations for the Leaf throw moves (Ball Throw first)
 python3 tools/mtmoon_fix.py $T/11a.gba $T/11b.gba         # Mt. Moon B2F grunt with a lost script pointer
-python3 tools/story_nero.py $T/11b.gba "$OUT"              # NERO replaces the General: arrest / execute / crown, father reaction, titles, epilogue cards
+python3 tools/story_viri_native.py $T/11b.gba $T/11c.gba     # native helpers for the Viridian arrest (Max's Pikachu)
+python3 tools/story_viridian.py $T/11c.gba $T/11d.gba        # Max, the Viridian arrest, the double battle
+python3 tools/story_nero.py $T/11d.gba "$OUT"              # NERO replaces the General: arrest / execute / crown, father reaction, titles, epilogue cards
 python3 - "$OUT" <<'PY'
 import sys,zlib
 d=open(sys.argv[1],'rb').read(); print('rebuilt CRC32',hex(zlib.crc32(d)))
