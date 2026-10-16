@@ -1,7 +1,7 @@
 """Shinigami storyline: native code (usage: story_native.py IN.gba OUT.gba), source story/story_native.c
  - reputation: rep_calc() = clamp(100 + blessings - kills + (VAR_REPADJ - 1000), 0..200), written to VAR_REP. Shop prices (the item price getter at 0x9a916) are scaled
    +1%/point below 100 and -1%/point above; at 0 the pokemart script command (table entry 0x86) refuses with the shopkeeper's line.
- - MAX fights as herself: before every battle (hook at the CreateTask call of the battle start task 0x7f6a2) with no usable POKeMON in the party MAX (species 255, Lv 1) joins
+ - LEAF fights as herself: before every battle (hook at the CreateTask call of the battle start task 0x7f6a2) with no usable POKeMON in the party LEAF (species 255, Lv 1) joins
    if there is room; she leaves again once a usable POKeMON exists, and in the white-out script.
  - the table 'STORYFN1' (rep_calc, max_remove, max_prepare, party_empty) tells later steps the addresses (addrs(r))."""
 import sys,struct,subprocess,os

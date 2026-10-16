@@ -1,4 +1,4 @@
-// Native routines of the Shinigami storyline: reputation, shop price scaling and refusal, MAX fights as herself.
+// Native routines of the Shinigami storyline: reputation, shop price scaling and refusal, LEAF fights as herself.
 typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32;
 #include "../stage2/data.h"
 #include "../leg2/killcount.h"
@@ -39,7 +39,7 @@ static void drop(int i){
     for(int k=i;k<n-1;k++){ u32* d=(u32*)(PARTY+100*k); u32* s=(u32*)(PARTY+100*(k+1)); for(int w=0;w<25;w++) d[w]=s[w]; }
     ZeroMonData(PARTY+100*(n-1)); COUNT=(u8)(n-1);
 }
-// removes MAX (the stand-in for a trainer with no POKeMON at all) from the party
+// removes LEAF (the stand-in for a trainer with no POKeMON at all) from the party
 void max_remove(void){
     for(int i=0;i<COUNT;i++) if(GetMonData(PARTY+100*i,11,0)==SP_MAX){ drop(i); return; }
 }
@@ -48,14 +48,14 @@ void max_remove(void){
 #define SetMainCallback2 ((void(*)(u32))(0x08000544|1))
 #define VAR_CBLO 0x40EB
 #define VAR_CBHI 0x40F1
-// the battle's end callback is wrapped: the first frame back in the overworld removes MAX again, then the real callback runs
+// the battle's end callback is wrapped: the first frame back in the overworld removes LEAF again, then the real callback runs
 void max_after(void){
     u32 cb=(u32)*var(VAR_CBLO)|((u32)*var(VAR_CBHI)<<16);
     max_remove();
     SAVEDCB=cb;
     SetMainCallback2(cb);
 }
-// before every battle: only when the party is completely empty MAX (Lv 1, Caterpie stats, TACKLE) joins, for the length of that battle
+// before every battle: only when the party is completely empty LEAF (Lv 1, Hitmonchan stats, TACKLE) joins, for the length of that battle
 void max_prepare(void){
     max_remove();
     if(COUNT!=0) return;
@@ -64,5 +64,5 @@ void max_prepare(void){
     u32 cb=SAVEDCB; u32 mine=((u32)max_after)|1;
     if(cb!=mine){ *var(VAR_CBLO)=(u16)cb; *var(VAR_CBHI)=(u16)(cb>>16); SAVEDCB=mine; }
 }
-// GSV7 = 1 when the party is empty (used by the white-out script: MAX was the one who fell)
+// GSV7 = 1 when the party is empty (used by the white-out script: LEAF was the one who fell)
 void party_empty(void){ GSV(7)=(COUNT==0)?1:0; }

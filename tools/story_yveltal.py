@@ -88,7 +88,7 @@ def whiteout(r,reset):
         S.compare(I.VAR_YV,4); S.goto_if(1,'dead')
         S.raw(0x23); S.ptr(fn['party_empty']); S.compare(0x8007,1); S.goto_if(1,'maxdead')
         S.raw(0x05); S.ptr(orig)
-        # MAX (the stand-in for an empty party) fell: HEAVEN with reputation 100 or more, HELL below, like being shot (gun.py 'gotshot')
+        # LEAF (the stand-in for an empty party) fell: HEAVEN with reputation 100 or more, HELL below, like being shot (gun.py 'gotshot')
         S.lab('maxdead'); S.lockall()
         S.raw(0x23); S.ptr(fn['rep_calc']); S.compare(I.VAR_REP,100); S.goto_if(0,'hell')
         S.msg(ST.ptr_s(r,["The world goes white.","Something warm lifts you up."]),4); S.raw(0x97,1); S.raw(0x39,2,80,0xff); S._add(struct.pack('<HH',8,25)); S.raw(0x27); S.releaseall(); S.end()

@@ -1,6 +1,6 @@
 # CryMon cottage opening, ported onto the War and Murder ROM.
 # usage: cry_open.py IN.gba OUT.gba
-# No naming screens: the player is MAX and the rival is MASON. New games start in the player's house (the Slums are gone).
+# No naming screens: the player is LEAF and the rival is MASON. New games start in the player's house (the Slums are gone).
 # Player's house 1F uses the CryMon wood tiles (tools/cry_house_tiles.json, baked from the CryMon sprites).
 # Father, empty bed, shelf (Sandshrew) and crate (Potion) replace Mom's scene.
 # Oak has no starters and says he was robbed. The ultra-ball man and the
@@ -179,7 +179,7 @@ def u32(d, a):
 # ---------------------------------------------------------------------------------------------- no naming screens
 # The hack's new game goes title -> naming screen (task state 0x1303b4 calls DoNamingScreen) -> "Are you sure?" confirmation -> start.
 # Both DoNamingScreen calls in that task state are redirected to a stub that writes the names into the save and returns straight to the screen's own return
-# callback, as if the name had been typed: MAX for the player, MASON for the rival (the rival is never asked in this hack, so it is set here too).
+# callback, as if the name had been typed: LEAF for the player, MASON for the rival (the rival is never asked in this hack, so it is set here too).
 # The confirmation's Yes/No handler (0x130554) answers Yes by itself.
 SB2_PTR, SB1_PTR = 0x0300500C, 0x03005008
 NAMING_TASK, NAMING_TASK_END, DO_NAMING, SET_MAIN_CB2 = 0x1303B4, 0x130464, 0x0809D954, 0x08000545
@@ -201,7 +201,7 @@ def skip_naming(r):
             if 0x08000000 + o + 4 + off == DO_NAMING: sites.append(o)
     assert len(sites) == 2, [hex(x) for x in sites]
     assert u16(d, YESNO_CALL) & 0xF800 == 0xF000 and u16(d, YESNO_CALL + 2) & 0xF800 == 0xF800, 'Yes/No call not where expected'
-    mx = enc('MAX')[:-1] + b'\xff' * 5
+    mx = enc('LEAF')[:-1] + b'\xff' * 4
     ms = enc('MASON')[:-1] + b'\xff' * 3
     pm = 0x08000000 + r.alloc(mx + ms, 4)
     stub_src = f"""

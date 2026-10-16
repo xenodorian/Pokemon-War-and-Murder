@@ -5,16 +5,16 @@
   ],
   "captain_defeat_intro": [
     "CAPTAIN: Halt! This is a JRA base.\nNobody opens that cell. Turn back.",
-    "MAX: That cell holds Shinigami.\nI need him. Move, or fight."
+    "LEAF: That cell holds Shinigami.\nI need him. Move, or fight."
   ],
   "captain_defeat_win": [
     "CAPTAIN: I was told to hold him.\nTake the key. The JRA will hear."
   ],
   "free_shinigami": [
-    "Max unlocks the cell door.\nShinigami steps into the light.",
+    "Leaf unlocks the cell door.\nShinigami steps into the light.",
     "SHINIGAMI: You kept your word.",
-    "Shinigami hands Max a scroll.\nThe Scroll of Resurrection.",
-    "SHINIGAMI: It wakes the dead.\nHuman or POK\u00e9MON. Use it well."
+    "Shinigami hands Leaf a scroll.\nThe Scroll of Resurrection.",
+    "SHINIGAMI: It wakes the dead.\nHuman or POKéMON. Use it well."
   ],
   "shinigami_leaves": [
     "Shinigami walks out of the base\npast the fallen Captain.",
@@ -23,10 +23,10 @@
   ],
   "anne_news": [
     "Anne is waiting outside the base.\nHer face is grey.",
-    "ANNE: Max. I'm so sorry.\nYour father died. Just now.",
-    "MAX: No. He was only sleeping.\nHe was fine when I left him.",
+    "ANNE: Leaf. I'm so sorry.\nYour father died. Just now.",
+    "LEAF: No. He was only sleeping.\nHe was fine when I left him.",
     "ANNE: His breath just stopped.\nI wanted you to hear it from me.",
-    "MAX: Shinigami raises the dead.\nI have the scroll. I can fix this."
+    "LEAF: Shinigami raises the dead.\nI have the scroll. I can fix this."
   ],
   "choice_prompt": [
     "Use the scroll on Father,\nor speak YVELTAL's name?"
@@ -38,21 +38,21 @@
     "Call YVELTAL"
   ],
   "choice_father": [
-    "Max unrolls the scroll on Father.\nHis eyes open. He is breathing.",
+    "Leaf unrolls the scroll on Father.\nHis eyes open. He is breathing.",
     "The scroll burns to ash. The old\nman sits up, shaking."
   ],
   "father_revived_talk": [
-    "FATHER: Max? I was already gone.\nYou pulled me back anyway.",
-    "MAX: I still need you.\nWhatever comes, we face it.",
+    "FATHER: Leaf? I was already gone.\nYou pulled me back anyway.",
+    "LEAF: I still need you.\nWhatever comes, we face it.",
     "FATHER: Then you have me. Thanks.\nI'm with you to the end.",
-    "Father joins your party.\nHe carries six more POK\u00e9MON."
+    "Father joins your party.\nHe carries six more POKéMON."
   ],
   "choice_yveltal": [
-    "Max speaks YVELTAL's name instead.\nThe scroll points toward Lavender.",
-    "MAX: Wake, YVELTAL. Be mine.\nYour grave: the POK\u00e9MON Tower."
+    "Leaf speaks YVELTAL's name instead.\nThe scroll points toward Lavender.",
+    "LEAF: Wake, YVELTAL. Be mine.\nYour grave: the POKéMON Tower."
   ],
   "yveltal_grave_need_scroll": [
-    "A cold grave in the POK\u00e9MON Tower.\nNo scroll. The runes stay dark."
+    "A cold grave in the POKéMON Tower.\nNo scroll. The runes stay dark."
   ],
   "yveltal_rise": [
     "The earth splits. YVELTAL rises.\nIts wings blot out the sky.",
@@ -60,26 +60,26 @@
     "It attacks. No time to rest."
   ],
   "yveltal_tamed": [
-    "YVELTAL folds its black wings.\nIt bows its head to Max.",
+    "YVELTAL folds its black wings.\nIt bows its head to Leaf.",
     "YVELTAL: You called me.\nI will stay with you."
   ],
   "yveltal_defeated": [
     "YVELTAL falls and does not rise.\nThe sky closes over the tower.",
-    "MAX: The price of power is paid.\nNow no one stands against me."
+    "LEAF: The price of power is paid.\nNow no one stands against me."
   ],
   "yveltal_max_dies": [
-    "YVELTAL's last strike lands.\nMax falls, and does not get up.",
+    "YVELTAL's last strike lands.\nLeaf falls, and does not get up.",
     "They bury her outside Pallet Town,\nunder a plain stone."
   ],
   "nero_spot": [
     "NERO: So. The girl from Pallet.\nI held my queen as she died.",
     "NERO: Twelve years ago, I swore\nno one would ever leave me again.",
     "NERO: Every soul stays with me.\nEven the dead. Especially them.",
-    "MAX: You call that keeping them?\nI call it refusing to let go.",
+    "LEAF: You call that keeping them?\nI call it refusing to let go.",
     "NERO: You came for a dead father.\nDon't pretend you're different."
   ],
   "nero_defeated": [
-    "Nero's last POK\u00e9MON falls.\nOutside, the wailing goes quiet.",
+    "Nero's last POKéMON falls.\nOutside, the wailing goes quiet.",
     "A woman in a pale gown stands\nbehind the throne. The queen.",
     "NERO: No. Not yet. Stay.",
     "She rests a hand on his shoulder.\nThen she is gone, like the rest.",
@@ -98,39 +98,39 @@
     "Be crowned"
   ],
   "nero_arrest": [
-    "Max locks the Golden Shackles on\nNero's wrists.",
-    "MAX: You stand trial. Every town\nyou burned gets to watch.",
+    "Leaf locks the Golden Shackles on\nNero's wrists.",
+    "LEAF: You stand trial. Every town\nyou burned gets to watch.",
     "Weeks later, the square fills.\nNero stands before the people.",
     "Witness after witness speaks.\nThe judge reads every charge.",
     "Guilty on every count.\nNero goes to prison for life.",
-    "He does not look at Max\nas they take him away."
+    "He does not look at Leaf\nas they take him away."
   ],
   "nero_execute": [
-    "MAX: No trial. No prison.\nJust this.",
+    "LEAF: No trial. No prison.\nJust this.",
     "The throne room erupts in screams.\nThen it stops.",
-    "A ring rolls across the floor.\nIt stops at Max's feet."
+    "A ring rolls across the floor.\nIt stops at Leaf's feet."
   ],
   "nero_crowned": [
     "The JRA has no king. It needs one.\nIt fears only one person.",
-    "They crown Max with Nero's crown.\nNobody cheers.",
-    "Max, the Kingslayer, is crowned\nthe new Queen."
+    "They crown Leaf with Nero's crown.\nNobody cheers.",
+    "Leaf, the Kingslayer, is crowned\nthe new Queen."
   ],
   "father_end_proud": [
-    "Max walks home to Pallet Town.\nFather is waiting on the step.",
+    "Leaf walks home to Pallet Town.\nFather is waiting on the step.",
     "FATHER: You put him on trial.\nLess blood. I'm proud of you.",
     "FATHER: I have never been prouder."
   ],
   "father_end_sacrifice": [
-    "Max walks home to Pallet Town.\nFather is waiting on the step.",
+    "Leaf walks home to Pallet Town.\nFather is waiting on the step.",
     "FATHER: I heard what you did.\nI know the fighter you became.",
     "FATHER: Still, you gave him trial.\nMaybe the rest was a sacrifice."
   ],
   "father_end_monster": [
-    "Max walks home to Pallet Town.\nFather is waiting on the step.",
+    "Leaf walks home to Pallet Town.\nFather is waiting on the step.",
     "FATHER: You killed a beaten man.\nThen you took his crown.",
     "FATHER: I raised you better.\nYou are a monster.",
     "Father walks out of Pallet Town\nand does not look back.",
-    "His POK\u00e9MON go with him."
+    "His POKéMON go with him."
   ],
   "epi_war": [
     "The JRA is finished.\nThe towns of Johto are free."
@@ -139,7 +139,7 @@
     "Nero lives out his days in a\nprison cell, far from the throne."
   ],
   "epi_crowned": [
-    "Queen Max, the Kingslayer, rules\nfrom the throne."
+    "Queen Leaf, the Kingslayer, rules\nfrom the throne."
   ],
   "epi_father_stays": [
     "Father comes home to Pallet Town\nwith her."
@@ -148,7 +148,7 @@
     "Father never speaks to her again."
   ],
   "epi_none": [
-    "Max has no god at her side.\nShe never needed one."
+    "Leaf has no god at her side.\nShe never needed one."
   ],
   "epi_tamed": [
     "YVELTAL stays at her side for the\nrest of her days."
@@ -157,13 +157,13 @@
     "They call her Godslayer now.\nNobody says it to her face."
   ],
   "epi_bloody": [
-    "Max The Bloody is dead.\nThe songs about her are not kind."
+    "Leaf The Bloody is dead.\nThe songs about her are not kind."
   ],
   "epi_end": [
     "THE END"
   ],
   "title_kind": [
-    "Max The Kind"
+    "Leaf The Kind"
   ],
   "title_kingslayer": [
     "Kingslayer"
@@ -172,7 +172,7 @@
     "Godslayer"
   ],
   "title_bloody": [
-    "Max The Bloody"
+    "Leaf The Bloody"
   ],
   "title_none": [
     ""
@@ -187,13 +187,13 @@
     "SHOPKEEPER: The people like you.\nA small discount, just for you."
   ],
   "rep_free": [
-    "SHOPKEEPER: Take it. It's free.\nThe town owes you, Max."
+    "SHOPKEEPER: Take it. It's free.\nThe town owes you, Leaf."
   ],
   "max_fights_bare_1": [
-    "MAX squares up, bare handed!"
+    "LEAF squares up, bare handed!"
   ],
   "max_fights_bare_2": [
-    "No POK\u00e9MON. Max fights as herself."
+    "No POKéMON. Leaf fights as herself."
   ],
   "max_fights_bare_3": [
     "Fists up. She is not afraid."

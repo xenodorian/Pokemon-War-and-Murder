@@ -195,3 +195,11 @@ Plan and decisions: docs/STORY_PLAN.md. Ids: tools/story_ids.py. Text: story_ass
 
 ## Rebuild check (2026-10-16)
 `sh tools/apply_all.sh OUT.gba` (run with the /home/claude/work symlink in place, ~20 s) rebuilds `roms/Pokemon War and Murder.gba` byte for byte: CRC32 1d47da69, 16,777,240 bytes, 0 differing bytes. The build chain works from this repo.
+
+## Protagonist is LEAF; stand-in is Hitmonchan-based (2026-10-16)
+- Save name: LEAF (tools/cry_open.py). The rival stays MASON. Checked in the harness on a cold boot: player LEAF, rival MASON, start (4,5).
+- Story text: every MAX/Max speaker label and narration line is LEAF/Leaf (story_assets/text/story_text.json, strings only). Code comments updated.
+- Stand-in species 255 is named LEAF with Hitmonchan's base stats and types (Fighting, from the ROM's species 107), art story_assets/chars/leaf_front.png (pret trainers/front_pics/leaf_front_pic.png) and leaf_back.png (the top 64x64 frame of pret trainers/back_pics/leaf_back_pic.png). Learnset is still TACKLE only: the Hitmonchan list needs the new move slots below.
+- Not done: Hitmonchan learnset, new moves Bitch Slap, Ball Throw and Hyperpunch (needs extended move tables: MOVES_COUNT 355 is a sentinel in several engine routines), throw animations.
+- ROM CRC32 f2862d89. IPS regenerated from the outlaw base (roms/outlaw-2015-09-05 ..., CRC32 5e460b23) and verified byte for byte.
+- The MAX art files (chars/max_front.png, max_back.png) are no longer used by the build.
