@@ -13,7 +13,7 @@ void viri_prepare(void){
     int n=COUNT;
     for(int i=0;i<n;i++) if(GetMonData(PARTY+100*i,1,0)==MAXOT) return;
     if(n>=6) return;
-    CreateMon(PARTY+100*n,25,10,32,0,0,2,MAXOT); COUNT=(u8)(n+1);
+    CreateMon(PARTY+100*n,25,10,32,0,0,1,MAXOT); COUNT=(u8)(n+1);
 }
 static void drop(int i){
     int n=COUNT;

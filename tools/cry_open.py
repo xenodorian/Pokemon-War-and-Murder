@@ -503,6 +503,7 @@ def main():
             S.goto_if(1, 'full')
             S.setflag(flag)
             S.setvar(VAR_CRY, 1)
+            S.raw(0x23); S.ptr(0x083b24b1)      # story_native leaf_join (trampoline in padding): LEAF becomes a party member
         if item is not None:
             S.giveitem(item, 1)
             S.setflag(flag)
@@ -562,9 +563,17 @@ def main():
     if os.environ.get('TEST_BATTLE'):   # TEST ONLY: stepping onto the door tile starts a wild Pidgey battle (lv 5); never set for a release build
         foe = [int(x) for x in os.environ.get('TEST_FOE', '16,5').split(',')]
         tb = SB()
+        for g in os.environ.get('TEST_GIVE_MORE', '').split(';'):   # TEST ONLY: TEST_GIVE_MORE=species,level;species,level adds more mons
+            if g:
+                gs, gl = [int(x) for x in g.split(',')]
+                tb.raw(0x79, gs & 255, gs >> 8, gl, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        if os.environ.get('TEST_MASTER'):   # TEST ONLY: five MASTER BALLs
+            tb.raw(0x44, 1, 0, 5, 0)
         if os.environ.get('TEST_GIVE'):   # TEST ONLY: TEST_GIVE=species,level adds that mon first (so the stand-in is not used)
             gs, gl = [int(x) for x in os.environ['TEST_GIVE'].split(',')]
             tb.raw(0x79, gs & 255, gs >> 8, gl, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        if os.environ.get('TEST_LEAF'):   # TEST ONLY: LEAF joins the party as the shelf script does
+            tb.raw(0x23); tb.ptr(0x083b24b1)
         if os.environ.get('TEST_WARP'):   # TEST ONLY: TEST_WARP=group,num,x,y warps there instead of starting a battle
             wg, wn, wx, wy = [int(x) for x in os.environ['TEST_WARP'].split(',')]
             tb.releaseall(); tb.raw(0x39, wg, wn, 0xff, wx & 255, wx >> 8, wy & 255, wy >> 8); tb.raw(0x27); tb.end()

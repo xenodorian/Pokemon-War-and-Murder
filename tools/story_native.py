@@ -12,11 +12,15 @@ import story_text as ST
 HERE=os.path.dirname(os.path.abspath(__file__)); SRC=os.path.join(HERE,'..','story'); WORK='/tmp/story_build'
 PRICE_SITE=0x9a916; BATTLE_SITE=0x7f6a2; CMD_TABLE=0x15F9B4; POKEMART=0x86
 TRAMP_FREE=[0x3b2450,0x3b2480,0x3b24b0]      # free padding runs inside BL range of the hook sites (see CURRENT_WORK.md)
-MAGIC=b'STORYFN1'
+MAGIC=b'STORYFN1'; MAGIC2=b'STORYFN2'
 def addrs(r):
     i=bytes(r.b).find(MAGIC,0xA00000)
     assert i>0,'story_native not applied'
     return dict(zip(('rep_calc','max_remove','max_prepare','party_empty'),struct.unpack('<4I',r.b[i+8:i+24])))
+def addrs3(r):
+    i=bytes(r.b).find(MAGIC2,0xA00000); assert i>0
+    return dict(zip(('leaf_join','leaf_swap'),struct.unpack('<2I',r.b[i+8:i+16])))
+LEAF_JOIN_TRAMP=0x083b24b0|1      # cry_open's shelf script calls this address after the first POKeMON is given
 def tramp(r,at,target):
     assert bytes(r.b[at:at+8])==b'\xff'*8,hex(at)
     r.b[at:at+8]=bytes([0x00,0x4b,0x18,0x47])+struct.pack('<I',target)
@@ -25,7 +29,25 @@ def install(r):
     S=SB(); S.msg(ST.ptr(r,'rep_refuse'),4); S.releaseall(); S.end(); refuse=0x08000000+put_script(r,S)
     orig=r32(r,CMD_TABLE+4*POKEMART)
     assert orig==0x806c3ad,hex(orig)
-    open(os.path.join(SRC,'story_gen.h'),'w').write('#define ORIG_POKEMART 0x%08x\n#define REFUSE_SCRIPT 0x%08x\n'%(orig,refuse))
+    # PC-or-withdraw prompt (run after a catch with a full party that holds LEAF); reserved first so its address is a compile-time constant, filled in after linking
+    from g3 import ENC
+    def tx(*parts):
+        o=bytearray()
+        for q in parts:
+            if q=='@': o+=b'\xfd\x02'
+            elif q=='|': o+=b'\xfb'
+            elif q=='\n': o.append(0xFE)
+            else: o+=bytes(ENC[c] for c in q)
+        o.append(0xFF); return bytes(o)
+    texts=[0x08000000+r.alloc(t,1) for t in (tx('Your party is full.\nSend ','@',' to the PC?'),tx('Remove LEAF from combat?'),tx('@',' was sent to the PC.'),tx('LEAF waits in the PC.\n','@',' joins you.'))]
+    def prompt(fn):
+        P=SB(); P.lab('top'); P.raw(0x7d,0); P._add(struct.pack('<H',0x8004)); P.msg(texts[0],5); P.compare(0x800d,1); P.goto_if(1,'sent')
+        P.msg(texts[1],5); P.compare(0x800d,1); P.goto_if(1,'swap'); P.goto('top')
+        P.lab('sent'); P.msg(texts[2],4); P.releaseall(); P.end()
+        P.lab('swap'); P.raw(0x23); P.ptr(fn); P.msg(texts[3],4); P.releaseall(); P.end()
+        return P
+    plen=len(prompt(0).build(0)); r.cur=(r.cur+3)&~3; pat=r.cur; r.alloc(b'\xff'*plen,4)
+    open(os.path.join(SRC,'story_gen.h'),'w').write('#define ORIG_POKEMART 0x%08x\n#define REFUSE_SCRIPT 0x%08x\n#define PROMPT_SCRIPT 0x%08x\n'%(orig,refuse,0x08000000+pat))
     r.cur=(r.cur+3)&~3; base=0x08000000+r.cur
     ld=os.path.join(WORK,'story.ld')
     open(ld,'w').write('ENTRY(rep_calc)\nSECTIONS { . = 0x%08x; .all : { *(.text*) *(.rodata*) *(.data*) } /DISCARD/ : { *(.ARM.exidx*) *(.comment) *(.note*) *(.ARM.attributes) } }\n'%base)
@@ -52,6 +74,9 @@ def install(r):
     # shop command
     r.w32(CMD_TABLE+4*POKEMART,fn('shop_cmd'))
     r.alloc(MAGIC+struct.pack('<4I',fn('rep_calc'),fn('max_remove'),fn('max_prepare'),fn('party_empty')),4)
+    r.alloc(MAGIC2+struct.pack('<2I',fn('leaf_join'),fn('leaf_swap')),4)
+    r.b[pat:pat+plen]=prompt(fn('leaf_swap')).build(pat)
+    tramp(r,TRAMP_FREE[2],fn('leaf_join'))
     return dict(rep_calc=fn('rep_calc'))
 def r32(r,o): return struct.unpack('<I',r.b[o:o+4])[0]
 if __name__=='__main__':
