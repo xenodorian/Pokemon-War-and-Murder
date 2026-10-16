@@ -244,7 +244,7 @@ Not done:
 - Bitch Slap / Ball Throw / Hyperpunch use TACKLE's battle animation. Damage not yet read from RAM.
 - Max as an NPC (child sprite), the Viridian arrest cutscene, double battles with Max's Pikachu and then Raichu, the soldier fights and outcomes, the XP Share and gun pickup.
 - Reputation-based death (Arceus or Giratina), PC-or-withdraw prompt for a full party, normal white-out.
-- Hyperpunch's type is set to Fighting; confirm.
+- Hyperpunch type: Fighting (resolved 2026-10-16, matches the other punches).
 - Leaf back art is the top frame of pret's back sheet; revisit later.
 
 ## Environment setup on the cloud box (2026-10-16)
@@ -293,3 +293,10 @@ Not done:
 - docs/SPEC_ARREST_AND_PARTY.md: Max as a girl NPC, the Viridian arrest, the double battle (LEAF + Max Pikachu Lv10 vs Totodile/Cyndaquil/Chikorita Lv5 and Squirtle/Charmander/Bulbasaur Lv5), win and loss outcomes, XP Share, gun pickup, run mode (NORMAL or PLAYABLE), LEAF as a permanent party member, and the PC-or-withdraw prompt.
 - Ambiguities decided with defaults and listed in section 12 of the spec (soldier 2's line, Max's sprite, run-mode choice point, LEAF's party status, the arrest stop tile). Confirm these; the build proceeds on the defaults.
 - The spec unblocks steps 2 to 4. Build order: step 2 (Max NPC and arrest), then step 3 (double battle and outcomes), then step 4 (PC prompt and death rules).
+
+## Open items resolved (2026-10-16)
+- Hyperpunch type: Fighting. Resolved.
+- c3_build_base.gba and m_final_latest_build.gba: KEEP in roms/. They are not deleted; the user asked for them to stay. Not awaiting any action.
+- Mason's CryMon names (Calder, Weeping Army, Prison): kept, per the user.
+- Spec decisions: docs/SPEC_ARREST_AND_PARTY.md section 12, all resolved.
+- Push method for binary files: the GitHub connector is text-only. Binaries (ROM, IPS, states) are pushed with git from the cloud box (git push origin main), which works.

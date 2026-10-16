@@ -16,7 +16,7 @@ Status: written 2026-10-16 from the user's instructions in the working session. 
 
 ## 3. Arrest sequence (in order)
 1. Max enters from the north side of town, walking east to west across the screen, between SOLDIER 1 (leading) and SOLDIER 2 (following). Max is in the middle, escorted.
-2. All three walk across the screen together, then stop in place at the stop tile (DECISION: the tile in the middle of the main street, same row as LEAF's view).
+2. All three walk across the screen together, then stop in place at the stop tile (DECISION (see section 12, item 5): tile chosen from the Viridian map at build time).
 3. Max says: "Let me go! Pikachu, I choose you!"
 4. The three stop. The walk ends. Nothing else happens until the player interacts.
 5. Interaction with MAX or either SOLDIER (talk, or walking into them) starts the DOUBLE BATTLE. There is no escape option.
@@ -32,8 +32,8 @@ Status: written 2026-10-16 from the user's instructions in the working session. 
 ## 5. Battle outcomes
 ### 5a. Player and MAX WIN
 - After the battle, MAX says (SOLDIER 2 is still alive at this point):
-  - MAX notices SOLDIER 2's Kanto Pokemon and says: "A traitor and a coward. You defected to Johto."
-  - DECISION: the user's text says SOLDIER 2 used Kanto Pokemon but was called a traitor for "defecting to Johto". This is inconsistent as written. Default: use the user's wording exactly. Confirm before release.
+  - MAX notices SOLDIER 2's Kanto Pokemon and says: "A traitor and a coward. You fight with Kanto POKeMON, but you serve Johto."
+  - RESOLVED: the user's text said SOLDIER 2 used Kanto Pokemon but was called a traitor for "defecting to Johto", which is inconsistent. The line above keeps the intent (traitor and coward for defecting) and matches his team.
 - SOLDIER 2 says: "A child could never understand the burdens of a soldier." Then SOLDIER 2 shoots himself. He falls and leaves a blood splatter on the ground.
 - SOLDIER 1 says: "Arceus in heaven, he actually shot himself! I have to alert the captain!" and walks off screen.
 - MAX says: "A worm returning to the dirt. There's nothing here to mourn. Thank you for saving me. I have more battles to fight. But as an expression of gratitude, here, take this." MAX gives LEAF the XP SHARE item (FireRed ITEM_EXP_SHARE).
@@ -83,9 +83,11 @@ Status: written 2026-10-16 from the user's instructions in the working session. 
 - PC prompt: with a full party (LEAF in it), a catch prompts PC or withdraw.
 - Build: apply_all.sh rebuilds; newgame_test passes; battle_test passes.
 
-## 12. Open decisions (defaults above; confirm when convenient)
-1. Soldier 2 line wording (Kanto team vs "defected to Johto").
-2. Max's sprite (girl 17 default; boy 16 alternative).
-3. Run mode choice point (house, first wake-up).
-4. LEAF as permanent party member (default: from first Pokemon).
-5. Stop tile for the arrest.
+## 12. Decisions (all resolved 2026-10-16; change here if the user disagrees)
+1. Soldier 2 line: resolved as in 5a (traitor for serving Johto while fighting with Kanto POKeMON).
+2. Max's sprite: LITTLE_GIRL (17). Resolved.
+3. Run mode choice point: the house, first wake-up, YES/NO. Resolved.
+4. LEAF as a permanent party member: from her first Pokemon. Resolved.
+5. Arrest stop tile: set at build time from the Viridian map (tools/mapinfo.py). An implementation detail, not a user decision.
+6. Hyperpunch type: Fighting (matches the other punches). Resolved; the user did not object.
+7. CryMon names (Calder, Weeping Army, Prison) in Mason's dialogue: kept as the user asked. Resolved.

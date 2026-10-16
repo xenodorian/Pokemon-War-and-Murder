@@ -73,7 +73,7 @@ Moves (tools/moves_extend.py):
 - Move table extended from 355 to 358 entries. New IDs: 355 BITCH SLAP (power 30, accuracy 100, Fighting, 20 PP, TACKLE animation), 356 BALL THROW (power 50, accuracy 100, Fighting, 15 PP, TACKLE animation), 357 HYPERPUNCH (Hyper Beam's recharge record: power 150, accuracy 100, Fighting, 5 PP, TACKLE animation).
 - Moved tables: move data, names, descriptions, battle animation table. All 4-aligned pointers repointed (137, 32, 2, 1).
 - Code sentinel: the two literals holding the move count (0x40238, 0x933e8) are now 358. Other literal-pool 355 words are flags or data (0x163 = FLAG_HIDE_ROUTE25_TM43), left alone.
-- Hyperpunch type: set to Fighting. USER HAS NOT CONFIRMED THIS.
+- Hyperpunch type: Fighting (resolved; see CURRENT_WORK.md).
 
 Learnsets (Hitmonchan species 107 AND LEAF species 255 share this list):
 Lv1 Bitch Slap (355); Lv7 Mach Punch (183); Lv10 Ball Throw (356); Lv13 Pursuit (228); Lv15 Barrage (140); Lv18 Spike Cannon (131); Lv20 Revenge (279); Lv21 Swift (129); Lv23 Ice Punch (8); Lv24 Thunderpunch (9); Lv25 Fire Punch (7); Lv27 Sky Uppercut (327); Lv30 Shadow Ball (247); Lv33 Mega Punch (5); Lv35 Sludge Bomb (188); Lv37 Counter (68); Lv40 Egg Bomb (121); Lv45 Hyperpunch (357). Detect removed. Agility removed (replaced by Ball Throw at Lv10).
@@ -120,11 +120,11 @@ Ordered list the user approved in principle:
 5. PC-or-withdraw prompt when a catch does not fit a full party (needs decision on Leaf as a permanent party member).
 6. Reputation-based death rule for playable-Pokemon runs versus normal white-out runs (needs decision on how a run chooses the mode).
 7. Damage check of Bitch Slap in the battle test (read the Pidgey HP from RAM).
-8. Confirm Hyperpunch type (Fighting now).
+8. (done) Hyperpunch type is Fighting.
 
 Other open items:
-- c3_build_base.gba and m_final_latest_build.gba are still in roms/ (removal blocked by a permission check; the user has said to leave them only if tools break; they are NOT used by apply_all.sh, but tools/build_full.sh and tools/cry_open.py read them per CURRENT_WORK.md). Do not delete without the user's explicit OK.
-- Calder, the Weeping Army and the Prison are CryMon names kept in Mason's dialogue. They may not exist in War and Murder's world; confirm with the user.
+- c3_build_base.gba and m_final_latest_build.gba stay in roms/ (the user asked for them to stay). Do not delete them.
+- Calder, the Weeping Army and the Prison are CryMon names kept in Mason's dialogue, as the user asked.
 - "Pokemon Outlaw is the base ROM and must stay in the repo" (user rule). Do not remove.
 
 =====================================================================
