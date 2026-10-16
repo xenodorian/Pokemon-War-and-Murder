@@ -246,3 +246,7 @@ Not done:
 - Reputation-based death (Arceus or Giratina), PC-or-withdraw prompt for a full party, normal white-out.
 - Hyperpunch's type is set to Fighting; confirm.
 - Leaf back art is the top frame of pret's back sheet; revisit later.
+
+## Environment setup on the cloud box (2026-10-16)
+- Box rebuilt: python3.13 with keystone-engine, capstone (needed by tools/story_party.py, not listed before), Pillow, numpy, scipy, scikit-image (pip --break-system-packages); clang/lld/llvm-objcopy 19.1.7, arm-none-eabi-gcc; libmgba0.10t64 (apt) so tools/harness_ls and harness_new run. /home/claude/work symlinks to /workspace/Pokemon-War-and-Murder; /tmp/claude-0 must exist for the test drivers.
+- Rebuild check: `sh tools/apply_all.sh out/rebuild.gba` gives 16,777,240 bytes, CRC32 7c536327, not 4b9023d6. Only 5 bytes differ from roms/Pokemon War and Murder.gba, at 0xf62a67 and 0xf62ab0..b3, inside the clang-compiled thumb code (signed vs unsigned branch, push/pop vs mov); this is the compiler version (clang 19.1.7 here), not a source change. roms/ was not replaced. newgame_test passes on both ROMs (LEAF, MASON, start 4,5). The 5 bytes were not analysed for behaviour.
