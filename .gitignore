@@ -8,3 +8,4 @@ __pycache__/
 out/
 shots/*.ppm
 shots/*_0[0-9][0-9][0-9][0-9].png
+shots/bt_*.ppm

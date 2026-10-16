@@ -225,6 +225,6 @@ Plan and decisions: docs/STORY_PLAN.md. Ids: tools/story_ids.py. Text: story_ass
 - The battle is not triggered by a test yet: see the battle test note below.
 - ROM CRC32 4b9023d6.
 
-## Battle test (2026-10-16): not run
-- A scripted wild battle from the mkw script did not start: the harness state loads with the "save the game?" prompt open, and the script never reaches the battle command. A new-game state created with the harness SAVEAT hook loads at Leaf's house with an empty party.
-- To run it: trigger a battle from a real in-game script (Mason's Pallet fight is a trainer battle that starts the stand-in when the party is empty), or add a harness command that starts a battle directly.
+## Battle test (2026-10-16): passes
+- tools/battle_test.py builds a TEST ROM where stepping onto the house door starts a wild Pidgey battle (cry_open.py, gated on TEST_BATTLE=1; release builds are unaffected and verified byte-identical).
+- Result: wild PIDGEY appears, LEAF (stand-in, Lv 1, 1 HP) goes out, the move menu shows BITCH SLAP 1/20 PP TYPE/FIGHT. LEAF faints to Tackle and the white-out runs without a crash. Damage from Bitch Slap was not read from RAM.

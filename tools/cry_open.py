@@ -546,6 +546,9 @@ def main():
     D.releaseall()
     D.end()
     door_scr = 0x08000000 + put_script(r, D)
+    if os.environ.get('TEST_BATTLE'):   # TEST ONLY: stepping onto the door tile starts a wild Pidgey battle (lv 5); never set for a release build
+        tb = SB(); tb.raw(0xb6, 16, 0, 5, 0, 0); tb.raw(0xb7); tb.end()
+        door_scr = 0x08000000 + put_script(r, tb)
     # house bg events: old TV sign replaced, plus bed, shelf, crate
     hev = 0x3b974c
     bgs = []
