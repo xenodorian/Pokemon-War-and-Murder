@@ -218,3 +218,13 @@ Plan and decisions: docs/STORY_PLAN.md. Ids: tools/story_ids.py. Text: story_ass
 - Anne is a little girl (pret OBJ_EVENT_GFX_LITTLE_GIRL = 17) in Pallet and in the story Anne outside base 1. Her gift is six POKé BALLS and a POTION (CryMon wording; the potion line comes after the balls).
 - ROM CRC32 0340bba9 (computed as 0x0340bba9 from the build log).
 - Not done: Mason's dialogue still uses the earlier adaptation (CryMon text is in the reference file). Max NPC, Viridian arrest cutscene, double battles with Max, soldier 1 and 2 battles and outcomes, XP Share and gun pickup, Arceus/Giratina death system driven by reputation, PC-or-withdraw prompt, throw animations, and the battle test are all still open.
+
+## Mason's CryMon dialogue (2026-10-16)
+- The Pallet intro and the after-battle lines are CryMon's masonFight and masonAfter/masonWin lines (tools/cry_open.py mason_intro, mason_after). CryMon "CryMon" is "POKéMON" here and "crystal" is "ball". Calder, the Weeping Army and the Prison are kept as in CryMon.
+- The CryMon tip line after Mason's win ("Tall grass hides CryMon. Wren has salve...") is not used; it names characters this game does not have.
+- The battle is not triggered by a test yet: see the battle test note below.
+- ROM CRC32 04b9023d6 (0x4b9023d6).
+
+## Battle test (2026-10-16): not run
+- A scripted wild battle from the mkw script did not start: the harness state loads with the "save the game?" prompt open, and the script never reaches the battle command. A new-game state created with the harness SAVEAT hook loads at Leaf's house with an empty party.
+- To run it: trigger a battle from a real in-game script (Mason's Pallet fight is a trainer battle that starts the stand-in when the party is empty), or add a harness command that starts a battle directly.

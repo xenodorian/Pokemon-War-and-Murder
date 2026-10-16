@@ -430,21 +430,33 @@ def main():
     door = say(r, ["Not yet. Father's POKéMON\nis still on the shelf."])
     tv = say(r, ["Dust on the screen.\nNobody has turned it on."])
     oak = say(r, ["OAK: I was robbed.\nThe balls on that table are empty.\nThey took every POKéMON I had."])
+    # CryMon masonFight lines (content/dialogue.json talk.masonFight), CryMon -> POKéMON and crystal -> ball
     mason_intro = say(r, [
         "MASON: {P}. Stop right there.",
         "{P}: Mason.",
         "MASON: You walked out with your\nfather's hound and a ball.",
         "MASON: Where are you going?",
-        "{P}: Out of town.",
-        "MASON: You're eight.\nYou cannot win this.",
+        "{P}: To the Prison.",
+        "MASON: This place is a prison.\nNobody walks out of the Prison.",
+        "{P}: Shinigami is chained there.\nLocked up for necromancy.",
+        "{P}: I'm going to free him.\nHe owes me power for it.",
+        "MASON: You're eight.\nYou cannot win this war.",
+        "MASON: And you cannot bargain\nwith a necromancer.",
+        "{P}: I'm not asking.",
         "MASON: Then your POKéMON faints\nhere, and you go back inside.",
     ])
     # battle text needs a trailing space so the last letter is not dropped
     mb_in = 0x08000000 + r.alloc(enc("MASON: Stop. We're fighting. ")[:-1] + b' \xff', 1)
     mb_de = 0x08000000 + r.alloc(enc("MASON: ...Fine. You win. ")[:-1] + b' \xff', 1)
+    # CryMon masonAfter, then masonWin (the battle ends the same way for a win or a loss here)
     mason_after = say(r, [
-        "MASON: Go, then.\nThe road is still guarded.",
-        "{P}: I didn't ask for your blessing.",
+        "MASON: Fine. Calder is still\nout there.",
+        "{P}: I won't die first.",
+        "Mason spits in the dirt.\nHis POKéMON won't rise.",
+        "MASON: Go, then. But the Weeping\nArmy guards the road.",
+        "MASON: And the Prison\nguards itself.",
+        "{P}: I didn't ask for your\nblessing.",
+        "MASON: You didn't need it.\nYou took it anyway.",
     ])
     anne = say(r, [
         "ANNE: {P}. You actually fought.",
