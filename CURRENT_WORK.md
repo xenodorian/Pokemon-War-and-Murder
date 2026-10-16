@@ -288,3 +288,8 @@ Not done:
 - Local state added to the repo: saves/ported/new_game_empty_party.raw (empty-party new-game state, used by tools/battle_test.py). Ignored by .gitignore only as a rule for the file itself: it is tracked; see .gitignore.
 - docs/handoff/grok_handoff.txt: handoff text for Grok (answers to the four spec questions). Its ROM CRC line is out of date; use bbe90f02.
 - Not in the repo: the re-paired saves/ported/Pokemon War and Murder.state that the notes above say was re-paired on another machine. This session does not have it. Upload it to the repo or send the file to re-create it.
+
+## Written spec for steps 2 to 4 (2026-10-16)
+- docs/SPEC_ARREST_AND_PARTY.md: Max as a girl NPC, the Viridian arrest, the double battle (LEAF + Max Pikachu Lv10 vs Totodile/Cyndaquil/Chikorita Lv5 and Squirtle/Charmander/Bulbasaur Lv5), win and loss outcomes, XP Share, gun pickup, run mode (NORMAL or PLAYABLE), LEAF as a permanent party member, and the PC-or-withdraw prompt.
+- Ambiguities decided with defaults and listed in section 12 of the spec (soldier 2's line, Max's sprite, run-mode choice point, LEAF's party status, the arrest stop tile). Confirm these; the build proceeds on the defaults.
+- The spec unblocks steps 2 to 4. Build order: step 2 (Max NPC and arrest), then step 3 (double battle and outcomes), then step 4 (PC prompt and death rules).
