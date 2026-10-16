@@ -263,3 +263,12 @@ Not done:
 - Release ROM updated: the repo ROM plus only the 30 bytes this fix changes (the 5-byte compiler difference from a fresh build is not mixed in). CRC32 a5920d7c. IPS regenerated from the outlaw base and verified. saves/ported state re-paired. newgame_test passes (LEAF, MASON, 4,5). Verified in the emulator only.
 - Push status: the GitHub connector only writes text, so the rebuilt ROM, IPS and ported state (CRC32 a5920d7c) are NOT on GitHub yet; the repo copies are still CRC32 4b9023d6. Rebuild with `sh tools/apply_all.sh` then apply the 30-byte diff, or push the binaries once a git credential exists.
 - Next: Ball Throw animation, then the other throw moves.
+
+## Step 1: Leaf throw animations (2026-10-16), tools/anim_throw.py
+- Symbols: pret/pokefirered built as FireRed 1.0 (sha1 matches) gives the full symbol map; see docs/ANIMATION_NOTES.md. This is the way to find any engine function or table address.
+- New battle animation sprites: Leaf's five throw frames (tag 10289) and the Poke Ball (10290). The pic and palette tables were moved to free space with two more entries and every reference repointed.
+- BALL THROW (356): attacker hidden, Leaf throws, the ball flies t=26..44 (18 frames, 34 px arc), then the Tackle hit (hit splat, target shake). BITCH SLAP (355): Leaf throw, Tackle hit at t=32.
+- Swift, Barrage, Egg Bomb, Spike Cannon, Sludge Bomb and Shadow Ball: Leaf's frames are added in front of the original animation (effect at t=26; Shadow Ball: Leaf starts when the ball appears), only when the attacker is Hitmonchan or LEAF. A native check task (thumb, in free space) sets a flag read by jumpargeq. Checked: Staryu's Swift still shows the original animation.
+- Checked in the harness (screenshot sheets, Magikarp foe): Ball Throw, Bitch Slap, Swift, Barrage, Spike Cannon, Shadow Ball, Egg Bomb, Sludge Bomb all play, Hitmonchan returns afterwards, no hang. Timing and positions are close to leaf_throw_anims/TIMING.md but were judged by eye from screenshots, not frame-measured. Hyperpunch has no reference animation and still uses Tackle's.
+- Release ROM rebuilt as repo ROM plus the build diff: CRC32 60efbd76. IPS regenerated and verified; saves/ported state re-paired. newgame_test passes. These binaries are not on GitHub (connector is text only).
+- Next: Step 2, the Max NPC and the Viridian arrest cutscene.
