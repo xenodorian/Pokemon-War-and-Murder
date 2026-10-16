@@ -37,3 +37,7 @@ F_GUNTAKEN=0x849       # LEAF took the GLOCK from the splatter
 # ---- run mode (set in the player's house at the door, once, before leaving)
 F_PLAYABLE=0x84A       # SET = PLAYABLE run (a lost battle is death: heaven or hell by reputation); CLEAR = NORMAL run (white-out to the Pokemon Center)
 F_MODEASKED=0x84B      # the run-mode question was asked
+# ---- Max's later Raichu double battles (story_ambush.py). A: Cerulean, B: Vermilion. HIDE_* flags are SET while hidden; F_*DONE once the fight was played.
+HIDE_AS1,HIDE_AM,HIDE_AS2,F_ADONE=0x84C,0x84D,0x84E,0x84F
+HIDE_BS1,HIDE_BM,HIDE_BS2,F_BDONE=0x850,0x851,0x852,0x853
+VAR_AMB_A,VAR_AMB_B=0x4095,0x4096     # coord-event triggers (vanilla unused)

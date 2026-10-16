@@ -9,6 +9,8 @@ typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32;
 #define ZeroMonData ((void(*)(void*))(0x0803D994|1))
 #define CreateMon ((void(*)(void*,u16,u8,u8,u8,u32,u8,u32))(0x0803DA54|1))
 #define MAXOT 0x4D415821u
+#define VAR_PSPECIES 0x4093
+#define VAR_PLEVEL 0x4094
 #define VAR_PARTNER 0x4092          // 1 while MAX's PIKACHU fights as the AI partner (battler 2)
 static u16* var(u32 v){ return (u16*)(SB1+0x1000+((v-0x4000)<<1)); }
 static void drop(int i){
@@ -24,13 +26,15 @@ void viri_prepare(void){
     *var(VAR_PARTNER)=0;
     if(n<1||n>=6) return;
     for(int k=n;k>1;k--){ u32* d=(u32*)(PARTY+100*k); u32* s=(u32*)(PARTY+100*(k-1)); for(int w=0;w<25;w++) d[w]=s[w]; }
-    CreateMon(PARTY+100,25,10,32,0,0,1,MAXOT); COUNT=(u8)(n+1);
+    u16 sp=*var(VAR_PSPECIES), lv=*var(VAR_PLEVEL);      // later fights (story_ambush.py) set these: MAX's RAICHU instead of PIKACHU
+    if(!sp){ sp=25; lv=10; }
+    CreateMon(PARTY+100,sp,(u8)lv,32,0,0,1,MAXOT); COUNT=(u8)(n+1);
     *var(VAR_PARTNER)=1;
 }
 // after the fight: PIKACHU leaves, RESULT = 1 when the player's side lost (outcome is not "won")
 void viri_cleanup(void){
     for(int i=0;i<COUNT;i++) if(GetMonData(PARTY+100*i,1,0)==MAXOT){ drop(i); break; }
-    *var(VAR_PARTNER)=0;
+    *var(VAR_PARTNER)=0; *var(VAR_PSPECIES)=0; *var(VAR_PLEVEL)=0;
     RESULT=(OUTCOME==1)?0:1;
 }
 // ---- partner AI: ported from pokeemerald src/battle_controller_player_partner.c (PlayerPartnerHandleChooseAction / ChooseMove)
