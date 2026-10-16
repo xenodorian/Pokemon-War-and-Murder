@@ -400,3 +400,10 @@ Not done:
   - newgame_test and battle_test pass.
 - Test lesson: with tools/viri_test.py the Viridian arrest only talks; walk to the soldiers and press A for the fight. A coord trigger needs a step onto the tile, not a warp onto it.
 - No ROM or IPS change this step.
+
+## Leaf throw animations vs reference GIFs (2026-10-16)
+- Owner order: leaf_throw_anims/gifs/*.gif are the reference for how each move looks in game. Spike Cannon looked wrong (late volley, Leaf vanished, repeated round).
+- Causes: (1) the original Spike Cannon script runs an attacker wind-up lunge and waits for it before the needles, about 28 frames late; (2) Leaf's throw sprite is destroyed when its animation ends (t=57) while the attacker battler stays hidden until the script ends; (3) the engine replays the animation for each multi-hit hit.
+- Fixes in tools/anim_throw.py: lunge, its wait and the slide-back sprite removed for Spike Cannon (volley at t=26 from Leaf's hand); show-attacker task at t=57 for all Leaf scripts (Ball Throw, Bitch Slap, Swift, Barrage, Egg Bomb, Spike Cannon, Sludge Bomb, Shadow Ball); hits 2+ of Spike Cannon and Barrage play no animation; Shadow Ball hides the attacker only when the throw starts.
+- Checked in the emulator only (Leaf vs Magikarp, harness screenshots, compared by eye to the GIFs): Spike Cannon, Barrage, Swift, Egg Bomb, Sludge Bomb, Shadow Ball, Ball Throw, Bitch Slap all keep Leaf visible and launch effects at the arm-extended frame (Ball Throw at ball landing, Bitch Slap at t=32). Timing is by eye, not frame-measured. newgame_test and battle_test run OK.
+- Release ROM and IPS regenerated: CRC32 0x6ff443be (was 3d86d910); IPS applied to the Outlaw base reproduces the ROM.

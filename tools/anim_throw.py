@@ -15,7 +15,7 @@ ART=os.path.join(ROOT,'leaf_throw_anims','frames')
 PIC=0x3acc08; PAL=0x3ad510; N_OLD=289
 TAG_LEAF=10289; TAG_BALL=10290
 G=lambda a:a-0x08000000
-SYM=dict(DESTROY_VTASK=0x08072760,ATTACKER=0x02037f1a,ARGS=0x02037f02,MONS=0x02023be4,OAM64=0x083ac9e0,DUMMY_ANIMS=0x08231cf0,DUMMY_AFF=0x08231cfc,ON_MON_POS=0x08075d9c,EGG_THROW=0x083e3d00,HITSPLAT=0x083e7c08,SHAKE=0x080989f8)
+SYM=dict(DESTROY_VTASK=0x08072760,ATTACKER=0x02037f1a,ARGS=0x02037f02,MONS=0x02023be4,OAM64=0x083ac9e0,DUMMY_ANIMS=0x08231cf0,DUMMY_AFF=0x08231cfc,ON_MON_POS=0x08075d9c,EGG_THROW=0x083e3d00,HITSPLAT=0x083e7c08,SHAKE=0x080989f8,SCRIPTING=0x02037f16,WINDUP=0x0809949d,SLIDEBACK=0x083d4e84,TASKS=0x03005090,SPRITES=0x0202063c,BSPRITEIDS=0x02023d44)
 IMPACT=10135
 SYM_SHADOWBALL=0x083e7608  # gShadowBallSpriteTemplate
 LEN={0:3,1:3,4:2,5:1,6:1,7:1,8:1,9:3,10:2,11:2,12:3,13:1,14:5,15:1,16:4,17:9,18:6,19:5,20:2,21:1,22:1,23:1,24:2,25:4,26:2,27:7,28:6,29:5,30:3,32:1,33:8,34:2,35:2,36:5,37:4,38:7,39:7,40:2,41:1,42:2,43:2,44:2,45:2,46:2,47:1}
@@ -103,10 +103,58 @@ def apply(r):
     egg=bytearray(b[G(SYM['EGG_THROW']):G(SYM['EGG_THROW'])+24]); struct.pack_into('<HH',egg,0,TAG_BALL,TAG_BALL)
     tball=r.alloc(bytes(egg),4)
     T=lambda a:0x08000000+a
+    # show-attacker task: Leaf's throw sprite ends at t=57 (frame 0 holds 1 frame and the sprite is destroyed), so at that tick the hidden attacker battler
+    # (the same idle pose) is made visible again; otherwise Leaf vanishes for the rest of the move (reference GIFs keep her on screen)
+    showfn=r.fn("""
+        push {r4,lr}
+        mov r4,r0
+        ldr r1,=%d
+        movs r2,#0x28
+        muls r2,r0
+        adds r1,r1,r2
+        ldrh r2,[r1,#10]
+        cmp r2,#0
+        bne started
+        movs r2,#1
+        strh r2,[r1,#10]
+        ldr r3,=%d
+        ldrh r2,[r3]
+        strh r2,[r1,#8]
+    started:
+        ldrh r2,[r1,#8]
+        subs r2,#1
+        strh r2,[r1,#8]
+        bne out
+        ldr r2,=%d
+        ldrb r2,[r2]
+        ldr r3,=%d
+        ldrb r2,[r3,r2]
+        movs r3,#0x44
+        muls r2,r3
+        ldr r3,=%d
+        adds r2,r2,r3
+        adds r2,#0x3e
+        ldrb r3,[r2]
+        movs r0,#4
+        bics r3,r0
+        strb r3,[r2]
+        mov r0,r4
+        ldr r3,=%d
+        pop {r4}
+        pop {r1}
+        mov lr,r1
+        bx r3
+    out:
+        pop {r4}
+        pop {r0}
+        bx r0
+    """%(SYM['TASKS'],SYM['ARGS'],SYM['ATTACKER'],SYM['BSPRITEIDS'],SYM['SPRITES'],SYM['DESTROY_VTASK']|1))
+    print('showfn',hex(showfn))
+    SHOWT=task(0x08000000+showfn|1,2,57)
     # 4. Ball Throw script
     s=script(loadgfx(TAG_LEAF),loadgfx(TAG_BALL),loadgfx(IMPACT),
         monbg(1),setalpha(12,8),invisible(0),
-        createsprite(T(tleaf),0,2,LEAF_OFF[0],LEAF_OFF[1],0,0),
+        createsprite(T(tleaf),0,2,LEAF_OFF[0],LEAF_OFF[1],0,0),SHOWT,
         delay(26),sewithpan(54,-64),
         createsprite(T(tball),1,2,BALL_START[0],BALL_START[1],0,0,18,-34),
         delay(18),
@@ -124,7 +172,7 @@ def apply(r):
     assert ANIM
     # 4b. Bitch Slap (355): Leaf throws, then the Tackle hit at t=32 (TIMING.md)
     s2=script(loadgfx(TAG_LEAF),loadgfx(IMPACT),monbg(1),setalpha(12,8),invisible(0),
-        createsprite(T(tleaf),0,2,LEAF_OFF[0],LEAF_OFF[1],0,0),delay(32),
+        createsprite(T(tleaf),0,2,LEAF_OFF[0],LEAF_OFF[1],0,0),SHOWT,delay(32),
         createsprite(SYM['HITSPLAT'],0,2,0,0,1,2),task(SYM['SHAKE']|1,2,1,3,0,6,1),sewithpan(132,63),
         WAIT,visible(0),clearmonbg(1),BLENDOFF,END)
     slap=r.alloc(s2,1)
@@ -148,11 +196,21 @@ def apply(r):
     done:
         ldr r3,=%d
         strh r2,[r3,#14]
+        movs r1,#0
+        cmp r2,#0
+        beq noturn
+        ldr r1,=%d
+        ldrb r1,[r1]
+        cmp r1,#0
+        beq noturn
+        movs r1,#1
+    noturn:
+        strh r1,[r3,#12]
         ldr r3,=%d
         pop {r1}
         mov lr,r1
         bx r3
-    """%(SYM['ATTACKER'],SYM['MONS'],SYM['ARGS'],SYM['DESTROY_VTASK']|1))
+    """%(SYM['ATTACKER'],SYM['MONS'],SYM['ARGS'],SYM['SCRIPTING'],SYM['DESTROY_VTASK']|1))
     def cmd_len(sc,p):
         op=sc[p]
         if op in (2,3): return 7+2*sc[p+6]
@@ -167,18 +225,28 @@ def apply(r):
         return ptr,[c for _,c in cmds[:-1]]
     from_map=SYM_SHADOWBALL
     wrapped={140:26,121:26,247:None,129:26,131:26,188:26}
+    skipsc=r.alloc(END,1)
     for mv,dl in wrapped.items():
         orig,cmds=body_of(mv)
-        out=[loadgfx(TAG_LEAF),invisible(0)]
+        if mv==131:   # SPIKE CANNON: drop the attacker wind-up lunge, its wait and the slide-back sprite so the volley starts at t=26 (TIMING.md)
+            f=[];skip_wait=False
+            for c in cmds:
+                if c[0]==3 and struct.unpack_from('<I',c,1)[0]==SYM['WINDUP']: skip_wait=True; continue
+                if skip_wait and c[0]==5: skip_wait=False; continue
+                if c[0]==2 and struct.unpack_from('<I',c,1)[0]==SYM['SLIDEBACK']: continue
+                f.append(c)
+            cmds=f
+        out=[loadgfx(TAG_LEAF)] if dl is None else [loadgfx(TAG_LEAF),invisible(0)]   # Shadow Ball: Leaf stays visible during the tint, hide only when the throw starts
         leaf=createsprite(T(tleaf),0,2,LEAF_OFF[0],LEAF_OFF[1],0,0)
-        if dl is not None: out+=[leaf,delay(dl)]
+        if dl is not None: out+=[leaf,SHOWT,delay(dl)]
         for c in cmds:
-            if dl is None and c[0]==2 and struct.unpack_from('<I',c,1)[0]==from_map: out.append(leaf)
+            if dl is None and c[0]==2 and struct.unpack_from('<I',c,1)[0]==from_map: out.append(invisible(0)); out.append(leaf); out.append(SHOWT)
             out.append(c)
         if dl is None: assert leaf in out
         out+=[visible(0),END]
         lv=r.alloc(b''.join(out),1)
-        entry=r.alloc(task(T(check)|1,2)+b'\x21'+bytes([7])+struct.pack('<hI',1,T(lv))+b'\x13'+struct.pack('<I',orig),1)
+        multi=b'\x21'+bytes([6])+struct.pack('<hI',1,T(skipsc)) if mv in (131,140) else b''   # multi-hit: one round only, hits 2+ play no animation
+        entry=r.alloc(task(T(check)|1,2)+multi+b'\x21'+bytes([7])+struct.pack('<hI',1,T(lv))+b'\x13'+struct.pack('<I',orig),1)
         r.w32(ANIM+4*mv,T(entry))
     r.w32(ANIM+4*356,0x08000000+sa); r.w32(ANIM+4*355,0x08000000+slap)
     print('anim_throw: refs repointed',n,'tables',hex(pic_new),hex(pal_new),'script',hex(sa))
