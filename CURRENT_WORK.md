@@ -414,3 +414,8 @@ Not done:
 - Checked in the emulator only (Viridian arrest fight with a test Sandshrew): Max appears left of LEAF during "would like to battle", "sent out" and "Go!", leaves with the throw, the battle then plays normally (menus, Pikachu acting by itself). newgame_test and battle_test run OK.
 - Release ROM and IPS regenerated: CRC32 0x32dfc7de (was 0x6ff443be); IPS applied to the Outlaw base reproduces the ROM.
 - Still not built: Leaf art beyond the approved frames (owner: no new Leaf sprites), CryMon verbatim text that does not exist in the repos, Mt. Moon sight trigger reproduction and script 0x081be11d in-game run (test gaps, not build gaps).
+
+## Test pass on CRC 0x32dfc7de (emulator-only, copies)
+- Pass: Cerulean/Vermilion Raichu fights (win+loss, Max back pic, partner), PLAYABLE heaven, second death, newgame_test, battle_test.
+- Mt. Moon grunt: movement type 7 is FACE_UP, so he sees only the tile column north of him. Walking in from the north (35,8 down) triggers dialogue and battle; approaching from the south never triggers (correct, not a bug). Earlier failed test approached from the south.
+- Not run this pass: script 0x081be11d, full 8-move re-check, full-chain smoke, CryMon dialogue diff.
