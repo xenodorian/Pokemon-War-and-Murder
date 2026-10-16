@@ -46,8 +46,13 @@ def install(r):
         P.lab('sent'); P.msg(texts[2],4); P.releaseall(); P.end()
         P.lab('swap'); P.raw(0x23); P.ptr(fn); P.msg(texts[3],4); P.releaseall(); P.end()
         return P
+    # MASON knocked LEAF out: dialog, heal, warp to her house in Pallet Town (player's house 1F, map 4,0)
+    KO=SB(); KO.lockall()
+    KO.msg(ST.ptr_s(r,["MASON: ...Enough. It's over, LEAF.\nI'm sorry.","Mason knocked you out cold and\ncarried you home to PALLET TOWN.","He ended your adventure before\nthe war could kill you.","You wake up in your own house.\nYour POKéMON have been healed."]),4)
+    KO.fadescreen(1); KO.raw(0x25,0,0); KO.raw(0x39,4,0,0xff); KO._add(struct.pack('<HH',5,7)); KO.raw(0x27); KO.releaseall(); KO.end()
+    mason_ko=0x08000000+put_script(r,KO)
     plen=len(prompt(0).build(0)); r.cur=(r.cur+3)&~3; pat=r.cur; r.alloc(b'\xff'*plen,4)
-    open(os.path.join(SRC,'story_gen.h'),'w').write('#define ORIG_POKEMART 0x%08x\n#define REFUSE_SCRIPT 0x%08x\n#define PROMPT_SCRIPT 0x%08x\n'%(orig,refuse,0x08000000+pat))
+    open(os.path.join(SRC,'story_gen.h'),'w').write('#define ORIG_POKEMART 0x%08x\n#define REFUSE_SCRIPT 0x%08x\n#define PROMPT_SCRIPT 0x%08x\n#define MASON_KO_SCRIPT 0x%08x\n'%(orig,refuse,0x08000000+pat,mason_ko))
     r.cur=(r.cur+3)&~3; base=0x08000000+r.cur
     ld=os.path.join(WORK,'story.ld')
     open(ld,'w').write('ENTRY(rep_calc)\nSECTIONS { . = 0x%08x; .all : { *(.text*) *(.rodata*) *(.data*) } /DISCARD/ : { *(.ARM.exidx*) *(.comment) *(.note*) *(.ARM.attributes) } }\n'%base)

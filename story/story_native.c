@@ -79,11 +79,18 @@ void leaf_prompt_prep(void){ GSV(4)=(u16)GetMonData(ENEMY,11,0); }
 #define SetMainCallback2 ((void(*)(u32))(0x08000544|1))
 #define VAR_CBLO 0x40EB
 #define VAR_CBHI 0x40F1
+#define OPP (*(volatile u16*)0x020386ae)       // gTrainerBattleOpponent_A
+#define BTF (*(volatile u32*)0x02022b4c)       // gBattleTypeFlags
+// MASON (the rival) trainer records: early/late rival ids and the champion rematch ids
+static int is_mason(u16 t){ return (t>=326&&t<=334)||t==426||t==429||t==432||t==435||t==740||t==741||t==743; }
 // the battle's end callback is wrapped: the first frame back in the overworld removes LEAF again, then the real callback runs
 void max_after(void){
     u32 cb=(u32)*var(VAR_CBLO)|((u32)*var(VAR_CBHI)<<16);
     max_remove();
     SAVEDCB=cb;
+    if((OUTCOME==2||OUTCOME==3) && (BTF&8) && is_mason(OPP)){      // MASON won: no white-out, no afterlife (either run mode): he knocks LEAF out and carries her home
+        SetupScript((const u8*)MASON_KO_SCRIPT); SetMainCallback2(CB2_CONTINUE); return;
+    }
     if(*var(VAR_BSTART)==1 && OUTCOME==7){      // caught with a full party that holds LEAF: ask PC or withdraw
         *var(VAR_BSTART)=0; leaf_prompt_prep();
         SetupScript((const u8*)PROMPT_SCRIPT); SetMainCallback2(CB2_CONTINUE); return;

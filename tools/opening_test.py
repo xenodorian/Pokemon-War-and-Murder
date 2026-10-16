@@ -63,7 +63,7 @@ def main(rom):
      ('crate 1',seq(('A',1))),('crate 2',seq(('A',1))),('crate done',seq(('A',5),('W',30))),
      ('to door',seq(('L',6),('D',2))),('door',[('D',30,10),('W',200,0)]),
      ('outside',seq(('W',120),('D',1),('U',1),('W',200))),
-     ('mason',seq(('A',8),('W',60)))]+[('b%d'%i,seq(('A',1),('W',50))) for i in range(90)]
+     ('mason',seq(('A',8),('W',60)))]+[('b%d'%i,seq(('R',1),('A',2),('W',50)) if str(i) in os.environ.get('OPENING_SW','').split(',') else seq(('A',1),('W',50))) for i in range(int(os.environ.get('OPENING_B','90')))]
     marks,info,ew=run(rom,steps)
     print(info)
 def main_lab(rom):
