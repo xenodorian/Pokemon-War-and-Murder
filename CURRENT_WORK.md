@@ -351,3 +351,10 @@ Not done:
 - Verified in the emulator only (Cerulean, tools/viri_test.py with VIRI_FLAGS=0x847 and TEST_GIVE; AMB_LV=5 is a test-only switch that lowers the soldiers' level): scene and line, Raichu acts alone (Tail Whip, Quick Attack, Growl with no input), win branch text, RARE CANDY obtained, actors gone, flags 0x84C..0x84F set, party back to 2. Not run: the loss branch and the Vermilion site (same code, other coordinates). newgame_test and battle_test run OK.
 - Release ROM and IPS regenerated: CRC32 0x24664883 (was e9f07b78); IPS re-verified from the Outlaw base.
 - Next: Hyperpunch animation, Mt. Moon check, afterlife beats.
+
+## Step 5.2: Hyperpunch's own animation (2026-10-16)
+- New tools/anim_hyperpunch.py (in apply_all.sh after anim_throw.py). Hyperpunch (357) no longer uses Tackle's animation: its script is the original Mega Punch body (charged fist, white flash on the target, impact background, heavy shake) followed by the original Dynamic Punch body (second fist, shake, five explosions on the target). Both are copied command by command from the ROM's own scripts (pret data/battle_anim_scripts.s), so no new sprites are needed; the first body's closing end is dropped so they run back to back.
+- Decision: not wrapped with Leaf's throw frames (those are for the throw moves; anim_throw.py's Leaf-first rule applies only to the moves it lists). Limits: it is a longer animation (about 2.5 s); the damage and 150 power recharge effect are unchanged.
+- Verified in the emulator only: tools/anim_test.py 60 3 16 20 (Hitmonchan Lv 60 uses HYPERPUNCH on a Pidgey): fist charge, impact flash, second fist and explosions, then the faint. newgame_test and battle_test run OK.
+- Release ROM and IPS regenerated: CRC32 0xa43eaf21 (was 24664883); IPS applied to the Outlaw base reproduces the ROM (checked by CRC).
+- Next: Mt. Moon check, afterlife beats.

@@ -5,3 +5,4 @@
 - Animation scripts: opcode lengths are in tools/anim_throw.py (LEN). createvisualtask runs the task function once at once, so a task can set gBattleAnimArgs[7] and the script can branch with jumpargeq 7, 1, ptr.
 - Leaf frames are only added to Swift, Barrage, Egg Bomb, Spike Cannon, Sludge Bomb and Shadow Ball when the attacker is species 107 (Hitmonchan) or 255 (LEAF); other users keep the original animation. Bitch Slap and Ball Throw always use Leaf.
 - Position tuning env vars for builds: LEAF_X, LEAF_Y, BALL_X, BALL_Y. tools/anim_test.py takes dense screenshots of a move (needs out/user_new.raw).
+- HYPERPUNCH (357) has its own animation (tools/anim_hyperpunch.py, after anim_throw.py): FireRed's MEGA PUNCH script (move 5) followed by DYNAMIC PUNCH (move 223), copied command by command with the original sprite, task and sound pointers. Not Leaf-wrapped. Screenshot check: tools/anim_test.py 60 3 16 20 OUT.png (Hitmonchan Lv 60, slot 3).
