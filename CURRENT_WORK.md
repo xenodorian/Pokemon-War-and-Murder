@@ -419,3 +419,11 @@ Not done:
 - Pass: Cerulean/Vermilion Raichu fights (win+loss, Max back pic, partner), PLAYABLE heaven, second death, newgame_test, battle_test.
 - Mt. Moon grunt: movement type 7 is FACE_UP, so he sees only the tile column north of him. Walking in from the north (35,8 down) triggers dialogue and battle; approaching from the south never triggers (correct, not a bug). Earlier failed test approached from the south.
 - Not run this pass: script 0x081be11d, full 8-move re-check, full-chain smoke, CryMon dialogue diff.
+
+## Test pass part 2 on CRC 0x32dfc7de (emulator-only, copies)
+- Script 0x081be11d: pass. It is the boulder script used by the Seafoam boulders (map 1,105, boulder at (12,5)); interacting without Strength shows "It's a big boulder, but a POKEMON may be able to push it aside." The push branch (badge plus field move) was not exercised.
+- Eight GIF moves (Barrage, Swift, Egg Bomb, Sludge Bomb, Shadow Ball, Spike Cannon, Ball Throw, Bitch Slap, Leaf vs Magikarp, sheets /workspace/shots/final_*.png): pass by eye. Leaf stays visible, effects launch at the arm-extended frame, Ball Throw shows the ball only for itself, Shadow Ball keeps its own particle. Timing not frame-measured. Added tools/_anim_test2.py (anim_test.py with CHOOSE=frame env); slots: Barrage lv15, Spike lv18, Swift lv21, Shadow lv30, Sludge lv35, Egg lv40 are slot 3, Ball lv10 slot 2, Slap lv12 slot 0.
+- Full chain: pass. opening_test (house, shelf Sandshrew, crate, door, Pallet, Mason's Pikachu battle) and Viridian arrest trigger (Max line, soldiers) run; end state Pallet, party 2.
+- battle_test sheet: house, wild Pidgey Lv5 vs LEAF Lv1 (1 HP), menu shows BITCH SLAP 20/20, Pidgey Tackle, LEAF faints, white out.
+- CryMon dialogue.json diff: 1152 talk, intro and mercy lines; only 91 (about 8 percent) appear in the repo text or ROM by first-28-character match. The ROM carries the Pokemon-adapted story (Leaf, Mason, Shinigami), the CryMon file is a different cast and setting, so the rest is not ported. No code bug; no change.
+- No ROM or IPS change.
