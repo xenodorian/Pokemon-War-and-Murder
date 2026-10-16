@@ -552,7 +552,11 @@ def main():
         if os.environ.get('TEST_GIVE'):   # TEST ONLY: TEST_GIVE=species,level adds that mon first (so the stand-in is not used)
             gs, gl = [int(x) for x in os.environ['TEST_GIVE'].split(',')]
             tb.raw(0x79, gs & 255, gs >> 8, gl, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        tb.raw(0xb6, foe[0] & 255, foe[0] >> 8, foe[1], 0, 0); tb.raw(0xb7); tb.end()
+        if os.environ.get('TEST_WARP'):   # TEST ONLY: TEST_WARP=group,num,x,y warps there instead of starting a battle
+            wg, wn, wx, wy = [int(x) for x in os.environ['TEST_WARP'].split(',')]
+            tb.releaseall(); tb.raw(0x39, wg, wn, 0xff, wx & 255, wx >> 8, wy & 255, wy >> 8); tb.raw(0x27); tb.end()
+        else:
+            tb.raw(0xb6, foe[0] & 255, foe[0] >> 8, foe[1], 0, 0); tb.raw(0xb7); tb.end()
         door_scr = 0x08000000 + put_script(r, tb)
     # house bg events: old TV sign replaced, plus bed, shelf, crate
     hev = 0x3b974c
