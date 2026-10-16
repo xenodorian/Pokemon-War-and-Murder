@@ -1,0 +1,156 @@
+HANDOFF: Pokemon War and Murder (for Grok)
+Date of snapshot: 2026-10-16. Repo: github.com/xenodorian/Pokemon-War-and-Murder, branch main (work is pushed straight to main, no new branches).
+Last commit at time of writing: 71fcbeb. Progress log: CURRENT_WORK.md (end of file, "Progress status").
+
+=====================================================================
+1. ANSWERS TO THE FOUR QUESTIONS
+=====================================================================
+
+Q1. Who is Max in this ROM? Is Max a separate child NPC from Leaf?
+- In the current ROM, the player character is LEAF. Max (the CryMon protagonist) no longer exists as the player. The save name is set to LEAF (tools/cry_open.py) and all story text that said MAX/Max was renamed to LEAF/Leaf.
+- Max does NOT exist yet as an NPC. The plan is a SEPARATE child NPC, a different object from Leaf, using a small child overworld sprite (pret OBJ_EVENT_GFX_LITTLE_BOY = 16 or OBJ_EVENT_GFX_LITTLE_GIRL = 17; the user has not picked one for Max, only that it is a small child sprite).
+- Gender note: in CryMon, Max is referred to as "she" / "her" throughout (CryMon content/dialogue.json). Use that unless the user says otherwise.
+- Max is the one who fights alongside the player in the double battles, and is the stand-in name in old code (species 255 stand-in was MAX; it is now named LEAF).
+
+Q2. What happens in the arrest scene, and where does it take place?
+- Location: Viridian City (map id not verified; check with tools/mapinfo.py before scripting). Trigger: as soon as Leaf walks INTO Viridian City.
+- Cutscene plays within view of Leaf: the military arrests Max for speaking out against the soldiers. Show an animation of Max walking across the screen, escorted by TWO SOLDIERS.
+- They stop in place. Max says: "Let me go! Pikachu, I choose you!"
+- All three stop in place. If the player interacts with Max or either soldier, a DOUBLE BATTLE starts.
+- Player's side: the player plus Max. Max has ONLY a level 10 Pikachu.
+- Soldier 1: level 5 Totodile, level 5 Cyndaquil, level 5 Chikorita. (The user wrote "tododile"; the species is Totodile.)
+- Soldier 2: level 5 Squirtle, level 5 Charmander, level 5 Bulbasaur.
+- The player does NOT white out if they lose this fight.
+- After the fight, Max notices soldier 2 used Kanto Pokemon, and calls him a traitor and a coward "for defecting to Johto". (Ambiguous, see open issues below: soldier 2's team is Kanto, yet the line says he defected to Johto.)
+- IF THE PLAYER AND MAX LOSE: after the exchange, soldier 2 says "A child could never understand the burdens of a soldier.", then shoots BOTH Max and the player dead. Max goes to heaven or hell (reputation rule, see Q5 background) and comes back, but STAYS DEAD and is a blood splatter on the ground.
+- IF THEY WIN: soldier 2 says the same line ("A child could never understand the burdens of a soldier.") and then SHOOTS HIMSELF, leaving a blood splatter. Soldier 1 says "Arceus in heaven, he actually shot himself! I have to alert the captain!" and walks off screen. Max says: "A worm returning to the dirt. There's nothing here to mourn. Thank you for saving me. I have more battles to fight. But as an expression of gratitude, here, take this." Max hands over an XP Share.
+- The player can then grab the gun from soldier 2 (the one who shot himself).
+
+Q3. What do the soldier fights award?
+- Win: Max gives the player an XP SHARE (one-time, from Max's dialogue above).
+- Win: the player can take the GUN from soldier 2's body (the soldier who shot himself).
+- Loss: no reward. No white-out for the player, but the player (and Max) die as above.
+- No money, items or other rewards were specified.
+
+Q4. When should the PC-or-withdraw prompt appear?
+- Spec (user's words, paraphrased): "When the player reaches six Pokemon including themselves and eventually catches one that won't fit in their party, the player is given the decision to either move the new Pokemon to a PC, or to remove themselves from combat."
+- Interpretation to use: the PLAYER CHARACTER (Leaf) counts as a Pokemon in the party slots. When a catch happens and the party is already full (6 slots including Leaf), show the prompt: (a) send the newly caught Pokemon to the PC, or (b) withdraw Leaf from the party ("remove themselves from combat").
+- CONFLICT WITH CURRENT CODE: right now Leaf is only sent out as a stand-in when the party is COMPLETELY EMPTY (count 0). She is not a permanent party member. The PC prompt would require making Leaf a real party member (a species 255 mon in slot 6 or similar). This needs a decision before building.
+
+=====================================================================
+2. BACKGROUND THE QUESTIONS DEPEND ON
+=====================================================================
+
+Reputation and afterlife (Arceus vs Giratina):
+- The user wants the reputation system to decide: Arceus or Giratina, just like Pokemon Outlaw.
+- Current implementation (tools/story_yveltal.py, ~line 91-95): when the LEAF stand-in faints, the game checks VAR_REP (0x40E7, reputation + 100, range 0..200, neutral = 100). If VAR_REP >= 100 the player goes to HEAVEN (Arceus), otherwise HELL (Giratina). Same logic as being shot (gun.py 'gotshot').
+- Reputation = clamp(100 + blessings - kills + story adjustment, 0..200). Story adjustment VAR_REPADJ (0x40E9) changes with Nero choices. Shop prices scale with reputation; reputation 0 makes the shopkeeper refuse. See CURRENT_WORK.md, Step 6 entries.
+- The LEAF stand-in with 1 HP: when she faints, the death/afterlife path runs. Bloody ending hook fixed for blackouts.
+
+Death rule that must be built:
+- "Anytime the player is a playable Pokemon, when they lose a battle, they die and go to Arceus or Giratina. If they choose to play normally, they white out and go to a Pokemon Center as normal when they lose a battle." So there are two modes: a "playable Pokemon" run (death permanent) and a normal run (white-out). The mode choice is not yet defined in any spec. Ask the user when building.
+
+=====================================================================
+3. CURRENT STATE OF THE ROM (what is DONE)
+=====================================================================
+
+Build and files:
+- Release ROM: roms/Pokemon War and Murder.gba, CRC32 4b9023d6 (md5 not recorded; check with md5sum). It rebuilds BYTE FOR BYTE with tools/apply_all.sh from the outlaw base (roms/outlaw-2015-09-05 (original hack ROM, from user upload 3ad0b9f8).gba, CRC32 5e460b23, 16,777,240 bytes). The base ROM is the Pokemon Outlaw hack, and it IS in the repo (restored 2026-10-16).
+- Patch: "Pokemon War and Murder.ips" at repo root, verified to reproduce the release ROM from the outlaw base.
+- Build chain: tools/apply_all.sh OUT.gba (about 20 s). It needs /home/claude/work, which is a symlink to the repo (created on this machine; recreate with: mkdir -p /home/claude && ln -sfn <repo> /home/claude/work).
+- Build stages (in order): cry_open, splat_order, base1_paintings, base_paintings_clipped, door_anim, priest_text, slums_text, story_species, story_base1, story_anne, story_native, story_yveltal, moves_extend, story_nero.
+- Dependencies: python3 with keystone-engine, capstone, scipy, Pillow, numpy (pip); clang, ld.lld, arm-none-eabi binutils (apt); mgba (apt: mgba-sdl, libmgba-dev); pret gbagfx/gbafix built from pret tools.
+
+Harness and tests:
+- tools/harness_new ROM SCRIPT SHOTPREFIX (mGBA harness). Script lines: "<frame> <keymask hex>" (A=1, B=2, Select=4, Start=8, Right=10, Left=20, Up=40, Down=80), "shot <frame>", "end <frame>", "ram", "poke". Output PPM -> convert to PNG with PIL.
+- LOADSTATE=out/user_new.raw loads a new-game state with an EMPTY party (made with SAVEAT/SAVEOUT env vars at frame 1490 of a new-game key script). The state opens with a "save the game?" prompt; press B to close it.
+- tools/newgame_test.py: cold boot, checks player LEAF, rival MASON, start position (4,5). PASSES.
+- tools/battle_test.py: builds a TEST ROM with TEST_BATTLE=1 (stepping onto the house door starts a wild Pidgey battle, Lv 5). PASSES: Pidgey appears, LEAF stand-in goes out Lv 1 with 1 HP, BITCH SLAP shows 1/20 PP TYPE/FIGHT, she faints to Tackle, white-out runs with no crash. Damage of Bitch Slap NOT read from RAM yet.
+- The TEST_BATTLE hook is in tools/cry_open.py and is gated on the env var. Release builds are byte-identical with and without it (verified).
+- Known harness issues: a scripted battle via a warp script (mkw / gun_t3.mkw) does NOT run from a LOADSTATE state; use the door-tile hook instead.
+
+Moves (tools/moves_extend.py):
+- Move table extended from 355 to 358 entries. New IDs: 355 BITCH SLAP (power 30, accuracy 100, Fighting, 20 PP, TACKLE animation), 356 BALL THROW (power 50, accuracy 100, Fighting, 15 PP, TACKLE animation), 357 HYPERPUNCH (Hyper Beam's recharge record: power 150, accuracy 100, Fighting, 5 PP, TACKLE animation).
+- Moved tables: move data, names, descriptions, battle animation table. All 4-aligned pointers repointed (137, 32, 2, 1).
+- Code sentinel: the two literals holding the move count (0x40238, 0x933e8) are now 358. Other literal-pool 355 words are flags or data (0x163 = FLAG_HIDE_ROUTE25_TM43), left alone.
+- Hyperpunch type: set to Fighting. USER HAS NOT CONFIRMED THIS.
+
+Learnsets (Hitmonchan species 107 AND LEAF species 255 share this list):
+Lv1 Bitch Slap (355); Lv7 Mach Punch (183); Lv10 Ball Throw (356); Lv13 Pursuit (228); Lv15 Barrage (140); Lv18 Spike Cannon (131); Lv20 Revenge (279); Lv21 Swift (129); Lv23 Ice Punch (8); Lv24 Thunderpunch (9); Lv25 Fire Punch (7); Lv27 Sky Uppercut (327); Lv30 Shadow Ball (247); Lv33 Mega Punch (5); Lv35 Sludge Bomb (188); Lv37 Counter (68); Lv40 Egg Bomb (121); Lv45 Hyperpunch (357). Detect removed. Agility removed (replaced by Ball Throw at Lv10).
+- Hitmonchan base stats (from ROM): 50/105/79/76/35/110, Fighting/Fighting, catch 45, exp 140.
+
+Protagonist and stand-in:
+- Player name LEAF (save name), rival MASON (fixed). No naming screens; new games start in the house at (4,5).
+- Stand-in species 255 "LEAF": Hitmonchan stats and types, art story_assets/chars/leaf_front.png (from pret trainers/front_pics/leaf_front_pic.png, 64x64) and leaf_back.png (top 64x64 frame of pret trainers/back_pics/leaf_back_pic.png, which is a 64x320 five-frame sheet; the back art may need a better frame later, user said to revisit).
+- Stand-in rule: LEAF joins a battle ONLY when the party is completely empty; removed after the battle; she has 1 HP for the battle.
+- The old MAX art files (story_assets/chars/max_front.png, max_back.png) are no longer used.
+
+Anne (tools/cry_open.py and tools/story_anne.py):
+- Little girl sprite (pret GFX 17). Gift after Mason fight: "Max. You actually fought." (CryMon wording, Max -> the player's name in play is LEAF, but the Pallet line still reads "{P}" so it shows LEAF), then six POKe BALLs and a POTION.
+
+Mason (Pallet trainer, rival name MASON, Pikachu lv3 in the earlier build):
+- Pallet intro and after-battle text is CryMon's masonFight, masonAfter and masonWin lines. Mapping: CryMon "CryMon" -> "POKeMON", "crystal" -> "ball". "Calder", "Weeping Army", "Prison" kept verbatim. CryMon's tip line after Mason's win is NOT used.
+- Mason's fight uses the trainer id with TERRY renamed to MASON.
+
+Cottage (opening, from cry_open.py): father in bed (2..3,3..4), empty bed (bg 2,6 and 3,6), shelf gives SANDSHREW Lv3 (Leaf's starter, like Max got Quillpup in CryMon), crate gives a POTION, door locked until shelf used. Oak says he was robbed (no starters).
+
+Story (Shinigami/Yveltal/Nero, docs/STORY_PLAN.md):
+- Shinigami captive in Pewter base 1; scroll choice (FATHER or YVELTAL); Yveltal grave in Lavender Pokemon Tower; trainer 530 GORE renamed NERO and is the final JRA General; arrest/execute/crown endings; epilogue titles; Bloody ending on blackout.
+
+Other content:
+- Throw animations: NOT built. Reference only (leaf_throw_anims/README.md, TIMING.md, frames, GIFs). Eight approved moves: Ball Throw, Slap (now Bitch Slap), Barrage, Egg Bomb, Shadow Ball, Swift, Spike Cannon, Sludge Bomb. Rule from the user: use the Poke Ball ONLY for Ball Throw. Shadow Ball keeps its own particle effect with no ball. All other moves use the plain throw without a ball. Leaf's throw frames are the animation source.
+
+CryMon reference:
+- Repo github.com/xenodorian/CryMon (TypeScript, web). Cloned read-only at /home/user/xenodorian/crymon (commit c63dda5). Dialogue: content/dialogue.json (keys talk.*). Extract used: docs/crymon_reference/dialogue_cottage.txt.
+- CryMon's protagonist is Max (female, eight years old). CryMon's starter for Max is QUILLPUP (Max takes Father's crystal). War and Murder equivalent: Sandshrew.
+
+pret reference:
+- github.com/pret/pokefirered, cloned read-only at /home/user/pret/pokefirered (commit 037335f). Used for: move names and stats (src/data/battle_moves.h, src/data/text/move_names.h), learnsets (src/data/pokemon/level_up_learnsets.h), constants (include/constants/moves.h, event_objects.h, flags.h), and graphics.
+- Child overworld sprites: graphics/object_events/pics/people/little_boy.png and little_girl.png. Raw URL form: https://raw.githubusercontent.com/pret/pokefirered/037335f4c725d7c9aecdac87066f2002b4bd7e14/graphics/object_events/pics/people/little_boy.png (and little_girl.png).
+
+=====================================================================
+4. NOT DONE (what Grok may be asked to do next)
+=====================================================================
+
+Ordered list the user approved in principle:
+1. Throw animations (Ball Throw first; then the other seven reference moves).
+2. Max as a separate child NPC (sprite choice open: boy 16 or girl 17).
+3. Viridian arrest cutscene and the double battles (Max Pikachu Lv10; soldier 1 Totodile/Cyndaquil/Chikorita Lv5; soldier 2 Squirtle/Charmander/Bulbasaur Lv5). Max to later have a Raichu.
+4. Soldier outcomes: win/lose branches, shot death, gun pickup, XP Share, Arceus/Giratina via VAR_REP.
+5. PC-or-withdraw prompt when a catch does not fit a full party (needs decision on Leaf as a permanent party member).
+6. Reputation-based death rule for playable-Pokemon runs versus normal white-out runs (needs decision on how a run chooses the mode).
+7. Damage check of Bitch Slap in the battle test (read the Pidgey HP from RAM).
+8. Confirm Hyperpunch type (Fighting now).
+
+Other open items:
+- c3_build_base.gba and m_final_latest_build.gba are still in roms/ (removal blocked by a permission check; the user has said to leave them only if tools break; they are NOT used by apply_all.sh, but tools/build_full.sh and tools/cry_open.py read them per CURRENT_WORK.md). Do not delete without the user's explicit OK.
+- Calder, the Weeping Army and the Prison are CryMon names kept in Mason's dialogue. They may not exist in War and Murder's world; confirm with the user.
+- "Pokemon Outlaw is the base ROM and must stay in the repo" (user rule). Do not remove.
+
+=====================================================================
+5. USER PREFERENCES AND WORKING RULES (important)
+=====================================================================
+- Push all changes straight to main. No new branches. Commit and push after each verified step.
+- Never use em dashes or emoji in any text, code comments, or output.
+- Be concise and objective on simple questions.
+- Install tools freely when needed (sudo apt and pip are allowed).
+- When asked to "proceed", finish the work; do not stop to ask order questions. Use best judgment and state the choice.
+- Do not put model identifiers in commit messages or repo text.
+- Do not ask questions that can be answered by reading the other repos (CryMon, pret/pokefirered) or the ROM.
+- The user said breaking the tools is NOT acceptable. Do NOT delete the build ROMs (c3_build_base, m_final_latest_build) without explicit approval.
+- Do not claim work is done unless it is verified (boot test, battle test, CRC checks).
+- Pronouns: CryMon's Max is "she". Ask if unsure.
+
+=====================================================================
+6. HONEST STATUS NOTES (things previously claimed that were NOT done)
+=====================================================================
+- The throw animations were NOT implemented despite earlier implication. Only reference notes exist.
+- The battle with Max, arrest cutscene, PC prompt and death rules are NOT implemented.
+- Leaf's back sprite is a crop of the pret sheet; it may need a different frame.
+- Mason's dialogue is CryMon text adapted to this game (see section 3).
+
+=====================================================================
+7. KEY FILES (repo-relative)
+=====================================================================
+roms/Pokemon War and Murder.gba (release ROM); Pokemon War and Murder.ips (patch); roms/outlaw-2015-09-05 (...).gba (base)
+tools/apply_all.sh (build); tools/cry_open.py (opening, Pallet, Mason, Anne, bed/door, TEST_BATTLE hook); tools/story_species.py (YVELTAL 254, LEAF 255 stand-in); tools/moves_extend.py (new moves and learnsets); tools/story_yveltal.py (grave, Bloody ending, afterlife by VAR_REP); tools/story_nero.py (Nero, endings, epilogue); tools/story_anne.py (Anne outside base 1); tools/story_native.py + story/story_native.c (reputation, shop prices, stand-in logic); tools/battle_test.py; docs/STORY_PLAN.md; docs/crymon_reference/dialogue_cottage.txt; leaf_throw_anims/ (animation reference); CURRENT_WORK.md (full log, newest at the end).

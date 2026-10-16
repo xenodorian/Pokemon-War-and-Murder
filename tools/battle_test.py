@@ -1,6 +1,6 @@
 """Battle test: builds a TEST ROM (TEST_BATTLE=1: stepping onto the house door starts a wild Pidgey battle, lv 5),
 loads the new-game state, walks onto the door tile, picks FIGHT and the first move, and writes a contact sheet.
-usage: battle_test.py OUT_SHEET.png   (needs out/user_new.raw: a new-game state with an empty party, made with the harness SAVEAT hook)
+usage: battle_test.py OUT_SHEET.png   (needs saves/ported/new_game_empty_party.raw: a new-game state with an empty party, made with the harness SAVEAT hook)
 Expect: wild PIDGEY appears, LEAF (stand-in, Lv 1, 1 HP) goes out with BITCH SLAP 1/20 PP, TYPE/FIGHT."""
 import sys,os,subprocess,glob
 from PIL import Image
@@ -17,7 +17,7 @@ for s in range(700,2400,170): L.append(f"shot {s}")
 L.append("end 2400")
 open(script,'w').write('\n'.join(L))
 for p in glob.glob('shots/bt_*.ppm'): os.remove(p)
-subprocess.run(['./tools/harness_new',rom,script,'shots/bt'],env=dict(os.environ,LOADSTATE='out/user_new.raw'),capture_output=True,timeout=900)
+subprocess.run(['./tools/harness_new',rom,script,'shots/bt'],env=dict(os.environ,LOADSTATE='saves/ported/new_game_empty_party.raw'),capture_output=True,timeout=900)
 ims=[]
 for p in sorted(glob.glob('shots/bt_*.ppm')):
     d=open(p,'rb').read(); pa=d.split(b'\n',3); w,h=map(int,pa[1].split()); ims.append(Image.frombytes('RGB',(w,h),pa[3]))
