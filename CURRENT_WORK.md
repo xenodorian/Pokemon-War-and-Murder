@@ -279,6 +279,12 @@ Not done:
 - Not confirmed in the emulator: after a TEST_WARP (new test hook in cry_open.py, tools/warp_test.py) the player would not move in my test state, so the fight could not be walked into. Checked from ROM data only (template and script bytes). The 0x81be11d Seafoam / Victory Road script was not looked at.
 - ROM CRC32 bbe90f02 (repo ROM plus the 3-byte change on top of the previous build diff). IPS regenerated and verified; ported state re-paired. Not on GitHub (binary).
 
+## Standing orders from the owner (as stated in the session, 2026-10-16)
+- Work only on `main`.
+- The owner reversed the old rules: upload anything to the repos, including ROMs and art (`git add -f` for ignored types).
+- Decisions are delegated: use best judgement, record the choice, keep going.
+- Install any tool needed; use the owner's ROMs and any repo data freely.
+
 ## Blocked: steps 2 to 4 need a spec (2026-10-16)
 - Max NPC, the Viridian arrest cutscene, the double battles with Max's Pikachu and Raichu, soldier 1 and 2 fights and outcomes, XP Share and gun pickup, the full-party death outcome and the PC-or-withdraw prompt have no written spec in this repo, CryMon, or the handoff (only the one-line mentions above). The handoff rule is to confirm before editing when a request is unclear. Needed: who Max is in this ROM (the Leaf stand-in is species 255, so is Max a separate child NPC?), the arrest scene beats and location, what the soldiers' fights award, and when the PC-or-withdraw prompt shows.
 
