@@ -223,7 +223,7 @@ Plan and decisions: docs/STORY_PLAN.md. Ids: tools/story_ids.py. Text: story_ass
 - The Pallet intro and the after-battle lines are CryMon's masonFight and masonAfter/masonWin lines (tools/cry_open.py mason_intro, mason_after). CryMon "CryMon" is "POKéMON" here and "crystal" is "ball". Calder, the Weeping Army and the Prison are kept as in CryMon.
 - The CryMon tip line after Mason's win ("Tall grass hides CryMon. Wren has salve...") is not used; it names characters this game does not have.
 - The battle is not triggered by a test yet: see the battle test note below.
-- ROM CRC32 04b9023d6 (0x4b9023d6).
+- ROM CRC32 4b9023d6.
 
 ## Battle test (2026-10-16): not run
 - A scripted wild battle from the mkw script did not start: the harness state loads with the "save the game?" prompt open, and the script never reaches the battle command. A new-game state created with the harness SAVEAT hook loads at Leaf's house with an empty party.
