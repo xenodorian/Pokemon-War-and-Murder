@@ -384,3 +384,19 @@ Not done:
 - NOT BUILT: Max's back sprite and partner trainer pic in the double-battle intro. FireRed draws a second player-side trainer pic only for BATTLE_TYPE_MULTI (link) battles; the multi flag also changes switch-in text, party summaries and link waits, and there is no FireRed code path for an in-game partner pic (Emerald's BATTLE_TYPE_INGAME_PARTNER and gPartnerTrainerId are new there). Doing it means new intro/slide/ball-throw handlers for battler 2 plus a Max back sheet (FireRed's trainer back pic table has only the player pics). Left as a cosmetic gap: Pikachu/Raichu is sent out as a normal mon after "Go! LEAF's mon and PIKACHU!". Not attempted because a wrong hook can hang every double battle.
 - NOT BUILT: CryMon verbatim dialogue and Mason's Vallejo surname (the CryMon repo is gone), Leaf back art beyond the top frame of the pret sheet (needs new art).
 - Boot checks only after pass 1: newgame_test and battle_test pass on 3d86d910. The Vermilion Raichu scene was reached and the double battle started (Raichu Lv 32 vs Arcanine/Rhydon Lv 70, F_BDONE set); the loss branch and win branch of Vermilion and the Mt. Moon / 0x81be11d / PLAYABLE-heaven checks are still open for the full test pass.
+
+## Leaf art audit and full test pass (2026-10-16)
+- Leaf battle-art rules found: leaf_throw_anims/README.md and TIMING.md (frames 0..4 from leaf_throw_anims/frames, timings 20/6/6/24/1, Poke Ball sprite only for Ball Throw, Shadow Ball keeps its own particle effect with no ball, other throw moves plain, no Cormag art), docs/ANIMATION_NOTES.md (Leaf frames only for Hitmonchan 107 or LEAF 255 on the wrapped moves; Hyperpunch not Leaf-wrapped). Owner order: no new Leaf sprites.
+- Audit: tools/anim_throw.py uses only those frames and timings; the ball sprite is created only in the Ball Throw script; story_assets/chars/leaf_back.png is byte-identical to leaf_throw_anims/frames/leaf_frame0.png and leaf_front.png is the pret front pic, unchanged since its first commit. No deviation found, no change made. No Leaf art was painted.
+- Mason has no surname (owner): none added. CryMon dialogue already applied earlier where the spec calls for it.
+- Test pass on release ROM 3d86d910 (rebuilt from apply_all.sh, same CRC). Emulator only:
+  - Raichu loss at Cerulean: pass (no white-out, soldiers leave, Raichu removed, party 2, F_ADONE set).
+  - Raichu loss at Vermilion: pass (same).
+  - Vermilion win: pass (soldiers retreat line, party back to 2, F_BDONE set).
+  - PLAYABLE heaven end to end: pass (arrest, loss, heaven, MAX soul speaks once and fades, LEAF stays in heaven).
+  - Second death: pass (VAR_SOUL=1 shows the soul, VAR_SOUL=2 after a second death shows no soul).
+  - Script 0x081be11d: bytes are the stock Strength boulder script (special 0x187, badge 4 check); not run in game.
+  - Mt. Moon sight trigger: grunt template is correct (trainer type 1, sight 4, script 0x08160829); not reproduced because a TEST_WARP leaves the player at the wrong elevation (blocked on ledges, no sight match). Talking to him works (step 5.3).
+  - newgame_test and battle_test pass.
+- Test lesson: with tools/viri_test.py the Viridian arrest only talks; walk to the soldiers and press A for the fight. A coord trigger needs a step onto the tile, not a warp onto it.
+- No ROM or IPS change this step.
