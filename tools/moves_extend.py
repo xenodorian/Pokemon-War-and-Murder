@@ -53,17 +53,24 @@ def apply(r):
     anims+=tk_anim*3
     anim_new=r.alloc(anims,4)
     # 5. repoint every reference to the old tables
+    pp_refs=repoint(b,MD+4,md_new+4)    # code that reads gBattleMoves[move].pp through a pointer to the pp field (without this the new moves started with 1 PP)
     counts=(repoint(b,MD,md_new),repoint(b,MN,mn_new),repoint(b,MDESC,md_desc_new),repoint(b,ANIM,anim_new))
     assert counts[0]>0 and counts[1]>0 and counts[2]>0 and counts[3]>0, counts
     # 6. code sentinels
     for o in SENTINEL_SITES: r.w32(o,NEW_N)
+    # 6b. battle text: a move id above 354 printed 'a FIGHTING move' instead of the name (three compares in battle_message.c: movs r,#0xb1; lsls r,r,#1; cmp; bls/bhi).
+    #     New limit: r = 0xb3 << 1 = 358 and the branch is made strict (bls -> bcc, bhi -> bcs), so ids up to 357 print their names.
+    for o,br_old,br_new in ((0xd75fc,0xd9,0xd3),(0xd7e96,0xd8,0xd2),(0xd7eae,0xd9,0xd3)):
+        assert b[o]==0xb1 and b[o+1]==0x20 and b[o+2]==0x40 and b[o+3]==0x00 and b[o+4:o+6]==b'\x81\x42', hex(o)   # movs rN,#0xb1 ; lsls rN,rN,#1
+        assert b[o+7]==br_old, hex(o)
+        b[o]=0xb3; b[o+7]=br_new
     # 7. learnsets: Hitmonchan's list from the spec (levels, moves)
     spec=[(1,BITCH_SLAP),(7,183),(10,BALL_THROW),(13,228),(15,140),(18,131),(20,279),(21,129),
           (23,8),(24,9),(25,7),(27,327),(30,247),(33,5),(35,188),(37,68),(40,121),(45,HYPERPUNCH)]
     data=b''.join(struct.pack('<H',(l<<9)|m) for l,m in spec)+b'\xff\xff'
     for sp in (107,255):
         r.w32(LEARN+4*sp,0x08000000+r.alloc(data,2))
-    print('moves_extend: refs repointed',counts,'tables at',hex(md_new),hex(mn_new),hex(md_desc_new),hex(anim_new))
+    print('moves_extend: refs repointed',counts,'pp-field refs',pp_refs,'tables at',hex(md_new),hex(mn_new),hex(md_desc_new),hex(anim_new))
 
 if __name__=='__main__':
     r=Rom(sys.argv[1]); apply(r); r.save(sys.argv[2]); print('ok')

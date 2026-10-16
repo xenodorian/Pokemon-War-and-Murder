@@ -246,3 +246,38 @@ Not done:
 - Reputation-based death (Arceus or Giratina), PC-or-withdraw prompt for a full party, normal white-out.
 - Hyperpunch's type is set to Fighting; confirm.
 - Leaf back art is the top frame of pret's back sheet; revisit later.
+
+## Environment setup on the cloud box (2026-10-16)
+- Box rebuilt: python3.13 with keystone-engine, capstone (needed by tools/story_party.py, not listed before), Pillow, numpy, scipy, scikit-image (pip --break-system-packages); clang/lld/llvm-objcopy 19.1.7, arm-none-eabi-gcc; libmgba0.10t64 (apt) so tools/harness_ls and harness_new run. /home/claude/work symlinks to /workspace/Pokemon-War-and-Murder; /tmp/claude-0 must exist for the test drivers.
+- Rebuild check: `sh tools/apply_all.sh out/rebuild.gba` gives 16,777,240 bytes, CRC32 7c536327, not 4b9023d6. Only 5 bytes differ from roms/Pokemon War and Murder.gba, at 0xf62a67 and 0xf62ab0..b3, inside the clang-compiled thumb code (signed vs unsigned branch, push/pop vs mov); this is the compiler version (clang 19.1.7 here), not a source change. roms/ was not replaced. newgame_test passes on both ROMs (LEAF, MASON, start 4,5). The 5 bytes were not analysed for behaviour.
+
+## Step 2 and 6: move damage and PP read from RAM; two bugs fixed (2026-10-16)
+- Bug 1: the three new moves started a battle with 1 PP (shown 1/20). Cause: eight code literals point at the old move table plus 4 (the pp field) and were not repointed. tools/moves_extend.py now repoints them. Checked: Bitch Slap shows 19/20 after one use, then 18/20.
+- Bug 2: the battle text said "a FIGHTING move" instead of the name. Cause: three compares in the battle message code (0xd75fc, 0xd7e96, 0xd7eae) used the old limit 354. They now compare below 358. Checked: BITCH SLAP!, HYPERPUNCH! print. Metronome's own limit is left alone, so the new moves cannot be picked by it.
+- tools/damage_test.py (new) builds a test ROM (cry_open.py env TEST_GIVE=species,level and TEST_FOE=species,level, test builds only), starts the battle at the house door, uses one move slot and prints player and enemy HP from gBattleMons. It needs out/user_new.raw (a new-game state: harness_new with SAVEAT=1499 SAVEOUT=out/user_new.raw on a cold boot, keys as in newgame_test; out/ is ignored by git, so recreate it).
+- Results (Hitmonchan stand-in species 107 given at the level shown; foe Magikarp, which only Splashes):
+  - Bitch Slap (power 30), Lv12 vs Lv30 Magikarp (54 HP): 5 damage.
+  - Ball Throw (power 50), same fight: 8 damage.
+  - Hyperpunch (power 150), Lv45 vs Lv70 Magikarp (123 HP): 89 damage, then "must recharge!". Menu shows PP 5/5, TYPE/FIGHT.
+- Step 6 confirmed: Hyperpunch type is Fighting (menu TYPE/FIGHT and move record). Bitch Slap and Ball Throw also show TYPE/FIGHT.
+- Release ROM updated: the repo ROM plus only the 30 bytes this fix changes (the 5-byte compiler difference from a fresh build is not mixed in). CRC32 a5920d7c. IPS regenerated from the outlaw base and verified. saves/ported state re-paired. newgame_test passes (LEAF, MASON, 4,5). Verified in the emulator only.
+- Push status: the GitHub connector only writes text, so the rebuilt ROM, IPS and ported state (CRC32 a5920d7c) are NOT on GitHub yet; the repo copies are still CRC32 4b9023d6. Rebuild with `sh tools/apply_all.sh` then apply the 30-byte diff, or push the binaries once a git credential exists.
+- Next: Ball Throw animation, then the other throw moves.
+
+## Step 1: Leaf throw animations (2026-10-16), tools/anim_throw.py
+- Symbols: pret/pokefirered built as FireRed 1.0 (sha1 matches) gives the full symbol map; see docs/ANIMATION_NOTES.md. This is the way to find any engine function or table address.
+- New battle animation sprites: Leaf's five throw frames (tag 10289) and the Poke Ball (10290). The pic and palette tables were moved to free space with two more entries and every reference repointed.
+- BALL THROW (356): attacker hidden, Leaf throws, the ball flies t=26..44 (18 frames, 34 px arc), then the Tackle hit (hit splat, target shake). BITCH SLAP (355): Leaf throw, Tackle hit at t=32.
+- Swift, Barrage, Egg Bomb, Spike Cannon, Sludge Bomb and Shadow Ball: Leaf's frames are added in front of the original animation (effect at t=26; Shadow Ball: Leaf starts when the ball appears), only when the attacker is Hitmonchan or LEAF. A native check task (thumb, in free space) sets a flag read by jumpargeq. Checked: Staryu's Swift still shows the original animation.
+- Checked in the harness (screenshot sheets, Magikarp foe): Ball Throw, Bitch Slap, Swift, Barrage, Spike Cannon, Shadow Ball, Egg Bomb, Sludge Bomb all play, Hitmonchan returns afterwards, no hang. Timing and positions are close to leaf_throw_anims/TIMING.md but were judged by eye from screenshots, not frame-measured. Hyperpunch has no reference animation and still uses Tackle's.
+- Release ROM rebuilt as repo ROM plus the build diff: CRC32 60efbd76. IPS regenerated and verified; saves/ported state re-paired. newgame_test passes. These binaries are not on GitHub (connector is text only).
+- Next: Step 2, the Max NPC and the Viridian arrest cutscene.
+
+## Handoff open item: null script pointers (2026-10-16), tools/mtmoon_fix.py
+- Scanned allmaps.txt (decoded from the ROM) for trainer-type objects whose script is missing or not a trainerbattle. Only two exist: Route 11 JASPER (already fixed) and Mt. Moon B2F local id 6, the Rocket at (35,12). The other entries in the handoff list (Cerulean 10, Celadon 13, Five Island 3, Route 4 7, Route 7 1, Route 15 14, Sevault Canyon 7) are vanilla "clone" objects (border trees and guards copied from the neighbouring map), not broken scripts.
+- The Mt. Moon Rocket's template has script pointer 0x08000000 in the Outlaw base ROM too (vanilla points to 0x08160829). The original script is intact in the ROM, so the pointer is restored. Without it, talking to him would run the ROM header as a script.
+- Not confirmed in the emulator: after a TEST_WARP (new test hook in cry_open.py, tools/warp_test.py) the player would not move in my test state, so the fight could not be walked into. Checked from ROM data only (template and script bytes). The 0x81be11d Seafoam / Victory Road script was not looked at.
+- ROM CRC32 bbe90f02 (repo ROM plus the 3-byte change on top of the previous build diff). IPS regenerated and verified; ported state re-paired. Not on GitHub (binary).
+
+## Blocked: steps 2 to 4 need a spec (2026-10-16)
+- Max NPC, the Viridian arrest cutscene, the double battles with Max's Pikachu and Raichu, soldier 1 and 2 fights and outcomes, XP Share and gun pickup, the full-party death outcome and the PC-or-withdraw prompt have no written spec in this repo, CryMon, or the handoff (only the one-line mentions above). The handoff rule is to confirm before editing when a request is unclear. Needed: who Max is in this ROM (the Leaf stand-in is species 255, so is Max a separate child NPC?), the arrest scene beats and location, what the soldiers' fights award, and when the PC-or-withdraw prompt shows.
