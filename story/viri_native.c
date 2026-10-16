@@ -81,3 +81,47 @@ void partner_choose_move(void){
     EmitTwoReturnValues(1,10,chosen|(gBattlerTarget<<8));               // 10 = B_ACTION_EXEC_SCRIPT
     exec_done();
 }
+// ---- MAX's back picture in the double-battle intro (cosmetic only). FireRed draws a second player-side trainer pic only for link multi battles,
+// so a follower sprite is added next to LEAF's pic: it copies LEAF's pic position every frame (slide in, ball throw, slide out) and destroys itself as soon as
+// LEAF's pic sprite is gone (not in use, or the slot now holds another graphic) or after 600 frames. It never touches battle flow.
+#include "max_pic.h"
+struct FrameImg { const u8* d; u16 s; };
+static const struct FrameImg max_frames[1]={{max_pic,2048}};
+static const u32 max_anim[2]={0x00010000u,0xFFFFu};          // frame 0 for 1 tick, then end (the sprite keeps the frame)
+static const u32* const max_anims[1]={max_anim};
+#define SPRITE(i) ((u8*)0x0202063c+0x44*(i))
+#define gBattlerSpriteIds ((volatile u8*)0x02023d44)
+#define gMultiuseSpriteTemplate ((u32*)0x020244dc)
+#define CreateSprite ((u8(*)(void*,s16,s16,u8))(0x08006f8c|1))
+#define DestroySprite ((void(*)(void*))(0x08007280|1))
+#define LoadPalette ((void(*)(const void*,u16,u16))(0x080703ec|1))
+#define DUMMY_ANIMS 0x08231cf0u
+#define ORIG_DRAWPIC ((void(*)(void))(0x0803227c|1))
+#define S16(p,o) (*(volatile s16*)((p)+(o)))
+typedef short s16;
+static void max_follow(u8* s){
+    u8* L=SPRITE((u8)S16(s,0x2E));
+    u32 im=*(u32*)(L+0xC);
+    u32 saved=((u32)(u16)S16(s,0x32))|((u32)(u16)S16(s,0x34)<<16);
+    s16 t=S16(s,0x30)+1; S16(s,0x30)=t;
+    if(!(L[0x3E]&1) || im!=saved || t>600){ DestroySprite(s); return; }
+    S16(s,0x20)=S16(L,0x20)-40; S16(s,0x22)=S16(L,0x22);
+    S16(s,0x24)=S16(L,0x24); S16(s,0x26)=S16(L,0x26);
+    s[0x3E]=(s[0x3E]&~4)|(L[0x3E]&4);
+}
+void partner_draw_pic(void){
+    ORIG_DRAWPIC();
+    if(gActiveBattler!=0 || *var(VAR_PARTNER)!=1) return;
+    u8 lid=gBattlerSpriteIds[0]; u8* L=SPRITE(lid);
+    if(!(L[0x3E]&1)) return;
+    u32 oa=gMultiuseSpriteTemplate[2], oi=gMultiuseSpriteTemplate[3];
+    LoadPalette(max_pal,0x120,32);                                   // OBJ palette slot 2 (battler 2's mon loads there only after the trainers are gone)
+    gMultiuseSpriteTemplate[2]=(u32)max_anims; gMultiuseSpriteTemplate[3]=(u32)max_frames;
+    u8 id=CreateSprite(gMultiuseSpriteTemplate,S16(L,0x20)-40,S16(L,0x22),L[0x43]+1);
+    gMultiuseSpriteTemplate[2]=oa; gMultiuseSpriteTemplate[3]=oi;
+    u8* S=SPRITE(id);
+    *(u16*)(S+4)=(*(u16*)(S+4)&0x0FFF)|(2<<12);
+    u32 im=*(u32*)(L+0xC);
+    S16(S,0x2E)=lid; S16(S,0x30)=0; S16(S,0x32)=(s16)(im&0xFFFF); S16(S,0x34)=(s16)(im>>16);
+    *(u32*)(S+0x1C)=(u32)max_follow|1;
+}
