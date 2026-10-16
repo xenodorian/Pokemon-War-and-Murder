@@ -281,3 +281,10 @@ Not done:
 
 ## Blocked: steps 2 to 4 need a spec (2026-10-16)
 - Max NPC, the Viridian arrest cutscene, the double battles with Max's Pikachu and Raichu, soldier 1 and 2 fights and outcomes, XP Share and gun pickup, the full-party death outcome and the PC-or-withdraw prompt have no written spec in this repo, CryMon, or the handoff (only the one-line mentions above). The handoff rule is to confirm before editing when a request is unclear. Needed: who Max is in this ROM (the Leaf stand-in is species 255, so is Max a separate child NPC?), the arrest scene beats and location, what the soldiers' fights award, and when the PC-or-withdraw prompt shows.
+
+## Repo sync and release ROM (2026-10-16)
+- Merged origin/main (fc883bb) into local main with no conflicts. A fresh build from the merged tree (apply_all.sh with no TEST_* variables) gives CRC32 bbe90f02, which matches the latest release CRC in the notes above.
+- roms/Pokemon War and Murder.gba and Pokemon War and Murder.ips updated to that build; the IPS reproduces the ROM from the outlaw base.
+- Local state added to the repo: saves/ported/new_game_empty_party.raw (empty-party new-game state, used by tools/battle_test.py). Ignored by .gitignore only as a rule for the file itself: it is tracked; see .gitignore.
+- docs/handoff/grok_handoff.txt: handoff text for Grok (answers to the four spec questions). Its ROM CRC line is out of date; use bbe90f02.
+- Not in the repo: the re-paired saves/ported/Pokemon War and Murder.state that the notes above say was re-paired on another machine. This session does not have it. Upload it to the repo or send the file to re-create it.
