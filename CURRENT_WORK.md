@@ -1,6 +1,6 @@
-# Current work (2026-10-09)
+# Current work (2026-10-16)
 
-Branch: claude/lucid-edison-b1ri7h. Source of truth: tools/ and gun/. Full rebuild: tools/build_full.sh PREFIX.
+Branch: main (work is pushed straight to main). Source of truth: tools/ and gun/. Full rebuild: tools/build_full.sh PREFIX. Scripts use /home/claude/work, which is a symlink to this repo (created 2026-10-16); out/ is gitignored.
 
 ## Not in the repo (and why)
 - ROMs and states (*.gba, *.state): gitignored (copyrighted, large). The unpatched base ROM f4046af2-outlaw-2015-09-05.gba (16,777,240 bytes) is required; tools expect out/c3.gba (an intermediate build, not stored).
