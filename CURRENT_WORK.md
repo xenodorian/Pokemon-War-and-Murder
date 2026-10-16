@@ -373,3 +373,8 @@ Not done:
 - Limit: the scene starts when the player steps off the arrival tile, not automatically on arrival (a warp ends the script; no new frame hook was added). MAX's splatter in Viridian stays for the rest of the game (F_VLOST, unchanged).
 - Verified in the emulator only (VIRI_FORCE=lose skips the battle; the real lost battle was verified in 4a): NORMAL run, heaven: loss lines, heaven, soul appears and speaks, "A hand pulls you back", white-out, Pokemon Center with the nurse. PLAYABLE run, hell (reputation forced low with the test poke VIRI_POKE=0x11d2=0xb6,0x11d3=3): soul appears beside LEAF, speaks, fades, Giratina's prompt, back in Viridian with the splatter. Not run: PLAYABLE heaven end to end and the "never twice" second death (by construction VAR_SOUL = 2). New test-only env VIRI_POKE in tools/viri_test.py. newgame_test and battle_test run OK.
 - Release ROM and IPS regenerated: CRC32 0x16ba9580 (was a43eaf21); the IPS applied to the Outlaw base reproduces the ROM (CRC checked).
+
+## Build pass 1: soul scene starts automatically on arrival (2026-10-16)
+- Owner priority change: build first, run the full test pass after everything is built. Gaps still open from the testing list (Vermilion Raichu site, Raichu loss branch, PLAYABLE heaven end to end, Mt. Moon sight trigger, 0x81be11d) stay open until that pass.
+- tools/story_afterlife.py now also adds an on-frame map script table (map script type 2: VAR_SOUL == 1) to heaven and hell, so MAX's soul scene starts by itself on arrival; the coord events stay as a fallback. Boot-checked only: hell, PLAYABLE, no key pressed after the warp: soul appears, speaks, fades.
+- Release ROM and IPS regenerated: CRC32 0x3d86d910 (was 16ba9580); IPS applied to the Outlaw base reproduces the ROM.

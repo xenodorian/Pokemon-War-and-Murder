@@ -1,6 +1,6 @@
 """MAX's soul in the afterlife (usage: story_afterlife.py IN.gba OUT.gba). Runs after story_viridian.py.
 Spec section 5b: after the Viridian loss MAX "goes to heaven or hell, comes back to the screen once, and then STAYS DEAD".
- - the Viridian loss sets VAR_SOUL = 1 (story_viridian.py). In heaven (2,80) or hell (2,68), the first steps away from the arrival tile start the scene:
+ - the Viridian loss sets VAR_SOUL = 1 (story_viridian.py). In heaven (2,80) or hell (2,68) the scene starts by itself on arrival (map on-frame table; coord events kept as a fallback):
    MAX's soul (the girl sprite, a hidden object shown only while VAR_SOUL == 1) speaks, fades, VAR_SOUL = 2 (never again).
  - NORMAL run (F_PLAYABLE clear): the visit is only a visit, afterwards LEAF is white-out-restored to the Pokemon Center (special 200, runs the story white-out hooks).
    PLAYABLE run: LEAF stays dead in the afterlife.
@@ -45,6 +45,8 @@ def site(r,s):
         if r32(r,cp+16*k+12)==sc: r.b[cp+16*k+4]=0        # elevation 0 = any
     L=SB(); L.compare(I.VAR_SOUL,1); L.goto_if(1,'show'); L.setflag(s['hide']); L.end(); L.lab('show'); L.clearflag(s['hide']); L.end()
     add_mapscript(r,G,n,3,0x08000000+put_script(r,L))
+    # automatic start: an on-frame table (map script type 2: var, value, script) runs the scene on the first frame after arriving while VAR_SOUL == 1
+    add_mapscript(r,G,n,2,0x08000000+r.alloc(struct.pack('<HHI',I.VAR_SOUL,1,sc)+b'\0\0\0\0\0\0\0\0',4))
     print('afterlife',s['name'],'object',oid)
 def install(r):
     for s in SITES: site(r,s)
