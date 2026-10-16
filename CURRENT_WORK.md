@@ -250,3 +250,16 @@ Not done:
 ## Environment setup on the cloud box (2026-10-16)
 - Box rebuilt: python3.13 with keystone-engine, capstone (needed by tools/story_party.py, not listed before), Pillow, numpy, scipy, scikit-image (pip --break-system-packages); clang/lld/llvm-objcopy 19.1.7, arm-none-eabi-gcc; libmgba0.10t64 (apt) so tools/harness_ls and harness_new run. /home/claude/work symlinks to /workspace/Pokemon-War-and-Murder; /tmp/claude-0 must exist for the test drivers.
 - Rebuild check: `sh tools/apply_all.sh out/rebuild.gba` gives 16,777,240 bytes, CRC32 7c536327, not 4b9023d6. Only 5 bytes differ from roms/Pokemon War and Murder.gba, at 0xf62a67 and 0xf62ab0..b3, inside the clang-compiled thumb code (signed vs unsigned branch, push/pop vs mov); this is the compiler version (clang 19.1.7 here), not a source change. roms/ was not replaced. newgame_test passes on both ROMs (LEAF, MASON, start 4,5). The 5 bytes were not analysed for behaviour.
+
+## Step 2 and 6: move damage and PP read from RAM; two bugs fixed (2026-10-16)
+- Bug 1: the three new moves started a battle with 1 PP (shown 1/20). Cause: eight code literals point at the old move table plus 4 (the pp field) and were not repointed. tools/moves_extend.py now repoints them. Checked: Bitch Slap shows 19/20 after one use, then 18/20.
+- Bug 2: the battle text said "a FIGHTING move" instead of the name. Cause: three compares in the battle message code (0xd75fc, 0xd7e96, 0xd7eae) used the old limit 354. They now compare below 358. Checked: BITCH SLAP!, HYPERPUNCH! print. Metronome's own limit is left alone, so the new moves cannot be picked by it.
+- tools/damage_test.py (new) builds a test ROM (cry_open.py env TEST_GIVE=species,level and TEST_FOE=species,level, test builds only), starts the battle at the house door, uses one move slot and prints player and enemy HP from gBattleMons. It needs out/user_new.raw (a new-game state: harness_new with SAVEAT=1499 SAVEOUT=out/user_new.raw on a cold boot, keys as in newgame_test; out/ is ignored by git, so recreate it).
+- Results (Hitmonchan stand-in species 107 given at the level shown; foe Magikarp, which only Splashes):
+  - Bitch Slap (power 30), Lv12 vs Lv30 Magikarp (54 HP): 5 damage.
+  - Ball Throw (power 50), same fight: 8 damage.
+  - Hyperpunch (power 150), Lv45 vs Lv70 Magikarp (123 HP): 89 damage, then "must recharge!". Menu shows PP 5/5, TYPE/FIGHT.
+- Step 6 confirmed: Hyperpunch type is Fighting (menu TYPE/FIGHT and move record). Bitch Slap and Ball Throw also show TYPE/FIGHT.
+- Release ROM updated: the repo ROM plus only the 30 bytes this fix changes (the 5-byte compiler difference from a fresh build is not mixed in). CRC32 a5920d7c. IPS regenerated from the outlaw base and verified. saves/ported state re-paired. newgame_test passes (LEAF, MASON, 4,5). Verified in the emulator only.
+- Push status: the GitHub connector only writes text, so the rebuilt ROM, IPS and ported state (CRC32 a5920d7c) are NOT on GitHub yet; the repo copies are still CRC32 4b9023d6. Rebuild with `sh tools/apply_all.sh` then apply the 30-byte diff, or push the binaries once a git credential exists.
+- Next: Ball Throw animation, then the other throw moves.
