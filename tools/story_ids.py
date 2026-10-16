@@ -41,3 +41,6 @@ F_MODEASKED=0x84B      # the run-mode question was asked
 HIDE_AS1,HIDE_AM,HIDE_AS2,F_ADONE=0x84C,0x84D,0x84E,0x84F
 HIDE_BS1,HIDE_BM,HIDE_BS2,F_BDONE=0x850,0x851,0x852,0x853
 VAR_AMB_A,VAR_AMB_B=0x4095,0x4096     # coord-event triggers (vanilla unused)
+# ---- Max's soul in the afterlife (story_afterlife.py)
+VAR_SOUL=0x4097          # 0 nothing, 1 the Viridian loss happened and MAX's soul has not been seen, 2 seen (once)
+HIDE_SOULH,HIDE_SOULX=0x854,0x855     # her soul sprite in heaven (2,80) / hell (2,68); SET = hidden

@@ -92,10 +92,8 @@ def install(r):
     F.msg(T(["BANG!","MAX goes down."]),4)
     F.playse(SE_SHOT); F.raw(0x30)
     F.msg(T(["BANG!","You were shot!"]),4)
-    F.setflag(I.F_VLOST)
-    F.raw(0x2b); F._add(struct.pack('<H',I.F_PLAYABLE)); F.goto_if(1,'afterlife')
-    # NORMAL run: the usual white-out to the Pokemon Center (special SetCB2WhiteOut = 200)
-    F.msg(T(["Everything goes dark."]),4); F.raw(0x97,1); F.raw(0x25,200,0); F.raw(0x27); F.releaseall(); F.end()
+    F.setflag(I.F_VLOST); F.setvar(I.VAR_SOUL,1)
+    # both run modes visit the afterlife (spec 5b); story_afterlife.py plays MAX's soul once, then a NORMAL run is white-out-restored, a PLAYABLE run stays dead
     F.lab('afterlife')
     callnative(F,nat['rep_calc']); F.compare(I.VAR_REP,100); F.goto_if(0,'hell')
     F.msg(T(["The world goes white.","Something warm lifts you up."]),4); F.raw(0x97,1); F.raw(0x39,2,80,0xff); F._add(struct.pack('<HH',8,25)); F.raw(0x27); F.releaseall(); F.end()
