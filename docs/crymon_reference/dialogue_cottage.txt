@@ -1,0 +1,120 @@
+INTRO
+The cottage is quiet. Father sleeps. Outside, the Weeping Army drums.
+Max is eight. CryMon — Crystal Monsters — sleep inside Capture Crystals.
+Father is too sick to stand. His crystal sits on the shelf.
+Quillpup is inside it. She will take the CryMon. CryTown does not get to fall.
+
+### father
+  [max] The Weeping Army is at our gates, father.
+  [max] They burn what they don't steal. CryTown is already bleeding.
+  [max] You're too sick to fight them. I know that.
+  [max] So I'm taking your CryMon. Your Crystal Monster.
+  [max] It sleeps inside the crystal until someone cracks it open.
+  [none] Father does not wake. The Capture Crystal is still on the shelf.
+
+### fatherAfter
+  [max] I already took Quillpup. Sleep. I'll do the fighting.
+  [none] His breath is thin. He does not answer.
+
+### bed
+  [max] Just until they breathe again.
+  [none] Max's empty bed. The CryMon sleep. Cuts close. Specials return.
+
+### shelf
+  [max] This is it. Father's crystal. Quillpup is inside.
+  [none] Max closes her hand around the crystal and pockets it.
+  [max] You're coming. CryTown doesn't get to fall.
+
+### shelfEmpty
+  [max] Dust. The crystal is already open.
+
+### doorLocked
+  [max] Not yet. Father's CryMon is still on the shelf.
+
+### crate
+  [max] A wrap. He won't miss it.
+  [none] A linen wrap under the lid. You take it.
+
+### crateEmpty
+  [max] Splinters and a moth. Empty.
+
+### doorOut
+  [max] Night air. I can do this.
+  [none] Tall grass hides CryMon. Wren's got salve. Bram's on the path. Watch for Calder.
+
+### footsteps
+  [none] Footsteps on the path. Someone followed you out.
+
+### masonFight
+  [mason] Max. Stop right there.
+  [max] Mason.
+  [mason] You walked out with your father's hound and a crystal in your fist.
+  [mason] Where are you going?
+  [max] To the Prison.
+  [mason] This place is a prison. Nobody walks out of the Prison.
+  [max] Shinigami is chained there. Locked up for necromancy.
+  [max] I'm going to free him. He owes me power for it.
+  [mason] You're eight. You cannot win this war.
+  [mason] And you cannot bargain with a necromancer.
+  [max] I'm not asking.
+  [mason] Then your CryMon faints here, and you go back inside where it's safe.
+
+### masonAfter
+  [mason] Fine. Calder is still out there.
+  [max] I won't die first.
+
+### masonWin
+  [none] Mason spits in the dirt. His CryMon won't rise.
+  [mason] Go, then. But the Weeping Army guards the road, and the Prison guards itself.
+  [max] I didn't ask for your blessing.
+  [mason] You didn't need it. You took it anyway.
+  [none] Tall grass hides CryMon. Wren has salve. Bram sells gear up the path. Calder guards the cliff road.
+
+### anneGift
+  [anne] Max. You actually fought.
+  [anne] Take these. Five crystals. Don't waste them on the first moth.
+  [max] I won't.
+  [none] Anne presses five Capture Crystals into Max's palm. Xtals +5.
+
+### anneAgain
+  [anne] Don't lose those. Calder is still out there.
+  [max] I know the way.
+
+### anneReturn
+  [anne] Max. I hoped I wouldn't have to find you again.
+  [max] Anne. What happened?
+  [anne] Your father. While you were fighting Cathleen. His breath just stopped.
+  [max] No. No, he was sleeping. He was just sleeping.
+  [anne] I'm sorry, Max. I didn't want you to hear it from anyone else.
+  [max] Shinigami is a necromancer. If anyone can undo this, it's him.
+
+### cottage
+  [max] The cottage. Father in the bed. My bed.
+
+### lose
+  [max] We still breathe. Crawl back.
+
+### masonFight2
+  [mason] You. Again.
+  [mason] I trained since Calder fell. Three CryMon this time.
+  [mason] No mercy now.
+
+### masonWin2
+  [none] Mason kneels. Three down. He has nothing left to prove.
+
+### soldierSpot
+  [none] A Weeping Army scout spots you. Out of the way, rat. This wood is ours.
+  [max] I'm passing through.
+
+### soldierAfter
+  [none] The soldier sits. Go. Before I change my mind.
+
+### soldierDone
+  [none] They already lost. They will not rise.
+
+### shinigamiSpot
+  [shinigami] Three names. Three graves. I keep them while this cage keeps me.
+  [max] I can get you out. I need your power to bring my father back.
+  [shinigami] Then we have a bargain, if you can survive the bargain.
+  [max] Open the door.
+  [shinigami] CryMare first. Talking later.

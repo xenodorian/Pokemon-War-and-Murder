@@ -12,6 +12,7 @@ import story_ids as I
 import story_text as ST
 import story_party
 GFX_LASS=22
+GFX_LITTLE_GIRL=17   # Anne is a child (pret OBJ_EVENT_GFX_LITTLE_GIRL)
 RESULT=0x800D
 ANNE_START=(37,7); ANNE_STOP=(35,7)
 def callnative(S,fn): S.raw(0x23); S.ptr(fn)
@@ -29,7 +30,7 @@ def anne_scene(r,nat):
     h=header(r,g,n); ev=r32(r,h+4)-0x08000000; po=r32(r,ev+4)-0x08000000
     aid=max(r.b[po+24*i] for i in range(r.b[ev]))+1
     T=SB(); T.lock(); T.faceplayer(); T.msg(ST.ptr_s(r,"ANNE: I am here if you need me."),4); T.release(); T.end()
-    got=add_obj(r,g,n,ANNE_START[0],ANNE_START[1],GFX_LASS,0x08000000+put_script(r,T),8,I.HIDE_ANNE); assert got==aid
+    got=add_obj(r,g,n,ANNE_START[0],ANNE_START[1],GFX_LITTLE_GIRL,0x08000000+put_script(r,T),8,I.HIDE_ANNE); assert got==aid
     left=0x08000000+r.alloc(bytes([0x12,0xFE]),1); right=0x08000000+r.alloc(bytes([0x13,0x13,0xFE]),1)
     S=SB(); S.lockall()
     S.clearflag(I.HIDE_ANNE); S.addobject(aid)

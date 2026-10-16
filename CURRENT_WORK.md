@@ -212,3 +212,9 @@ Plan and decisions: docs/STORY_PLAN.md. Ids: tools/story_ids.py. Text: story_ass
 - Checked: move records, names, descriptions, animation entries and learnsets read back from the built ROM. The boot test (newgame_test) passes: player LEAF, rival MASON, start (4,5).
 - Not checked yet: a battle using the new moves (needs a scripted encounter or encrypted party edit in the harness). Throw animations for Ball Throw and Shadow Ball are not wired in.
 - ROM CRC32 37988abc. IPS regenerated and verified against the outlaw base.
+
+## CryMon reference and Anne (2026-10-16)
+- CryMon source: github.com/xenodorian/CryMon, cloned read-only to /home/user/xenodorian/crymon (commit c63dda5). Dialogue is in content/dialogue.json (talk.* keys). The cottage, Mason and Anne extract is docs/crymon_reference/dialogue_cottage.txt.
+- Anne is a little girl (pret OBJ_EVENT_GFX_LITTLE_GIRL = 17) in Pallet and in the story Anne outside base 1. Her gift is six POKé BALLS and a POTION (CryMon wording; the potion line comes after the balls).
+- ROM CRC32 0340bba9 (computed as 0x0340bba9 from the build log).
+- Not done: Mason's dialogue still uses the earlier adaptation (CryMon text is in the reference file). Max NPC, Viridian arrest cutscene, double battles with Max, soldier 1 and 2 battles and outcomes, XP Share and gun pickup, Arceus/Giratina death system driven by reputation, PC-or-withdraw prompt, throw animations, and the battle test are all still open.

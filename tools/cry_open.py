@@ -5,7 +5,7 @@
 # Father, empty bed, shelf (Sandshrew) and crate (Potion) replace Mom's scene.
 # Oak has no starters and says he was robbed. The ultra-ball man and the
 # Pallet exit block are gone. Mason (Gary's sprite) battles on the way out.
-# Anne (Lass sprite) gives five Poke Balls after that fight.
+# Anne (little girl sprite) gives six Poke Balls and a Potion after that fight.
 # Quillpup -> Sandshrew, Glimmoth -> Pikachu, linen wrap -> Potion,
 # capture crystals -> Poke Balls.
 import sys, struct
@@ -30,6 +30,7 @@ FLAG_BALLS = (0x028, 0x029, 0x02A)
 SANDSHREW, PIKACHU = 27, 25
 POTION, POKEBALL = 13, 4
 GFX_BLUE, GFX_LASS, GFX_LAYING = 72, 22, 34
+GFX_LITTLE_GIRL = 17          # pret OBJ_EVENT_GFX_LITTLE_GIRL: Anne is a child
 T_TABLE = 0x798790
 T_CLASS, T_PIC = 81, 106          # rival early class, Gary battle pic
 PAL = 10
@@ -447,7 +448,8 @@ def main():
     ])
     anne = say(r, [
         "ANNE: {P}. You actually fought.",
-        "ANNE: Take these. Five POKé BALLS.\nDon't waste them on the first moth.",
+        "ANNE: Take these. Six POKé BALLS.\nDon't waste them on the first moth.",
+        "ANNE: And take this POTION too.",
         "{P}: I won't.",
     ])
     up = 0x08000000 + r.alloc(bytes([0x11, 0xFE]), 1)
@@ -611,7 +613,8 @@ def main():
     M.move(anne_id, left)
     M.waitmove(0)
     boxes(M, anne)
-    M.giveitem(POKEBALL, 5)
+    M.giveitem(POKEBALL, 6)
+    M.giveitem(POTION, 1)
     M.setflag(F_ANNE)
     M.setvar(VAR_CRY, 2)
     M.releaseall()
@@ -630,7 +633,7 @@ def main():
     anne_scr = 0x08000000 + put_script(r, anne_talk)
     # (6,10) and (6,9) are open ground south of the door. Anne stands clear of that path.
     objs += obj_bytes(mason_id, GFX_BLUE, 6, 10, mason_scr, HIDE_MASON, 0)
-    objs += obj_bytes(anne_id, GFX_LASS, 9, 8, anne_scr, HIDE_ANNE, 0)
+    objs += obj_bytes(anne_id, GFX_LITTLE_GIRL, 9, 8, anne_scr, HIDE_ANNE, 0)
     oa = r.alloc(bytes(objs), 4)
     d[pev] = no + 2
     r.w32(pev + 4, 0x08000000 + oa)
