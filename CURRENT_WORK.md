@@ -427,3 +427,12 @@ Not done:
 - battle_test sheet: house, wild Pidgey Lv5 vs LEAF Lv1 (1 HP), menu shows BITCH SLAP 20/20, Pidgey Tackle, LEAF faints, white out.
 - CryMon dialogue.json diff: 1152 talk, intro and mercy lines; only 91 (about 8 percent) appear in the repo text or ROM by first-28-character match. The ROM carries the Pokemon-adapted story (Leaf, Mason, Shinigami), the CryMon file is a different cast and setting, so the rest is not ported. No code bug; no change.
 - No ROM or IPS change.
+
+## Reconciliation audit (2026-10-16, against the live repo at 4f46de8)
+Built and checked in the repo (code and notes): LEAF protagonist; Hitmonchan-based LEAF stand-in with Leaf front art and the pret back-sheet top frame (verified equal); moves 355 to 357 with the spec stats; Hitmonchan and LEAF learnset per spec (Mach Punch Lv7, Revenge Lv20, Ball Throw Lv10, Hyperpunch Lv45, Detect removed); Hyperpunch recharge; eight throw animations (Ball Throw alone shows the ball); Anne (little girl, six Poke Balls, potion); Mason's CryMon lines; Max NPC (sprite 17), Viridian arrest, LEAF+Max double battle with partner AI, win and loss branches, traitor line, XP Share, gun pickup, Cerulean and Vermilion Raichu battles, run mode (NORMAL or PLAYABLE), afterlife by reputation, LEAF as a party member, PC-or-withdraw prompt; battle test passes.
+Partial or open:
+- Agent permission allowlist (.claude/settings.json): NOT created. The write was denied earlier; needs the owner to approve it.
+- CryMon dialogue: only the cottage, Mason and Anne lines and the spec lines are ported. The rest of CryMon's dialogue.json is not in the game (a different cast and setting, per the notes). The CryMon repo is NOT gone: it is at github.com/xenodorian/CryMon. The older note saying it is gone is wrong.
+- Test gaps (not build gaps): Mt. Moon sight trigger not reproduced in the emulator; the push branch of script 0x081be11d not exercised; animation timing checked by eye only.
+- Stale "Not done" lines in older sections (throw animations, Bitch Slap animation, PC prompt, reputation death, Max NPC and fights) are superseded by the built items above.
+- docs/handoff/grok_handoff.txt is out of date (its CRC, not-done list and the save-state wording). Use this file and the notes above instead.

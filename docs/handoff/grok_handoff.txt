@@ -1,3 +1,5 @@
+STALE (2026-10-16 reconciliation): this handoff predates the later build passes. Use CURRENT_WORK.md (newest sections) for status.
+
 HANDOFF: Pokemon War and Murder (for Grok)
 Date of snapshot: 2026-10-16. Repo: github.com/xenodorian/Pokemon-War-and-Murder, branch main (work is pushed straight to main, no new branches).
 Last commit at time of writing: 71fcbeb. Progress log: CURRENT_WORK.md (end of file, "Progress status").
