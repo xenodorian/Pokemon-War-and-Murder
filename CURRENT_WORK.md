@@ -203,3 +203,12 @@ Plan and decisions: docs/STORY_PLAN.md. Ids: tools/story_ids.py. Text: story_ass
 - Not done: Hitmonchan learnset, new moves Bitch Slap, Ball Throw and Hyperpunch (needs extended move tables: MOVES_COUNT 355 is a sentinel in several engine routines), throw animations.
 - ROM CRC32 f2862d89. IPS regenerated from the outlaw base (roms/outlaw-2015-09-05 ..., CRC32 5e460b23) and verified byte for byte.
 - The MAX art files (chars/max_front.png, max_back.png) are no longer used by the build.
+
+## Three new move slots and the Hitmonchan learnset (2026-10-16), tools/moves_extend.py
+- Move count 355 -> 358: 355 BITCH SLAP (power 30, accuracy 100, Fighting, 20 PP), 356 BALL THROW (power 50, accuracy 100, Fighting, 15 PP), 357 HYPERPUNCH (Hyper Beam's recharge record: power 150, accuracy 100, Fighting, 5 PP). Their battle animation is TACKLE's for now.
+- Moved tables: move data, names, descriptions and the battle-animation table now live in free space at the end of the ROM. Every 4-aligned pointer to the old tables was repointed (137, 32, 2, 1). No unaligned matches.
+- Sentinel: the two code literals holding the move count (0x40238, 0x933e8) are 358. The other literal-pool 355 words (0x1666d4, 0x237e28, 0x3b8500, 0x46b5fc) are flag or data values (0x163 is FLAG_HIDE_ROUTE25_TM43), left alone.
+- Learnsets for Hitmonchan (107) and LEAF (255): Lv1 Bitch Slap, 7 Mach Punch, 10 Ball Throw, 13 Pursuit, 15 Barrage, 18 Spike Cannon, 20 Revenge, 21 Swift, 23 Ice Punch, 24 Thunderpunch, 25 Fire Punch, 27 Sky Uppercut, 30 Shadow Ball, 33 Mega Punch, 35 Sludge Bomb, 37 Counter, 40 Egg Bomb, 45 Hyperpunch. Detect is removed.
+- Checked: move records, names, descriptions, animation entries and learnsets read back from the built ROM. The boot test (newgame_test) passes: player LEAF, rival MASON, start (4,5).
+- Not checked yet: a battle using the new moves (needs a scripted encounter or encrypted party edit in the harness). Throw animations for Ball Throw and Shadow Ball are not wired in.
+- ROM CRC32 37988abc. IPS regenerated and verified against the outlaw base.
