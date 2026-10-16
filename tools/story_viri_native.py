@@ -23,5 +23,9 @@ def install(r):
         if len(f)==3: sym[f[2]]=int(f[0],16)
     fn=lambda n:(sym[n]&~1)|1
     r.alloc(MAGIC+struct.pack('<2I',fn('viri_prepare'),fn('viri_cleanup')),4)
+    # the player controller's command table (sPlayerBufferCommands): CHOOSEACTION (18) and CHOOSEMOVE (20) go through the partner wrappers
+    T=0x25089c
+    assert struct.unpack('<I',r.b[T+72:T+76])[0]==0x08032bd5 and struct.unpack('<I',r.b[T+80:T+84])[0]==0x08032c91
+    r.w32(T+72,fn('partner_choose_action')); r.w32(T+80,fn('partner_choose_move'))
 if __name__=='__main__':
     r=Rom(sys.argv[1]); install(r); r.save(sys.argv[2]); print('end',hex(r.cur))
