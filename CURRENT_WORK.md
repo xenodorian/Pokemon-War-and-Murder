@@ -1,3 +1,5 @@
+New agents: read docs/FOR_NEW_AGENTS.md first.
+
 # Current work (2026-10-16)
 
 Branch: main (work is pushed straight to main). Source of truth: tools/ and gun/. Full rebuild: tools/build_full.sh PREFIX. Scripts use /home/claude/work, which is a symlink to this repo (created 2026-10-16); out/ is gitignored.
