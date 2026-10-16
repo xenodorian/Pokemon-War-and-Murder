@@ -86,7 +86,7 @@ def whiteout(r,reset):
         orig=r32(r,lit); assert orig==expect,hex(orig)
         S=SB(); S.raw(0x23); S.ptr(fn['max_remove'])
         S.compare(I.VAR_YV,4); S.goto_if(1,'dead')
-        S.raw(0x23); S.ptr(fn['party_empty']); S.compare(0x8007,1); S.goto_if(1,'maxdead')
+        S.raw(0x2b); S._add(struct.pack('<H',I.F_PLAYABLE)); S.goto_if(1,'maxdead')      # PLAYABLE run: any lost battle is death (NORMAL: the usual white-out)
         S.raw(0x05); S.ptr(orig)
         # LEAF (the stand-in for an empty party) fell: HEAVEN with reputation 100 or more, HELL below, like being shot (gun.py 'gotshot')
         S.lab('maxdead'); S.lockall()

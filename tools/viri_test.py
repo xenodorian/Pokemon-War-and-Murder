@@ -10,6 +10,8 @@ if not os.environ.get('VIRI_ROM'):
     subprocess.run(['sh','tools/apply_all.sh',rom],check=True,env=dict(os.environ,TEST_BATTLE='1',TEST_WARP=os.environ.get('VIRI_WARP','3,1,23,38')),capture_output=True)
 KEY={'U':0x40,'D':0x80,'L':0x20,'R':0x10}
 L=[]
+for fl in os.environ.get('VIRI_FLAGS','').split(','):      # e.g. VIRI_FLAGS=0x84a sets F_PLAYABLE from the start
+    if fl: f=int(fl,16); L.append('setbit 3 %x %x'%(0xEE0+(f>>3),1<<(f&7)))
 for f in range(60,600,40): L+=[f"{f} 2",f"{f+4} 0"]
 L+=["700 80","760 0"]
 f=1400

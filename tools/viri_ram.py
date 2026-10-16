@@ -9,5 +9,5 @@ rams=[l.split() for l in (r.stdout+r.stderr).splitlines() if l.startswith('RAM')
 sb=struct.unpack('<I',bytes(int(x,16) for x in rams[0][3:]))[0]; ew=bytes(int(x,16) for x in rams[1][3:]); off=sb-0x2000000
 print('pos',struct.unpack('<hh',ew[off:off+4]),'party',ew[0x24029-0x0:0x24029+1] if False else '')
 fl=off+0xEE0
-print('flags',{hex(f):(ew[fl+(f>>3)]>>(f&7))&1 for f in range(0x840,0x849)})
+print('flags',{hex(f):(ew[fl+(f>>3)]>>(f&7))&1 for f in range(0x840,0x84c)})
 print('arrest flag area ok')

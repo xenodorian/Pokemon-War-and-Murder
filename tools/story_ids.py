@@ -34,3 +34,6 @@ F_VWON=0x847           # the soldiers were beaten (soldier 2 shot himself, MAX l
 F_VLOST=0x848          # the soldiers won (MAX is a splatter for the rest of the game)
 VAR_VIRI=0x4090       # coord-event trigger of the arrest scene: 0 not played, 1 played (vanilla VAR_0x4090, unused by the ROM)
 F_GUNTAKEN=0x849       # LEAF took the GLOCK from the splatter
+# ---- run mode (set in the player's house at the door, once, before leaving)
+F_PLAYABLE=0x84A       # SET = PLAYABLE run (a lost battle is death: heaven or hell by reputation); CLEAR = NORMAL run (white-out to the Pokemon Center)
+F_MODEASKED=0x84B      # the run-mode question was asked
