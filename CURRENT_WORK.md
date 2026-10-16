@@ -358,3 +358,11 @@ Not done:
 - Verified in the emulator only: tools/anim_test.py 60 3 16 20 (Hitmonchan Lv 60 uses HYPERPUNCH on a Pidgey): fist charge, impact flash, second fist and explosions, then the faint. newgame_test and battle_test run OK.
 - Release ROM and IPS regenerated: CRC32 0xa43eaf21 (was 24664883); IPS applied to the Outlaw base reproduces the ROM (checked by CRC).
 - Next: Mt. Moon check, afterlife beats.
+
+## Step 5.3: Mt. Moon B2F Rocket in-game check (2026-10-16)
+- Result: the fix works in the emulator. Talking to the grunt at (35,12) shows his line ("You look like a pussy or a snitch. Are you a POLICE intern or something?"), then the battle transition and "TEAM ROCKET GRUNT would like to battle!", he sends out RATTATA Lv 13, the command menu comes up. No crash. Screens: shots/mtmoon_talk.png, shots/mtmoon_battle.png. Emulator only.
+- Why it looked frozen before: the player was not frozen. Two things hid the grunt: he is hidden by FLAG_HIDE_MISC_KANTO_ROCKETS (0xAD, set in a new game), and his movement type is "face down" with sight 4, so he only sees a player standing south of him in his column. The earlier test warped to a spot where he was not spawned and nothing was in his line. tools/viri_test.py gained the test-only env VIRI_CLEAR=0xad (pokes the flag byte to zero before the door warp so the object spawns). Command used: VIRI_WARP=1,3,40,12 VIRI_CLEAR=0xad TEST_GIVE=27,30 TEST_LEAF=1 viri_test.py "W100 L2 D1 L3 W200 U1 A3 W100 A3 W400 A3 W400".
+- Limit: the walk-into-sight trigger did not fire in this run (player stood at (35,13) directly below him, but only after arriving by walking; I then pressed U and A to talk). The fight starts by talking, which is what the restored pointer fixes. Not investigated further, the sight check is vanilla engine behavior and he is a vanilla object.
+- 0x081be11d (the Seafoam/Victory Road script): the bytes decode as an ordinary script (special, compare, goto_if with valid pointers), nothing broken; not run in game.
+- No code changed, so the release ROM and IPS stay as they were (CRC32 a43eaf21).
+- Next: afterlife beats.
