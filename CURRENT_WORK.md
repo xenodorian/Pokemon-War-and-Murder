@@ -480,3 +480,9 @@ Partial or open:
 ## 2026-10-17 Release GBA now in the repo
 - PokemonWarAndMurder.gba at the repo root was never pushed: the `*.gba` rule in .gitignore skipped it, so GitHub only had the IPS and the stale roms/Pokemon War and Murder.gba (CRC32 0x32dfc7de, four builds old). Added it with `git add -f`.
 - Checked: PokemonWarAndMurder.ips applied to the Outlaw base gives a byte-identical file, 16,777,240 bytes, CRC32 0x873b6735 (includes the decal layering/collision fixes and the female LEAF avatar fix). roms/ files untouched.
+
+## 2026-10-17 Ported save now shows LEAF (new copy, originals untouched)
+- Problem: saves/ported/Pokemon War and Murder.srm (player Broski) predates the female-LEAF fix: playerGender 0, and Continue respawns the saved player object with graphicsId 0 (Red), so the release ROM showed Red on Continue. saves/ported/Pokemon War and Murder.state was also still paired to an old ROM (CRC32 0x1d47da69, not the release 0x873b6735).
+- New: tools/save_leaf.py (gender 1, saved player object Red 0..6 to Leaf 7..13, both slots, sector checksums fixed; always writes a new file). Output in saves/ported/leaf/: Pokemon War and Murder.srm and a fresh Pokemon War and Murder.state (booted the release ROM with that .srm, Continue, raw state wrapped with tools/make_state.py on the 56898276 R36S template), paired to CRC32 0x873b6735.
+- Checked in the emulator only: Continue screen shows the player name in the female colour; overworld is the vanilla Leaf sprite in front of the gym and she walks left, right and down normally; the raw state reloads with Leaf (shots/save_leaf_red_vs_leaf.png, shots/save_leaf_walk.png). Not tested on the R36S itself.
+- saves/ported/*.srm/.state, saves/user_uploads and roms/ are unchanged.
