@@ -25,6 +25,7 @@ def trainer(r):
     e[24:28]=struct.pack('<I',0)
     lv=int(os.environ.get('SNIPER_LV','0'))      # TEST ONLY
     team=[(212,47),(142,46),(215,45),(248,48)]
+    if os.environ.get('SNIPER_SPECIES'): team=[(int(os.environ['SNIPER_SPECIES']),1)]      # TEST ONLY: a one-mon team so a test can win with the stand-in
     e[32:36]=struct.pack('<I',len(team))
     party=b''.join(struct.pack('<HBBHH',0,lv or L,0,sp,0) for sp,L in team)
     e[36:40]=struct.pack('<I',0x08000000+r.alloc(party,4))
@@ -39,7 +40,7 @@ def install(r):
     S=add_obj(r,G,N,SNIPER_SPOT[0],SNIPER_SPOT[1],V.GFX_SOLDIER,0,0,I.HIDE_SNIPER)
     Fi2=SB()
     Fi2.lock(); Fi2.faceplayer()
-    Fi2.raw(0x5c,1); Fi2._add(struct.pack('<HH',tid,0)); Fi2.ptr(T(["SNIPER: You shouldn't have come this far.\nA soldier does his job."])); Fi2.ptr(ST.battle_ptr(r,"SNIPER: ...Not today.")); Fi2.ref('won')
+    Fi2.raw(0x5c,1); Fi2._add(struct.pack('<HH',tid,0)); Fi2.ptr(T(["SNIPER: You shouldn't have come this far.\nA soldier does his job."])); Fi2.ptr(ST.battle_ptr(r,"SNIPER: ...Not today. ")); Fi2.ref('won')
     Fi2.msg(T(["SNIPER: ...Nothing left to say."]),4); Fi2.release(); Fi2.end()
     Fi2.lab('won')
     Fi2.msg(T(["SNIPER: The Commander will hear of this. Run while you can.","The sniper drops his rifle and runs."]),4)

@@ -449,3 +449,9 @@ Partial or open:
 - Sniper (tools/story_sniper.py, map (2,79) final camp): entering row y15 with MAX alive makes her wait, a sniper shoots her (splatter, F_MAXDEAD), box explains, LEAF walks to the sniper at (3,10), says "child murderer", fight vs trainer 751 SNIPER (JRA, Lv 45..48, Scizor/Aerodactyl/Sneasel/Tyranitar). Flags F_SNIPEDONE 0x86D, HIDE_SNIPER 0x86E, HIDE_SMAX 0x86F, HIDE_SSPL 0x870, VAR_SNIPE 0x409C.
 - Emulator-only checks: shots/snipe2.png (scene to the insult), shots/pew.png and shots/maxdie.png (Pewter site and loss splatter), shots/mk_final.png (Mason KO home), newgame_test and battle_test run. The sniper fight itself was not played to the end.
 - Combined release at repo root: PokemonWarAndMurder.ips (Outlaw base to final, 1953 records) and PokemonWarAndMurder.gba, CRC32 0x11c68318 = apply_all output. Existing roms/ files untouched.
+
+## 2026-10-17 Remaining checks (emulator-only) and fixes
+- Pass: Lavender, Celadon (reached from the road at x24, y16 going up; the east side of the gym yard is fenced), Fuchsia site triggers; Max-loss execution splatter at Fuchsia and Pewter; sniper fight won (test: 4 mons at Lv1 vs Machamp Lv80), then the sniper flees and is removed; PLAYABLE-mode loss to the sniper enters the death flow ("The world goes white."); NORMAL loss is the stock white-out; PLAYABLE-mode Mason knock-out lands LEAF in her house with no afterlife; battle_test frames as expected; newgame_test gives LEAF/MASON.
+- Bug fixed: the sniper defeat line lacked its trailing space and showed a stray glyph.
+- Test-only env added: SNIPER_SPECIES, SNIPER_LV (never set for release).
+- Regenerated PokemonWarAndMurder.ips (1953 records) and PokemonWarAndMurder.gba from the single IPS on the Outlaw base: CRC32 0x9f877c68 = apply_all output. roms/ files untouched.
