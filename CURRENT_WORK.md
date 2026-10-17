@@ -476,3 +476,7 @@ Partial or open:
 - Existing saves keep their stored gender. Harness: out/user_new.raw is an old state with gender 0, so viri_test.py now pokes gender 1 at frame 5 (VIRI_MALE=1 disables) and the map load refreshes the avatar to Leaf. battle_test.py and other tools that load that state without viri_test still show Red until the state is regenerated.
 - shots: player_newgame_native.png (before, Red), player_newgame_native_fixed.png (after, Leaf), player_red_vs_leaf_side_by_side.png, leaf_test_warp.png; splatter_all_sheet*.png and splatter_crops redone with Leaf. Older layering_*/collision_* sheets from earlier today still show Red (layering behaviour unaffected).
 - Rebuilt combined IPS applied to the Outlaw base = apply_all output.
+
+## 2026-10-17 Release GBA now in the repo
+- PokemonWarAndMurder.gba at the repo root was never pushed: the `*.gba` rule in .gitignore skipped it, so GitHub only had the IPS and the stale roms/Pokemon War and Murder.gba (CRC32 0x32dfc7de, four builds old). Added it with `git add -f`.
+- Checked: PokemonWarAndMurder.ips applied to the Outlaw base gives a byte-identical file, 16,777,240 bytes, CRC32 0x873b6735 (includes the decal layering/collision fixes and the female LEAF avatar fix). roms/ files untouched.
