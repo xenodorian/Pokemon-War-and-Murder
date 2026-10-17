@@ -28,10 +28,12 @@ for tok in keys.split():
         for _ in range(v): L+=[f"{f} {1 if k=='A' else 2}",f"{f+4} 0"]; f+=40
     else: L+=[f"{f} {KEY[k]:x}",f"{f+16*v-4} 0"]; f+=16*v+8
 for s in range(start,f+60,step): L.append(f"shot {s}")
+for rs in os.environ.get("VIRI_RAM","").split(";"):      # TEST ONLY: VIRI_RAM=frame:hexaddr:count prints those RAM bytes (stderr copied to /tmp/viri_ram.txt)
+    if rs: a,b,c=rs.split(":"); L.append("ram %s %s %s"%(a,b,c))
 L.append(f"end {f+60}")
 open(script,'w').write('\n'.join(L))
 for p in glob.glob('shots/vt_*.ppm'): os.remove(p)
-subprocess.run(['./tools/harness_new',rom,script,'shots/vt'],env=dict(os.environ,LOADSTATE='out/user_new.raw'),capture_output=True,timeout=900)
+_r=subprocess.run(['./tools/harness_new',rom,script,'shots/vt'],env=dict(os.environ,LOADSTATE='out/user_new.raw'),capture_output=True,timeout=900); open('/tmp/viri_ram.txt','wb').write(_r.stderr)
 ims=[]
 for p in sorted(glob.glob('shots/vt_*.ppm')):
     d=open(p,'rb').read(); pa=d.split(b'\n',3); w,h=map(int,pa[1].split()); ims.append(Image.frombytes('RGB',(w,h),pa[3]))

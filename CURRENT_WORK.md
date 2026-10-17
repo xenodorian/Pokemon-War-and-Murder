@@ -455,3 +455,12 @@ Partial or open:
 - Bug fixed: the sniper defeat line lacked its trailing space and showed a stray glyph.
 - Test-only env added: SNIPER_SPECIES, SNIPER_LV (never set for release).
 - Regenerated PokemonWarAndMurder.ips (1953 records) and PokemonWarAndMurder.gba from the single IPS on the Outlaw base: CRC32 0x9f877c68 = apply_all output. roms/ files untouched.
+
+## 2026-10-17 Decal layering and collision audit (emulator-only)
+- Bugs found and fixed (new final stage tools/decal_layer.py, last in apply_all.sh):
+  1. The splat sort hook (tools/splat_order.py, subpriority 0xFF) only matched the splatter image table. The black feather (graphics 155, a 16x16 object) was not covered, so it sorted 8 pixels nearer than the 16x32 player and could be drawn over the head. The hook now forces 0xFF for the splatter table (0x98, 0x99, 0xA1 alias) and the feather table.
+  2. The collision exemption stub (army.py, 0x3B2300) exempted only 0x98, 0x99 and the army splatter alias, so feathers blocked LEAF. Graphics 155 is exempt now.
+- Verified by reading gSprites RAM (base 0x0202063C, tools/sprite_ram_report.py, harness VIRI_RAM) in 12 cases: every splatter/feather sprite has subpriority 0xFF and the same OAM priority as the player (2), the player/NPCs are 0x7A..0x92, so decals are under them; exit code 0 in all.
+- Visual walk tests (tools/layer_test.py): LEAF walks over each decal from W, E, S and N: Pewter, Lavender, Celadon, Fuchsia, Cerulean A, Vermilion B Max splatters, Viridian arrest splatter, final camp sniper splatter, feathers in Pallet, Viridian, Pewter, Cerulean, Vermilion. Sheets: shots/layering_*.png, RAM report shots/layering_ram_report.txt.
+- Collision: tools/decal_scan.py (all 79 decal objects on collision-0 tiles), tools/collision_diff.py (Outlaw base vs final), tools/collision_report.py (sheets shots/collision_*.png, outliers shots/collision_outliers.txt). Max site spots/triggers and the sniper walk path (row y15, x23 column, row y10) are all walkable. Outlier tiles are Viridian (9,4), Cerulean (42..43,11), Fuchsia (26,17..18, same as base): all trees/hedge/fence, blocked as intended (shots/collision_walk_into_trees_rocks.png). Observation only: a soldier object stands on a blocked house tile at Fuchsia (35,15), and Celadon has an object at (-7,21) off the map (both predate this work).
+- Test-only: VIRI_RAM in viri_test.py. CRC32 of the combined IPS applied to the Outlaw base = apply_all output = 0x27808271.
