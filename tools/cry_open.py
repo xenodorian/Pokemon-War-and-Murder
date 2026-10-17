@@ -181,6 +181,7 @@ def u32(d, a):
 # The hack's new game goes title -> naming screen (task state 0x1303b4 calls DoNamingScreen) -> "Are you sure?" confirmation -> start.
 # Both DoNamingScreen calls in that task state are redirected to a stub that writes the names into the save and returns straight to the screen's own return
 # callback, as if the name had been typed: LEAF for the player, MASON for the rival (the rival is never asked in this hack, so it is set here too).
+# LEAF is female (docs/SPEC_ARREST_AND_PARTY.md): the stub also writes playerGender = 1 (SaveBlock2 + 8), so the overworld avatar is FireRed's vanilla Leaf, not Red.
 # The confirmation's Yes/No handler (0x130554) answers Yes by itself.
 SB2_PTR, SB1_PTR = 0x0300500C, 0x03005008
 NAMING_TASK, NAMING_TASK_END, DO_NAMING, SET_MAIN_CB2 = 0x1303B4, 0x130464, 0x0809D954, 0x08000545
@@ -215,6 +216,8 @@ def skip_naming(r):
         str r3, [r1]
         ldr r3, [r2, #4]
         str r3, [r1, #4]
+        movs r3, #1
+        strb r3, [r1, #8]
         ldr r1, =0x{SB1_PTR:x}
         ldr r1, [r1]
         ldr r0, =0x{RIVAL_NAME_OFF:x}

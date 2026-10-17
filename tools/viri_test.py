@@ -18,6 +18,7 @@ for fl in os.environ.get('VIRI_CLEAR','').split(','):      # TEST ONLY: VIRI_CLE
     if fl: f=int(fl,16); L.append('poke 650 %x 0'%(0xEE0+(f>>3)))
 for pk in os.environ.get('VIRI_POKE','').split(','):      # TEST ONLY: VIRI_POKE=0x11ce=0,0x11cf=0 writes bytes at SB1+offset before the door warp (0x11ce = VAR_REP low byte)
     if pk: a,v=pk.split('='); L.append('poke 650 %x %x'%(int(a,16),int(v,0)))
+if not os.environ.get('VIRI_MALE'): L.append('poke2 5 8 1')      # TEST ONLY: the saved test state is from before the gender fix (playerGender 0 = Red); a new game on the current ROM writes 1 (LEAF)
 for f in range(60,600,40): L+=[f"{f} 2",f"{f+4} 0"]
 if not os.environ.get("VIRI_NODOWN"): L+=["700 80","760 0"]
 f=1400
