@@ -12,10 +12,18 @@ import story_ids as I, story_text as ST, story_native as SN, story_viri_native a
 import story_viridian as V
 G=3
 RAICHU=26; ITEM_RARE_CANDY=68
-SITES=[dict(n=3,name='CERULEAN',trig=[(28,21),(28,22),(28,23)],spots=[(24,22),(25,22),(26,22)],hide=(I.HIDE_AS1,I.HIDE_AM,I.HIDE_AS2),done=I.F_ADONE,var=I.VAR_AMB_A,lv=22,rlv=24,
-            team=[58,17,20,24],line="MAX: Them again! RAICHU, help me!"),
-       dict(n=5,name='VERMILION',trig=[(30,18),(30,19),(30,20),(30,21)],spots=[(33,19),(34,19),(35,19)],hide=(I.HIDE_BS1,I.HIDE_BM,I.HIDE_BS2),done=I.F_BDONE,var=I.VAR_AMB_B,lv=30,rlv=32,
-            team=[59,85,112,103],line="MAX: They found me again! RAICHU, with me!")]
+SITES=[dict(n=3,name='CERULEAN',trig=[(28,21),(28,22),(28,23)],spots=[(24,22),(25,22),(26,22)],hide=(I.HIDE_AS1,I.HIDE_AM,I.HIDE_AS2),done=I.F_ADONE,var=I.VAR_AMB_A,lv=22,rlv=24,spl=I.HIDE_SPLA,
+            team=[58,17,20,24],line="Max steps out, RAICHU at her side.\nShe says nothing."),
+       dict(n=5,name='VERMILION',trig=[(30,18),(30,19),(30,20),(30,21)],spots=[(33,19),(34,19),(35,19)],hide=(I.HIDE_BS1,I.HIDE_BM,I.HIDE_BS2),done=I.F_BDONE,var=I.VAR_AMB_B,lv=30,rlv=32,spl=I.HIDE_SPLB,
+            team=[59,85,112,103],line="Max steps out, RAICHU at her side.\nShe says nothing."),
+       dict(n=2,name='PEWTER',trig=[(36,14),(36,15),(36,16)],spots=[(32,15),(33,15),(34,15)],hide=(I.HIDE_CS1,I.HIDE_CM,I.HIDE_CS2),done=I.F_CDONE,var=I.VAR_AMB_C,lv=14,rlv=16,
+            team=[16,19,41,74],line="Max steps out, PIKACHU at her side.\nShe says nothing.",spl=I.HIDE_SPLC,mon=25),
+       dict(n=4,name='LAVENDER',trig=[(30,14),(30,15),(30,16)],spots=[(26,15),(27,15),(28,15)],hide=(I.HIDE_DS1,I.HIDE_DM,I.HIDE_DS2),done=I.F_DDONE,var=I.VAR_AMB_D,lv=36,rlv=36,
+            team=[93,42,97,24],line="Max steps out, RAICHU at her side.\nShe says nothing.",spl=I.HIDE_SPLD),
+       dict(n=6,name='CELADON',trig=[(24,14),(24,15),(24,16)],spots=[(20,15),(21,15),(22,15)],hide=(I.HIDE_ES1,I.HIDE_EM,I.HIDE_ES2),done=I.F_EDONE,var=I.VAR_AMB_E,lv=40,rlv=40,
+            team=[45,71,103,114],line="Max steps out, RAICHU at her side.\nShe says nothing.",spl=I.HIDE_SPLE),
+       dict(n=7,name='FUCHSIA',trig=[(29,23),(29,24),(29,25)],spots=[(25,24),(26,24),(27,24)],hide=(I.HIDE_FS1,I.HIDE_FM,I.HIDE_FS2),done=I.F_FDONE,var=I.VAR_AMB_F,lv=46,rlv=46,
+            team=[112,143,131,142],line="Max steps out, RAICHU at her side.\nShe says nothing.",spl=I.HIDE_SPLF)]
 def trainer(r,team,lv,name):
     b=r.b; tid=None
     for t in range(700,760):
@@ -40,26 +48,32 @@ def site(r,s,nat2):
     for (x,y),gfx,fl in zip(s['spots'],(V.GFX_SOLDIER,V.GFX_GIRL,V.GFX_SOLDIER),s['hide']):
         ids.append(add_obj(r,G,n,x,y,gfx,0,0,fl))
     S1,M,S2=ids
+    SPL=add_obj(r,G,n,s['spots'][1][0],s['spots'][1][1],V.GFX_SPLAT,0,0,s['spl'])
     F=SB(); F.raw(0x2b); F._add(struct.pack('<H',I.F_VWON)); F.goto_if(0,'no')
+    F.raw(0x2b); F._add(struct.pack('<H',I.F_MAXDEAD)); F.goto_if(1,'no')
     F.raw(0x2b); F._add(struct.pack('<H',s['done'])); F.goto_if(1,'no')
     F.lockall(); F.setvar(s['var'],1); F.setflag(s['done'])
     for f in s['hide']: F.clearflag(f)
     for o in ids: F.addobject(o)
     F.msg(T([s['line']]),4)
-    F.setvar(0x4093,RAICHU); F.setvar(0x4094,s['rlv'])
+    F.setvar(0x4093,s.get('mon',RAICHU)); F.setvar(0x4094,s['rlv'])
     V.callnative(F,nat2['viri_prepare'])
     F.raw(0x5c,9); F._add(struct.pack('<HH',tid,1)); F.ptr(ST.battle_ptr(r,"Tch. We lost.")); F.ptr(ST.battle_ptr(r,"Fall back!"))
     V.callnative(F,nat2['viri_cleanup'])
     F.compare(V.RESULT,1); F.goto_if(1,'lost')
     F.msg(T(["SOLDIER: Retreat! Tell the captain she has a RAICHU now!"]),4)
     F.setflag(s['hide'][0]); F.removeobject(S1); F.setflag(s['hide'][2]); F.removeobject(S2)
-    F.msg(T(["MAX: Thank you. I still have a long way to go.","Take this. I found it on a soldier."]),4)
+    F.msg(T(["Max nods once, without a word.","She holds out something she took\nfrom a soldier."]),4)
     F.giveitem(ITEM_RARE_CANDY)
     F.setflag(s['hide'][1]); F.removeobject(M); F.releaseall(); F.end()
     F.lab('lost')
-    F.msg(T(["SOLDIER: Not worth the trouble. Let her go for now."]),4)
-    for o,f in zip(ids,s['hide']): F.setflag(f); F.removeobject(o)
-    F.msg(T(["MAX ran off into the crowd."]),4)
+    F.msg(T(["SOLDIER: The little traitor is done running."]),4)
+    F.playse(V.SE_SHOT); F.raw(0x30)
+    F.setflag(s['hide'][1]); F.removeobject(M); F.clearflag(s['spl']); F.addobject(SPL)
+    F.msg(T(["BANG!","Max goes down. She does not get\nup again."]),4)
+    F.setflag(I.F_MAXDEAD); F.setvar(s['var'],2)
+    F.setflag(s['hide'][0]); F.removeobject(S1); F.setflag(s['hide'][2]); F.removeobject(S2)
+    F.msg(T(["The soldiers leave her where she\nfell."]),4)
     F.releaseall(); F.end()
     F.lab('no'); F.end()
     sc=0x08000000+put_script(r,F)
@@ -70,6 +84,7 @@ def site(r,s,nat2):
     # map load: the actors are hidden (they exist only during the scene script), then the old on-load script
     L=SB()
     for f in s['hide']: L.setflag(f)
+    L.compare(s['var'],2); L.goto_if(1,'ld'); L.setflag(s['spl']); L.goto('ld2'); L.lab('ld'); L.clearflag(s['spl']); L.lab('ld2')
     ms=r32(r,h+8)-0x08000000; a=ms; oldp=None
     while r.b[a]:
         if r.b[a]==3: oldp=r32(r,a+1); newat=a+1; break

@@ -14,9 +14,9 @@ import story_ids as I, story_text as ST
 import story_viridian as V
 G=2
 SITES=[dict(n=80,name='HEAVEN',obj=(8,22),trig=[(7,24),(8,24),(9,24)],hide=I.HIDE_SOULH,
-            lines=["MAX: So this is where it ends for me. Don't mourn, LEAF.","You did what you could. Go on. I will not be back."]),
+            lines=["Max's soul stands beside you.\nShe says nothing, and smiles.","She turns away. She will not be\nback."]),
        dict(n=68,name='HELL',obj=(10,22),trig=[(11,22),(12,22)],hide=I.HIDE_SOULX,
-            lines=["MAX: Of course. Even down here I have an escort.","Don't look for me, LEAF. I will not be back."])]
+            lines=["Max's soul stands beside you,\nsoldiers at her back. Silence.","She is led away. She will not be\nback."])]
 def add_mapscript(r,g,n,typ,ptr):
     """append a map script entry (type, pointer) to the map's table; returns nothing (the table moves to free space)"""
     h=header(r,g,n); ms=r32(r,h+8)-0x08000000 if r32(r,h+8) else None

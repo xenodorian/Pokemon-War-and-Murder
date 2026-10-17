@@ -44,3 +44,14 @@ VAR_AMB_A,VAR_AMB_B=0x4095,0x4096     # coord-event triggers (vanilla unused)
 # ---- Max's soul in the afterlife (story_afterlife.py)
 VAR_SOUL=0x4097          # 0 nothing, 1 the Viridian loss happened and MAX's soul has not been seen, 2 seen (once)
 HIDE_SOULH,HIDE_SOULX=0x854,0x855     # her soul sprite in heaven (2,80) / hell (2,68); SET = hidden
+
+# ---- Max recurring (owner spec 2026-10-16): more double battle sites, executed-on-loss splatters, the sniper scene. HIDE_* SET = hidden.
+HIDE_CS1,HIDE_CM,HIDE_CS2,F_CDONE=0x856,0x857,0x858,0x859        # C Pewter
+HIDE_DS1,HIDE_DM,HIDE_DS2,F_DDONE=0x85A,0x85B,0x85C,0x85D        # D Lavender
+HIDE_ES1,HIDE_EM,HIDE_ES2,F_EDONE=0x85E,0x85F,0x860,0x861        # E Celadon
+HIDE_FS1,HIDE_FM,HIDE_FS2,F_FDONE=0x862,0x863,0x864,0x865        # F Fuchsia
+VAR_AMB_C,VAR_AMB_D,VAR_AMB_E,VAR_AMB_F=0x4098,0x4099,0x409A,0x409B
+HIDE_SPLA,HIDE_SPLB,HIDE_SPLC,HIDE_SPLD,HIDE_SPLE,HIDE_SPLF=0x866,0x867,0x868,0x869,0x86A,0x86B   # her splatter at each site, SET = hidden
+F_MAXDEAD=0x86C          # MAX was executed at a site or in Viridian: no more MAX scenes
+F_SNIPEDONE,HIDE_SNIPER,HIDE_SMAX,HIDE_SSPL=0x86D,0x86E,0x86F,0x870   # the sniper scene at the final base
+VAR_SNIPE=0x409C         # coord trigger of the sniper scene
