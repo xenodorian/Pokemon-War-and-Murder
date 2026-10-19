@@ -4,7 +4,7 @@ usage: battle_test.py OUT_SHEET.png   (needs saves/ported/new_game_empty_party.r
 Expect: wild PIDGEY appears, LEAF (stand-in, Lv 1, 1 HP) goes out with BITCH SLAP 1/20 PP, TYPE/FIGHT."""
 import sys,os,subprocess,glob
 from PIL import Image
-ROOT='/home/claude/work'; os.chdir(ROOT)
+ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__))); os.chdir(ROOT)
 sheet_out=sys.argv[1]
 tmp=os.environ.get('TMPDIR','/tmp')
 rom=os.path.join(tmp,'battle_test_rom.gba'); script=os.path.join(tmp,'battle_test.txt')

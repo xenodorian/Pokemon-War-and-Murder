@@ -3,7 +3,7 @@ usage: viri_test.py "KEYS" OUT.png [STEP] [START]   KEYS as in warp_test.py (U3 
 Needs out/user_new.raw."""
 import sys,os,subprocess,glob
 from PIL import Image
-ROOT='/home/claude/work'; os.chdir(ROOT)
+ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__))); os.chdir(ROOT)
 keys,out=sys.argv[1],sys.argv[2]; step=int(sys.argv[3]) if len(sys.argv)>3 else 30; start=int(sys.argv[4]) if len(sys.argv)>4 else 1400
 rom=os.environ.get('VIRI_ROM') or '/tmp/viri_rom.gba'; script='/tmp/viri_test.txt'
 if not os.environ.get('VIRI_ROM'):

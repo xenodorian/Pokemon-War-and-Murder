@@ -1,8 +1,8 @@
 # CryMon cottage opening, ported onto the War and Murder ROM.
 # usage: cry_open.py IN.gba OUT.gba
 # No naming screens: the player is LEAF and the rival is MASON. New games start in the player's house (the Slums are gone).
-# Player's house 1F uses the CryMon wood tiles (tools/cry_house_tiles.json, baked from the CryMon sprites).
-# Father, empty bed, shelf (Sandshrew) and crate (Potion) replace Mom's scene.
+# Player's house 1F uses stock FireRed metatiles (the CryMon wood tiles in tools/cry_house_tiles.json are no longer used).
+# Father (an NPC lying in a stock bed), empty bed, shelf (Sandshrew) and cupboard (Potion) replace Mom's scene.
 # Oak has no starters and says he was robbed. The ultra-ball man and the
 # Pallet exit block are gone. Mason (Gary's sprite) battles on the way out.
 # Anne (little girl sprite) gives six Poke Balls and a Potion after that fight.
@@ -30,6 +30,7 @@ FLAG_BALLS = (0x028, 0x029, 0x02A)
 SANDSHREW, PIKACHU = 27, 25
 POTION, POKEBALL = 13, 4
 GFX_BLUE, GFX_LASS, GFX_LAYING = 72, 22, 34
+GFX_FATHER = int(os.environ.get('FATHER_GFX', '25'))   # pret OBJ_EVENT_GFX_MAN (TEST ONLY override: FATHER_GFX)
 GFX_LITTLE_GIRL = 17          # pret OBJ_EVENT_GFX_LITTLE_GIRL: Anne is a child
 T_TABLE = 0x798790
 T_CLASS, T_PIC = 81, 106          # rival early class, Gary battle pic
@@ -379,6 +380,58 @@ def paint_house(r, mid):
     put(8, 3, 0x0400 | mid['shelf'])
     put(10, 5, 0x0400 | mid['crate'])
 
+# Player's house 1F, stock FireRed assets only (primary + stock house secondary tileset, no new tiles).
+# Beds are the stock 2F bed (643..645 / 651..653 / 659..661); the shelf is the stock 2F bookshelf
+# (43/44, 51/52, 59/60); the crate is the stock kitchen cupboard (54/55 over 62/63); TV, sink, stairs,
+# plants, door mat and door are the stock 1F tiles in their stock places. B = blocked.
+# 664..666 are the stock bed's left column (643/651/659) on the stock plain floor quads instead of the
+# wall-shadow floor, for Max's bed away from the wall: same stock tiles, recombined (no new art).
+HOUSE_1F = [
+    "8B   32B  32B  46B  47B  32B  45B  43B  44B  32B  32B  32B  32B",
+    "8B   49B  50B  54B  55B  40B  53B  51B  52B  40B  40B  22B  23B",
+    "8B   57   58   62   63   9    61   59   60   9    29   30B  31B",
+    "8B   643  644B 645  1    1    1    1    1    1    37   38   39",
+    "8B   651  652  653  1    1    1    1    1    1    1    1    1",
+    "8B   659  660B 661  1    1    1    664  644B 645  1    1    1",
+    "8B   87   1    1    1    1    1    665  652B 653  1    1    71",
+    "8B   95B  1    1    1    1    1    666  660B 661  1    1    79B",
+    "8B   9    1    18   19   20   1    1    1    1    1    1    1",
+    "8B   8B   8B   26B  27B  28B  8B   8B   8B   8B   8B   8B   8B",
+]
+FATHER_XY = (2, 4)            # on the pillow tile 652; the bed's own top layer is the blanket
+MAX_BED = ((8, 5), (8, 6), (8, 7))
+
+def stock_house(r):
+    """repaint 1F with stock metatiles; the tileset pointers stay stock (the CryMon tiles are not used)"""
+    lay = 0x2d5200
+    w, h = u32(r.b, lay), u32(r.b, lay + 4)
+    mp = u32(r.b, lay + 12) - 0x08000000
+    sec_ptr = u32(r.b, lay + 20) - 0x08000000
+    assert (w, h) == (13, 10) and r.b[sec_ptr] == 1 and r.b[sec_ptr + 1] == 1, 'house layout not stock'
+    for y, row in enumerate(HOUSE_1F):
+        cells = row.split()
+        assert len(cells) == w
+        for x, c in enumerate(cells):
+            mid = int(c.rstrip('B'))
+            old = u16(r.b, mp + 2 * (y * w + x))
+            v = (old & 0xF000) | (0x0400 if c.endswith('B') else 0) | mid
+            r.b[mp + 2 * (y * w + x):mp + 2 * (y * w + x) + 2] = struct.pack('<H', v)
+    # a copy of the stock secondary tileset header (tiles and palettes shared) with 664..666 appended
+    hdr = bytearray(r.b[sec_ptr:sec_ptr + 24])
+    mo, ao = u32(r.b, sec_ptr + 12) - 0x08000000, u32(r.b, sec_ptr + 20) - 0x08000000
+    n = 24                          # stock metatiles 640..663
+    meta = bytearray(r.b[mo:mo + 16 * n])
+    attr = bytearray(r.b[ao:ao + 4 * n])
+    plain = {0x1005: 0x1003, 0x1006: 0x1004, 0x1015: 0x1013, 0x1016: 0x1014}
+    for src in (643, 651, 659):
+        e = list(struct.unpack('<8H', r.b[mo + 16 * (src - 640):mo + 16 * (src - 640) + 16]))
+        e[:4] = [plain.get(v, v) for v in e[:4]]
+        meta += struct.pack('<8H', *e)
+        attr += r.b[ao + 4 * (src - 640):ao + 4 * (src - 640) + 4]
+    hdr[12:16] = struct.pack('<I', 0x08000000 + r.alloc(bytes(meta), 4))
+    hdr[20:24] = struct.pack('<I', 0x08000000 + r.alloc(bytes(attr), 4))
+    r.w32(lay + 20, 0x08000000 + r.alloc(bytes(hdr), 4))
+
 def obj_bytes(local, gfx, x, y, script, flag=0, move=0):
     t = bytearray(24)
     t[0] = local
@@ -398,9 +451,8 @@ def main():
         return
     r.alloc(MARKER, 4)
     d = r.b
-    # ---- house art
-    mid = build_tiles(r)
-    paint_house(r, mid)
+    # ---- house art: stock FireRed metatiles (build_tiles/paint_house, the CryMon wood tiles, are no longer used)
+    stock_house(r)
     # ---- strings
     father = say(r, [
         "The army is at our gates, father.",
@@ -427,7 +479,7 @@ def main():
     shelf_full = say(r, ["There's no room for another\nPOKéMON."])
     crate = say(r, [
         "A wrap. He won't miss it.",
-        "A POTION under the lid.",
+        "A POTION behind the cupboard door.",
     ])
     crate_empty = say(r, ["Splinters and a moth. Empty."])
     door = say(r, ["Not yet. Father's POKéMON\nis still on the shelf."])
@@ -472,7 +524,6 @@ def main():
     # ---- father (was Mom)
     S = SB()
     S.lock()
-    S.face()
     S.chkflag(F_TOOK)
     S.goto_if(1, 'after')
     boxes(S, father)
@@ -483,11 +534,17 @@ def main():
     S.release()
     S.end()
     father_scr = 0x08000000 + put_script(r, S)
-    # Mom's script stays in the ROM. She is hidden: the father is drawn in the bed.
+    # Mom's object becomes the father, lying in his bed facing down (stock adult male sprite).
+    # The bed's blanket is on the BG top layer of metatile 652, so it is drawn over his body.
     ho = 0x3b9708
-    d[ho + 20:ho + 22] = struct.pack('<H', HIDE_MOM)
+    d[ho + 1] = GFX_FATHER
+    d[ho + 4:ho + 8] = struct.pack('<hh', *FATHER_XY)
+    d[ho + 9] = 8               # MOVEMENT_TYPE_FACE_DOWN
+    d[ho + 10:ho + 12] = b'\x00\x00'
+    d[ho + 16:ho + 20] = struct.pack('<I', father_scr)
+    d[ho + 20:ho + 22] = b'\x00\x00'
+    # Mom's map scripts are replaced by one empty on-transition script (later stages extend it); HIDE_MOM is no longer used
     HS = SB()
-    HS.setflag(HIDE_MOM)
     HS.end()
     hlist = bytes([3]) + struct.pack('<I', 0x08000000 + put_script(r, HS)) + b'\x00'
     r.w32(0x350d58, 0x08000000 + r.alloc(hlist, 1))
@@ -586,20 +643,21 @@ def main():
         else:
             tb.raw(0xb6, foe[0] & 255, foe[0] >> 8, foe[1], 0, 0); tb.raw(0xb7); tb.end()
         door_scr = 0x08000000 + put_script(r, tb)
-    # house bg events: old TV sign replaced, plus bed, shelf, crate
+    # house bg events: old TV sign replaced, plus father's bed, Max's bed, shelf, cupboard
     hev = 0x3b974c
     bgs = []
     def bg(x, y, scr):
         return struct.pack('<HHBBHI', x, y, 0, 0, 0, scr)
     bgs.append(bg(6, 1, tv_scr))
-    bgs.append(bg(2, 4, father_scr))
-    bgs.append(bg(3, 4, father_scr))
-    bgs.append(bg(2, 3, father_scr))
-    bgs.append(bg(3, 3, father_scr))
-    bgs.append(bg(2, 6, bed_scr))
-    bgs.append(bg(3, 6, bed_scr))
-    bgs.append(bg(8, 3, shelf_scr))
-    bgs.append(bg(10, 5, crate_scr))
+    fx, fy = FATHER_XY
+    for x, y in ((fx, fy - 1), (fx, fy + 1)):     # the headboard and blanket tiles talk to him too
+        bgs.append(bg(x, y, father_scr))
+    for x, y in MAX_BED:
+        bgs.append(bg(x, y, bed_scr))
+    bgs.append(bg(7, 1, shelf_scr))
+    bgs.append(bg(8, 1, shelf_scr))
+    bgs.append(bg(3, 1, crate_scr))
+    bgs.append(bg(4, 1, crate_scr))
     ba = r.alloc(b''.join(bgs), 4)
     d[hev + 3] = len(bgs)
     r.w32(hev + 16, 0x08000000 + ba)

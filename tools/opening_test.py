@@ -1,5 +1,5 @@
 """Plays the new opening from a cold boot in the mGBA harness: names skipped, house, father, shelf (Sandshrew), crate (Potion), door, Mason, Anne.
-usage: opening_test.py ROM.gba   Writes shots/op_*.png contact sheets under /home/claude/work/shots."""
+usage: opening_test.py ROM.gba   Writes shots/op_*.png contact sheets under shots/."""
 import sys,os,struct,subprocess
 sys.path.insert(0,os.path.dirname(os.path.abspath(__file__))); sys.path.insert(1,'/home/claude/work/tools')
 from PIL import Image
@@ -27,15 +27,15 @@ def seq(*s):
 SB1=0x20255a4      # gSaveBlock1 in EWRAM (position x,y at +0); checked against the pointer at 0x3005008 at the end
 PARTY=0x2024029      # gPlayerPartyCount
 def run(rom,steps,name='op',start=1250):
-    os.chdir('/home/claude/work')
+    os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     L,marks,end=build(steps,start)
     for lab,fr in marks: L+= [f"shot {fr}",f"ram {fr} {SB1:x} 6",f"ram {fr+1} {PARTY:x} 1"]
     # party count, SB1 position, map, flags/vars region of EWRAM
     L+=[f"ram {end-6} 3005008 4",f"ram {end-5} 2000000 262144",f"end {end}"]
-    open('/tmp/claude-0/op.txt','w').write('\n'.join(L))
+    open('/tmp/op.txt','w').write('\n'.join(L))
     for f in os.listdir('shots'):
         if f.startswith(name+'_'): os.remove('shots/'+f)
-    r=subprocess.run(['./tools/harness_new',rom,'/tmp/claude-0/op.txt','shots/'+name],capture_output=True,text=True,timeout=1800)
+    r=subprocess.run(['./tools/harness_new',rom,'/tmp/op.txt','shots/'+name],capture_output=True,text=True,timeout=1800)
     rams=[l.split() for l in (r.stdout+r.stderr).splitlines() if l.startswith('RAM')]
     rp=[x for x in rams if x[2]=='03005008:'][0]; rw=[x for x in rams if x[2]=='02000000:'][0]
     sb1=struct.unpack('<I',bytes(int(x,16) for x in rp[3:]))[0]; ew=bytes(int(x,16) for x in rw[3:]); o=sb1-0x2000000
@@ -54,14 +54,14 @@ def run(rom,steps,name='op',start=1250):
     var=lambda v:struct.unpack('<H',ew[o+0x1000+2*(v-0x4000):o+0x1002+2*(v-0x4000)])[0]
     return marks,dict(flags={hex(f):flags(f) for f in range(0x4EF,0x4F7)},VAR_CRY=var(0x406D),OAK_SCENE=var(0x4050),pos=struct.unpack('<hhbb',ew[o:o+6]),steps=[(lab,pos.get(fr),'party',pc.get(fr)) for lab,fr in marks],sb1=hex(sb1)),ew
 def main(rom):
-    """house: shelf (Sandshrew), crate (Potion), door, then Pallet: Mason fight and Anne's Poke Balls"""
+    """house: shelf (Sandshrew), cupboard (Potion), door, then Pallet: Mason fight and Anne's Poke Balls"""
     steps=[('start',seq(('A',1))),
-     ('to shelf',seq(('D',1),('R',4),('U',2))+[('U',3,30)]),
+     ('to shelf',seq(('U',3),('R',3))+[('U',3,30)]),        # stock house: bookshelf at (7..8,1), stand at (7,2)
      ('shelf 1',seq(('A',1))),('shelf 2',seq(('A',1))),('shelf 3',seq(('A',1))),
      ('got mon',seq(('A',1),('W',30))),
-     ('to crate',seq(('D',2),('R',2))+[('U',3,30)]),
+     ('to crate',seq(('L',3))+[('U',3,30)]),                # kitchen cupboard at (3..4,1), stand at (4,2)
      ('crate 1',seq(('A',1))),('crate 2',seq(('A',1))),('crate done',seq(('A',5),('W',30))),
-     ('to door',seq(('L',6),('D',2))),('door',[('D',30,10),('W',200,0)]),
+     ('to door',seq(('D',5))),('door',[('D',30,10),('W',200,0)]),
      ('outside',seq(('W',120),('D',1),('U',1),('W',200))),
      ('mason',seq(('A',8),('W',60)))]+[('b%d'%i,seq(('R',1),('A',2),('W',50)) if str(i) in os.environ.get('OPENING_SW','').split(',') else seq(('A',1),('W',50))) for i in range(int(os.environ.get('OPENING_B','90')))]
     marks,info,ew=run(rom,steps)

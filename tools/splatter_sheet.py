@@ -3,7 +3,7 @@ For each decal: native screenshot in place (player two tiles away), standing on 
 usage: splatter_sheet.py [ROM.gba]   (builds a TEST ROM with the final apply_all chain, TEST_BATTLE + a house door warp that is patched per decal)"""
 import sys,os,subprocess,glob,struct,shutil
 from PIL import Image,ImageDraw
-ROOT='/home/claude/work'; os.chdir(ROOT); sys.path.insert(0,'tools')
+ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__))); os.chdir(ROOT); sys.path.insert(0,'tools')
 from collision_diff import maps
 M=None
 BASE_ROM='/tmp/splat_test_base.gba'

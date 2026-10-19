@@ -4,7 +4,7 @@ usage: layer_test.py NAME G,N,X,Y OUT.png [POKES] [FLAGS] [CLEAR]    (X,Y = the 
  POKES  = viri_test VIRI_POKE (e.g. 0x1130=2), FLAGS = VIRI_FLAGS, CLEAR = VIRI_CLEAR. Env ROMSRC=ROM.gba tests an already built ROM-less variant (default: rebuild with apply_all)."""
 import sys,os,subprocess,glob
 from PIL import Image,ImageDraw
-ROOT='/home/claude/work'; os.chdir(ROOT)
+ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__))); os.chdir(ROOT)
 name,pos,out=sys.argv[1:4]; pokes=sys.argv[4] if len(sys.argv)>4 else ''; flags=sys.argv[5] if len(sys.argv)>5 else ''; clear=sys.argv[6] if len(sys.argv)>6 else ''
 g,n,x,y=[int(v) for v in pos.split(',')]
 START=(x-2,y)

@@ -5,15 +5,15 @@ sys.path.insert(0,os.path.dirname(os.path.abspath(__file__))); sys.path.insert(1
 from g3 import ENC
 DEC={v:k for k,v in ENC.items()}
 def run(rom,frames=1500,shots=()):
-    os.chdir('/home/claude/work')
+    os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     L=["200 8","204 0"]
     f=300
     while f<frames:
         L+=[f"{f} 1",f"{f+4} 0"]; f+=24
     for s in shots: L.append(f"shot {s}")
     L+=[f"ram {frames-12} 3005008 4",f"ram {frames-11} 300500c 4",f"ram {frames-10} 2000000 262144",f"end {frames}"]
-    open('/tmp/claude-0/ng.txt','w').write('\n'.join(L))
-    r=subprocess.run(['./tools/harness_new',rom,'/tmp/claude-0/ng.txt','shots/ng'],capture_output=True,text=True,timeout=900)
+    open('/tmp/ng.txt','w').write('\n'.join(L))
+    r=subprocess.run(['./tools/harness_new',rom,'/tmp/ng.txt','shots/ng'],capture_output=True,text=True,timeout=900)
     rams=[l.split() for l in (r.stdout+r.stderr).splitlines() if l.startswith('RAM')]
     sb1=struct.unpack('<I',bytes(int(x,16) for x in rams[0][3:]))[0]; sb2=struct.unpack('<I',bytes(int(x,16) for x in rams[1][3:]))[0]
     ew=bytes(int(x,16) for x in rams[2][3:])
