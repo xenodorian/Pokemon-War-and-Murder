@@ -28,7 +28,8 @@ python3 tools/story_ambush.py $T/11d2.gba $T/11e.gba        # MAX's later RAICHU
 python3 tools/story_nero.py $T/11e.gba $T/11f.gba
 python3 tools/story_sniper.py $T/11f.gba $T/11g.gba     # MAX shot by the sniper at the final base, then the sniper fight
 python3 tools/story_mason.py $T/11g.gba $T/11h.gba      # MASON as the rival at every rival encounter, KO-and-carry-home rule              # NERO replaces the General: arrest / execute / crown, father reaction, titles, epilogue cards
-python3 tools/decal_layer.py $T/11h.gba "$OUT"
+python3 tools/decal_layer.py $T/11h.gba $T/12.gba
+python3 tools/text_flush.py $T/12.gba "$OUT"          # last letter of a text box reaches VRAM at the fastest text speed
 python3 - "$OUT" <<'PY'
 import sys,zlib
 d=open(sys.argv[1],'rb').read(); print('rebuilt CRC32',hex(zlib.crc32(d)))
