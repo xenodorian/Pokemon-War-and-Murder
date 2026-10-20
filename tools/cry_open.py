@@ -33,7 +33,7 @@ GFX_BLUE, GFX_LASS, GFX_LAYING = 72, 22, 34
 GFX_FATHER = int(os.environ.get('FATHER_GFX', '25'))   # pret OBJ_EVENT_GFX_MAN (TEST ONLY override: FATHER_GFX)
 GFX_LITTLE_GIRL = 17          # pret OBJ_EVENT_GFX_LITTLE_GIRL: Anne is a child
 T_TABLE = 0x798790
-T_CLASS, T_PIC = 81, 106          # rival early class, Gary battle pic
+T_CLASS, T_PIC = 52, 106          # RIVAL (class 81 is past the name table and spills garbage into the battle intro)
 PAL = 10
 KEEP = {0x12, 0x13, 0x14, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F}
 
@@ -253,6 +253,97 @@ def skip_naming(r):
     # after the confirmation the speech copies rival preset 0 into the save (SetDefaultName stage 1): that preset is MASON
     r.w32(RIVAL_PRESETS, pm + 8)
     d[YESNO_CALL:YESNO_CALL + 4] = bytes([0x00, 0x20, 0xC0, 0x46])      # movs r0,#0 ; nop  (always Yes)
+    loading_cover(r)
+
+def loading_cover(r):
+    """The name confirm would print LEAF / MASON and auto-answer Yes. Cover it: black screen, "Loading...", about two seconds, no Yes/No."""
+    d = r.b
+    msg = enc('Loading...')
+    for a in (0x71C3D0, 0x71C48B):
+        n = bytes(d[a:a + 80]).index(0xFF) + 1
+        assert len(msg) <= n, (hex(a), len(msg), n)
+        d[a:a + len(msg)] = msg
+    assert d[0x1304EE:0x1304F0] == bytes([0x19, 0x20])
+    d[0x1304EE] = 0x78                                          # 120 frames, about two seconds, before the auto-Yes
+    assert d[0x130536:0x13053A] == bytes([0xDF, 0xF7, 0x13, 0xFD])
+    d[0x130536:0x13053A] = bytes([0xC0, 0x46, 0xC0, 0x46])       # do not create the Yes/No window
+    def cover(body, dest):
+        # ARMv4T only: no pop {r0, lr} (that encodes as Thumb-2 and crashes the GBA)
+        return 0x08000000 + r.fn("""
+            push {r4, lr}
+            mov r4, r0
+            ldr r0, =0x04000050
+            %s
+            mov r0, r4
+            pop {r4}
+            pop {r3}
+            ldr r2, =0x%08x
+            mov lr, r3
+            bx r2
+            .ltorg
+        """ % (body, dest)) + 1
+    dark = cover('movs r1, #0xFE\nstrh r1, [r0]\nmovs r1, #16\nstrh r1, [r0, #4]', 0x08130465)
+    clear_a = cover('movs r1, #0\nstrh r1, [r0]\nstrh r1, [r0, #4]', 0x08130161)
+    clear_b = cover('movs r1, #0\nstrh r1, [r0]\nstrh r1, [r0, #4]', 0x08130229)
+    for a in (0x130384, 0x130E5C):
+        assert u32(d, a) == 0x08130465
+        r.w32(a, dark)
+    assert u32(d, 0x13062C) == 0x08130161 and u32(d, 0x13064C) == 0x08130229
+    r.w32(0x13062C, clear_a)
+    r.w32(0x13064C, clear_b)
+    # The naming screen's own Yes/No (0x080EC304) is left alone: the player still uses it to accept or reject a nickname.
+    # New game never reaches it. Both DoNamingScreen calls already jump to the LEAF/MASON stub.
+
+def hide_confirm_menu(r):
+    """The name-confirm Yes/No is a second menu (naming screen, not the task at 0x08130464).
+    Do not draw it. After about two seconds of Loading..., answer Yes."""
+    d = r.b
+    create, decide = 0xEC304, 0xEC32A
+    if d[create:create + 4] == bytes([0xC0, 0x46, 0xC0, 0x46]):
+        return
+    assert d[create:create + 4] == bytes([0x0B, 0xF0, 0xA8, 0xFA]), d[create:create + 4].hex()
+    assert d[decide:decide + 4] == bytes([0x23, 0xF0, 0xCD, 0xFE]), d[decide:decide + 4].hex()
+    d[create:create + 4] = bytes([0xC0, 0x46, 0xC0, 0x46])
+    stub = r'''
+push {r5, lr}
+ldr r0, =0x03005090
+lsls r1, r4, #2
+adds r1, r1, r4
+lsls r1, r1, #3
+adds r5, r0, r1
+ldrh r1, [r5, #0x26]
+cmp r1, #0
+beq init
+cmp r1, #120
+bhi init
+subs r1, #1
+strh r1, [r5, #0x26]
+cmp r1, #0
+beq yes
+wait:
+movs r0, #2
+rsbs r0, r0, #0
+b ret
+init:
+movs r1, #120
+strh r1, [r5, #0x26]
+b wait
+yes:
+movs r0, #0
+ret:
+pop {r5}
+pop {r1}
+bx r1
+.ltorg
+'''
+    # the naming stub's padding is inside BL range of this site; the free tail of the ROM is not
+    at = 0x3B4DE8
+    while d[at] != 0xFF:
+        at += 1
+    at = (at + 3) & ~3
+    code = r.asm(stub, at)
+    r.put(at, code)
+    r.bl(decide, at)
 
 # ---------------------------------------------------------------------------------------------- new game starts at home
 NEWGAME_WARP = 0x54A00        # movs r0,#6 (y); .. movs r0,#1; movs r1,#0x58; movs r3,#6 (x)
@@ -484,7 +575,7 @@ def main():
     crate_empty = say(r, ["Splinters and a moth. Empty."])
     door = say(r, ["Not yet. Father's POKéMON\nis still on the shelf."])
     tv = say(r, ["Dust on the screen.\nNobody has turned it on."])
-    oak = say(r, ["OAK: I was robbed.\nThe balls on that table are empty.\nThey took every POKéMON I had."])
+    oak = say(r, ["OAK: I have no POKéMON."])
     # CryMon masonFight lines (content/dialogue.json talk.masonFight), CryMon -> POKéMON and crystal -> ball
     mason_intro = say(r, [
         "MASON: {P}. Stop right there.",
@@ -521,6 +612,7 @@ def main():
     ])
     up = 0x08000000 + r.alloc(bytes([0x11, 0xFE]), 1)
     left = 0x08000000 + r.alloc(bytes([0x12, 0xFE]), 1)
+    right = 0x08000000 + r.alloc(bytes([0x13, 0x13, 0x13, 0x13, 0xFE]), 1)
     # ---- father (was Mom)
     S = SB()
     S.lock()
@@ -725,6 +817,11 @@ def main():
     boxes(M, anne)
     M.giveitem(POKEBALL, 6)
     M.giveitem(POTION, 1)
+    M.close()
+    M.move(anne_id, right)
+    M.waitmove(0)
+    M.remobj(anne_id)
+    M.setflag(HIDE_ANNE)
     M.setflag(F_ANNE)
     M.setvar(VAR_CRY, 2)
     M.releaseall()
@@ -763,6 +860,11 @@ def main():
     H.ptr(0x08165465)
     hide_scr = 0x08000000 + put_script(r, H)
     r.w32(0x16545b, hide_scr)
+    # coord events do not run on the warp-in tile, so Mason is also an on-frame script the moment VAR_CRY becomes 1
+    oft = u32(d, 0x165460) - 0x08000000
+    assert u16(d, oft) == VAR_OAK_SCENE and u16(d, oft + 2) == 2, d[oft:oft + 8].hex()
+    tab = struct.pack('<HHI', VAR_CRY, 1, mason_scr) + struct.pack('<HHI', VAR_OAK_SCENE, 2, u32(d, oft + 4)) + b'\x00' * 8
+    r.w32(0x165460, 0x08000000 + r.alloc(tab, 4))
     update_quest_text(r)
     rename_rival(r)
     skip_naming(r)

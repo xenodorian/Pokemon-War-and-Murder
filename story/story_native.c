@@ -2,7 +2,11 @@
 typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32;
 #include "../stage2/data.h"
 #include "../leg2/killcount.h"
+#ifdef USE_FF_GEN
+#include "/tmp/ff_story_gen.h"
+#else
 #include "story_gen.h"
+#endif
 #define SB1 (*(u8* volatile*)0x03005008)
 #define PARTY ((u8*)0x02024284)
 #define COUNT (*(volatile u8*)0x02024029)
@@ -48,6 +52,22 @@ static void drop(int i){
     ZeroMonData(PARTY+100*(n-1)); COUNT=(u8)(n-1);
 }
 static int is_leaf_perm(int i){ return GetMonData(PARTY+100*i,11,0)==SP_MAX && GetMonData(PARTY+100*i,1,0)!=STNDOT; }
+static int leaf_fainted(void){
+    for(int i=0;i<COUNT;i++) if(is_leaf_perm(i) && GetMonData(PARTY+100*i,0x39,0)==0) return 1;
+    return 0;
+}
+// GSV7 = 1 when a permanent LEAF (not the empty-party stand-in) is in the party at 0 HP
+void leaf_down(void){ GSV(7)=leaf_fainted()?1:0; }
+// GSV7 = 1 when the last heal spot is a real center, 0 when it is still the player's house (new-game default)
+void heal_kind(void){
+    u8* w=SB1+0x1C;
+    GSV(7)=(w[0]==4 && w[1]==0)?0:1;
+}
+// GSV7 = 1 hell (karma < 0), 0 heaven. Zero karma is heaven.
+void soul_gate(void){
+    int k=(int)*var(BLESS_VAR)-(int)kc_total();
+    GSV(7)=(k<0)?1:0;
+}
 // removes the stand-in LEAF (the stand-in for a trainer with no POKeMON at all) from the party; the real LEAF stays
 void max_remove(void){
     for(int i=0;i<COUNT;i++) if(GetMonData(PARTY+100*i,11,0)==SP_MAX && GetMonData(PARTY+100*i,1,0)==STNDOT){ drop(i); return; }
@@ -90,6 +110,9 @@ void max_after(void){
     SAVEDCB=cb;
     if((OUTCOME==2||OUTCOME==3) && (BTF&8) && is_mason(OPP)){      // MASON won: no white-out, no afterlife (either run mode): he knocks LEAF out and carries her home
         SetupScript((const u8*)MASON_KO_SCRIPT); SetMainCallback2(CB2_CONTINUE); return;
+    }
+    if(*var(0x40EF)!=4 && leaf_fainted()){      // permanent LEAF is at 0 HP: death. VAR_YV 4 (Yveltal blackout) stays with the white-out script
+        SetupScript((const u8*)DEATH_SCRIPT); SetMainCallback2(CB2_CONTINUE); return;
     }
     if(*var(VAR_BSTART)==1 && OUTCOME==7){      // caught with a full party that holds LEAF: ask PC or withdraw
         *var(VAR_BSTART)=0; leaf_prompt_prep();
