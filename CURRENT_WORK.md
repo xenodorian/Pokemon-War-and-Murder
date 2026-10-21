@@ -4,6 +4,9 @@ New agents: read docs/FOR_NEW_AGENTS.md first.
 
 Branch: main (work is pushed straight to main). Source of truth: tools/ and gun/. Full rebuild: tools/build_full.sh PREFIX. Scripts use /home/claude/work, which is a symlink to this repo (created 2026-10-16); out/ is gitignored.
 
+## 2026-10-21 Pokemon War is a second release name
+- `Pokemon War.gba` at the repo root is the same build as PokemonWarAndMurder.gba (CRC32 0x8e5fa45d). GitROMs treats the two names as different games. publish_rom.sh writes both from one build. The old `roms/Pokemon War and Murder.gba` stays deleted.
+
 ## Not in the repo (and why)
 - ROMs and states (*.gba, *.state): gitignored (copyrighted, large). The unpatched base ROM f4046af2-outlaw-2015-09-05.gba (16,777,240 bytes) is required; tools expect out/c3.gba (an intermediate build, not stored).
 - All built outputs in out/ (533 ROM builds, 8.4 GB) and test screenshots in shots/.
