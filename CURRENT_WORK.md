@@ -604,3 +604,10 @@ Partial or open:
 15. For the other FE8 allies with animations in xenodorian/PoekEmblem decomp_overlay/graphics/battle_anims/ally_attack (for example Cormag and Innes): each becomes a captain in the remaining cities, with name, profile art, and a final Pokemon in their own roster. That final Pokemon is what gets captured.
     - Repo not yet attached in this session. It needs to be attached before items 14 and 15 can start.
     - Ambiguity: "Kestral" is "KESTREL" in the ROM. Treated as the same trainer.
+
+## Item E status (2026-10-21): PoekEmblem attached
+- xenodorian/PoekEmblem attached with push access. Shallow clone at /home/user/poekemblem, HEAD 1e6df09 (Leg21). Context reload requested.
+- It is a separate project (Fire Emblem story in FireRed, its own Current_Work.md and decomp). Its Eirika is species EIRIKA in slot 276; the eight FE8 ally species are slots 252 to 259.
+- Count check: decomp_overlay/graphics/battle_anims/ally_attack has nine folders: Cormag, Dozla, Duessel, Eirika, Innes, Joshua, Larachel, Myrrh, Tana. Eirika goes to Kestrel. That leaves eight allies for nine remaining captains (Hawthorn, Marlow, Vance, Corvin, Drayton, Ashford, Thorne, Brandt, Lockhart).
+- DECISION (best judgement, pending owner review): one captain gets no FE8 ally and keeps its normal team and pokemon. Which captain is the ninth: the last captain in the base order, Lockhart, unless the owner says otherwise.
+- Not started: the transplant of Eirika and the ally art, names and pokemon from PoekEmblem into this ROM (a different base ROM, so this needs its own pipeline).
