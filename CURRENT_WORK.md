@@ -555,3 +555,12 @@ Partial or open:
 - Emulator test on the current ROM (mGBA): A held, tapped and pulsed all work in the menu. The ROM does not drop held or pulsed A. Not tested on gpSP or the console.
 - Open: what the updater changes, which core each entry runs, and what the physical B does. The doc lists the on-console checks that settle it.
 - The earlier note ("RetroArch was already handing the game the normal buttons") was not verified on a device and is not relied on. The SWAP hook bug fixed earlier today was a separate, real bug.
+
+## 2026-10-21 CONTROLS: in-game input mapping (tools/controls_menu.py)
+- New start-menu entry CONTROLS, after the player's name entry. It names each of the ten GBA buttons in turn ("Press A." ... "Press RIGHT."). Press the button you want for it. The game then shows which signal that press arrived as ("B is set. The game sees that button as SELECT."), or "No button pressed. UP stays as it was." after 5 seconds. Each message stays one second; no button press is needed to continue.
+- The key reader hook (bl at 0x5F4, stub 0x175228, now a jump to the full hook) translates the raw keys through the saved mapping before the game sees them. BUTTON MODE SWAP still applies after it.
+- Reset: hold START + SELECT + UP together. This is checked on the raw keys before the mapping, so it works however the mapping is set. The game sees no keys on that frame.
+- Saved in vars 0x408C (magic 0xC7A1) and 0x408D..0x408F (4-bit source key per GBA key). Unused in pret, the Outlaw map scripts and the repo tools. No magic means the normal layout. The mapping lives in the save, so a ROM update keeps it.
+- Limit: the game sees only the ten GBA signals the emulator sends. It cannot tell physical X from Y. A physical button that sends nothing shows "No button pressed".
+- Checked in the emulator only (mGBA harness): the menu entry and description; all ten prompts and acknowledgements with B and SELECT swapped and UP skipped; the swapped layout takes effect (the physical B acts as SELECT, SELECT backs out); START + SELECT + UP resets to the normal layout with no side effect; newgame_test passes. Not tested: a save and reload of the mapping, and the console.
+- Release: the current PokemonWarAndMurder.gba with this stage applied. CRC32 0xc2774680, both release names and both IPS files. The IPS reproduces it from the Outlaw base. tools/apply_all.sh now ends with this stage (the chain runs, but still does not reproduce the release byte for byte; see the 2026-10-21 notes above).
