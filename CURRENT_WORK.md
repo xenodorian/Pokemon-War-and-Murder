@@ -536,3 +536,8 @@ Partial or open:
 - New Game now checks gSaveFileStatus first. Status 1 (a valid save) loads that save, the same way Continue does, and does not run the auto-select. An empty cart still starts one new game as LEAF.
 - Release is still only PokemonWarAndMurder.gba. CRC32 0x324a4267. Not booted in the emulator. Checked by reading the new-game branch and the gate at 0x175260.
 
+## 2026-10-21 Buttons were broken inside the ROM
+- Renaming the gba, srm, state and port script cannot fix this. RetroArch was already handing the game the normal buttons. The SWAP hook at 0x175228 loaded the key struct into r1 and then popped over it, so the rest of the key reader used the return address instead of 0x030030F0. No held button was seen, on every button mode, including HELP.
+- The hook now loads 0x030030F0 into r1 and returns with pop {r0, pc}. SWAP still exchanges A and B only when BUTTON MODE is SWAP. HELP, LR and L=A are unchanged. 13 bytes changed, all inside the old stub. The following routine at 0x175260 is unchanged. A second run changes nothing.
+- Release is still only PokemonWarAndMurder.gba. CRC32 0x8e5fa45d. Not booted in the emulator.
+

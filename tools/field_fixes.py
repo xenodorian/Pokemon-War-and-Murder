@@ -208,11 +208,10 @@ bx r1
 ''' % (leaf, death, CB_CONT, old, SETUP_SCRIPT + 1, SET_CB + 1)
 
 def controls(r):
-    """OPTIONS, BUTTON MODE: HELP, LR, L=A, or SWAP. SWAP exchanges A and B. HELP is the normal layout."""
+    """OPTIONS, BUTTON MODE: HELP, LR, L=A, or SWAP. SWAP exchanges A and B. HELP is the normal layout.
+    The hook must leave r1 pointing at the key struct (0x030030F0). The first version popped that
+    pointer back off, so the game never saw a held button."""
     d = r.b
-    if d[0x5F4:0x5F8] != bytes([0x4B, 0x40, 0x0D, 0x49]):
-        return
-    assert d[0x3CC30C] == 3
     stub = r'''
 push {r0, lr}
 eors r3, r1
@@ -235,13 +234,21 @@ bics r3, r1
 orrs r3, r0
 noswap:
 ldr r1, =0x030030f0
-pop {r0}
-pop {r1}
-bx r1
+pop {r0, pc}
 .ltorg
 '''
     at = 0x175228
     code = r.asm(stub, at)
+    assert len(code) <= 56, len(code)
+    if d[0x5F4:0x5F8] != bytes([0x4B, 0x40, 0x0D, 0x49]):
+        broken = bytes([0x01, 0xBC, 0x02, 0xBC, 0x08, 0x47])
+        if broken not in d[at:at + 56]:
+            return
+        d[at:at + len(code)] = code
+        d[at + len(code):at + 56] = b'\x00\xbf' * ((56 - len(code)) // 2)
+        print('controls repaired', hex(at))
+        return
+    assert d[0x3CC30C] == 3
     assert d[at:at + len(code)] == b'\xff' * len(code), (hex(at), len(code))
     r.put(at, code)
     r.bl(0x5F4, at)
