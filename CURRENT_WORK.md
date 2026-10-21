@@ -587,7 +587,7 @@ Partial or open:
 7. Rename the custom species Sandstorm (slot 251) to Sandgrave. Move 201 (Sandstorm, the weather move) keeps its name. Move names and species names are separate tables.
 8. Sandgrave gets a new Ground move, SAND GRAVE: power 120, 100% paralysis chance. Animation: the tomb rock animation with the rocks recoloured a sandy light brown, and a strong screen shake on every rock drop.
 9. Sand Grave effect text: the target is swallowed by the ground and buried up to the neck in dirt.
-10. Sand Grave is learned at level 35 (per the owner's "when Sandshrew evolves into Sandgrave at 35"). Interpreted as the evolution level of Sandslash into Sandgrave, which is 35 in the ROM; confirm if the owner meant Sandshrew.
+10. Sandslash evolves into Sandgrave at level 35 (owner confirmed 2026-10-21). Sand Grave is learned on that evolution.
 11. Sandgrave learns Hyper Beam at level 40. The ROM currently has it at 35, so this moves it.
 
 ### D. Shackle Balls and captains
@@ -611,3 +611,9 @@ Partial or open:
 - Count check: decomp_overlay/graphics/battle_anims/ally_attack has nine folders: Cormag, Dozla, Duessel, Eirika, Innes, Joshua, Larachel, Myrrh, Tana. Eirika goes to Kestrel. That leaves eight allies for nine remaining captains (Hawthorn, Marlow, Vance, Corvin, Drayton, Ashford, Thorne, Brandt, Lockhart).
 - DECISION (best judgement, pending owner review): one captain gets no FE8 ally and keeps its normal team and pokemon. Which captain is the ninth: the last captain in the base order, Lockhart, unless the owner says otherwise.
 - Not started: the transplant of Eirika and the ally art, names and pokemon from PoekEmblem into this ROM (a different base ROM, so this needs its own pipeline).
+
+## Owner decisions (2026-10-21)
+- Sandslash evolves into Sandgrave at level 35 (item 10 corrected above).
+- Kestrel is the trainer name (KESTREL in the ROM). Eirika replaces Kestrel.
+- Lockhart remains as he is (no FE8 ally). The ninth captain in item 15 is Lockhart and is unchanged.
+- PoekEmblem: do not clone the whole repo. Only the files needed for the transplant are cloned (sparse checkout).
