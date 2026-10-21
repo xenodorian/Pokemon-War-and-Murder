@@ -549,3 +549,8 @@ Partial or open:
 - Checked in the emulator only: from the door lawn, one step south walks onto the old cross tiles and then right; from the church steps, right walks onto the old solid lawn; two steps south from the cross stays out of the church. Not tested on a device.
 - Both release names are this build. CRC32 0x2f906b52.
 
+
+## 2026-10-21 R36S controls finding (docs/R36S_CONTROLS.md)
+- X acting as A in menus and Y acting as B is gpSP's Turbo A and Turbo B (RetroPad X and Y). mGBA does not map X or Y. The affected game entry is launching in gpSP, not mGBA. The ROM cannot cause this: a GBA has no X or Y.
+- This corrects the earlier note ("RetroArch was already handing the game the normal buttons"), which was not checked on a device. The SWAP hook bug fixed on 2026-10-21 was a separate, real bug.
+- Fix is on the console: default GBA emulator to mGBA (system), or per-game Alternative emulator; or unbind X and Y in gpSP and save a core remap. See the doc.
