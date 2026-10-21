@@ -675,3 +675,9 @@ Partial or open:
 - Verified in the built ROM: all 15 lists end 56, 89; boot test passes.
 - Release: PokemonWarAndMurder.gba and IPS, CRC32 0x96042281.
 - Task 13 (SHACKLE option on the captain's bless/shoot menu, +5 Liberty capture, +10 Liberty shoot, roster effects): not started.
+
+## Owner task list, pass 6 (2026-10-21): task 13 blocked, analysis only
+- The bless / rob / shoot prompts for a defeated trainer are trainer_script in tools/leg2.py. It is not part of tools/apply_all.sh, so the ROM copy is not rebuilt by the chain. Adding SHACKLE means a new stage that rewrites that script (the BLESS TAG question at the 'ask' step, then a third question when the defeated trainer is a captain: class 44 in the trainer table) and gives 'shackle' its own branch.
+- Shackle capture adds the captain to the roster as a Pokemon. That needs the captain's species from task 15 (the FE8 ally Pokemon), so task 15 has to come first, or the captain placeholder is the wrong Pokemon.
+- The shoot path already gives the captain's party (shoot_do and 'You took their POKeMON!'). The liberty counter is VAR 0x40AC (gun.c LIB_VAR); +10 on shoot needs adding.
+- Order I recommend: task 15 species and roster first, then task 13 as a new stage in apply_all.sh.
