@@ -522,3 +522,7 @@ Partial or open:
 ## 2026-10-21 Walk behind the church
 - Pallet grass at (7,8) and (8,8), the two solid tiles between the player's house and the back of the church, is open again. The house wall and the church itself stay solid. field_fixes.py no longer closes those tiles.
 - Release is still only PokemonWarAndMurder.gba. CRC32 0xc168d25e. Not booted in the emulator.
+
+## 2026-10-21 Button mode can be reset in the game
+- The key reader was unchanged from the Outlaw base. OPTIONS now has a fourth BUTTON MODE, SWAP, which exchanges A and B. HELP is the normal layout, LR and L=A are unchanged. The choice is stored in the save, the same place as the old button mode.
+- Release CRC32 checked after publish. Not booted in the emulator.

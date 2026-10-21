@@ -207,6 +207,50 @@ bx r1
 .ltorg
 ''' % (leaf, death, CB_CONT, old, SETUP_SCRIPT + 1, SET_CB + 1)
 
+def controls(r):
+    """OPTIONS, BUTTON MODE: HELP, LR, L=A, or SWAP. SWAP exchanges A and B. HELP is the normal layout."""
+    d = r.b
+    if d[0x5F4:0x5F8] != bytes([0x4B, 0x40, 0x0D, 0x49]):
+        return
+    assert d[0x3CC30C] == 3
+    stub = r'''
+push {r0, lr}
+eors r3, r1
+ldr r0, =0x0300500c
+ldr r0, [r0]
+cmp r0, #0
+beq noswap
+ldrb r0, [r0, #0x13]
+cmp r0, #3
+bne noswap
+movs r0, #3
+ands r0, r3
+movs r1, #1
+ands r1, r0
+lsrs r0, r0, #1
+lsls r1, r1, #1
+orrs r0, r1
+movs r1, #3
+bics r3, r1
+orrs r3, r0
+noswap:
+ldr r1, =0x030030f0
+pop {r0}
+pop {r1}
+bx r1
+.ltorg
+'''
+    at = 0x175228
+    code = r.asm(stub, at)
+    assert d[at:at + len(code)] == b'\xff' * len(code), (hex(at), len(code))
+    r.put(at, code)
+    r.bl(0x5F4, at)
+    name = say(r, ["SWAP"])[0]
+    tab = struct.pack('<IIII', 0x08419E46, 0x08419E4F, 0x08419E4B, name)
+    r.w32(0x88A94, 0x08000000 + r.alloc(tab, 4))
+    d[0x3CC30C] = 4
+    print('controls', hex(at), 'swap', hex(name))
+
 def header(d, g, n):
     gp = u32(d, GROUPS + 4 * g) - 0x08000000
     return u32(d, gp + 4 * n) - 0x08000000
@@ -404,6 +448,7 @@ def install(r):
         loading_cover(r)
     menu(r)
     class_name(r)
+    controls(r)
     church(r)
     oak(r)
     anne(r)
