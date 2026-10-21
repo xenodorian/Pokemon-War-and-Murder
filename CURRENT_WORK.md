@@ -681,3 +681,15 @@ Partial or open:
 - Shackle capture adds the captain to the roster as a Pokemon. That needs the captain's species from task 15 (the FE8 ally Pokemon), so task 15 has to come first, or the captain placeholder is the wrong Pokemon.
 - The shoot path already gives the captain's party (shoot_do and 'You took their POKeMON!'). The liberty counter is VAR 0x40AC (gun.c LIB_VAR); +10 on shoot needs adding.
 - Order I recommend: task 15 species and roster first, then task 13 as a new stage in apply_all.sh.
+
+## Owner task list, pass 7 (2026-10-21): task 14 done
+- 14 (EIRIKA replaces KESTREL, Viridian captain, trainer 24): tools/eirika_kestrel.py (new last-but-one stage, before shackle_item).
+  - Species EIRIKA in free slot 256 (donor SCIZOR 212): stats, types, abilities, yields, egg data copied from Scizor. Front and back art from PoekEmblem's Eirika portrait crop (story_assets/eirika/). Learnset is PoekEmblem's sEirikaLevelUpLearnset (18 moves, FireRed move ids).
+  - Not transplanted yet: Eirika's icon, cry and footprint (copied from Scizor), and her Pokedex entry (none).
+  - Team: ELEKID 11, CHINCHOU 12, CLEFFA 13, EIRIKA 15 (Aipom and Corsola removed, Eirika last). Name EIRIKA. Class and trainer picture kept from KESTREL (class 44).
+  - Not changed: tools/army_text.py CAPTAIN table still says KESTREL (army_text is not in the build chain; medal text source to check).
+- Release: PokemonWarAndMurder.gba and PokemonWarAndMurder.ips, CRC32 0x9baf1896. Data verified in the built ROM. Not yet tested in the emulator.
+
+## Still open after pass 7
+- 15 (FE8 allies as captains): not started. PoekEmblem source: decomp_overlay/graphics/pokemon/<name>/ (front, back, icon, pal) and decomp_overlay/src/data/pokemon/level_up_learnsets.h. These files are outside the sparse checkout and were read with git show.
+- 8, 9, 10, 12 (selling check), 13: see the earlier passes.

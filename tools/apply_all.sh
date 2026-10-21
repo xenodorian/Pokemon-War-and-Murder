@@ -32,7 +32,8 @@ python3 tools/decal_layer.py $T/11h.gba $T/12.gba
 python3 tools/text_flush.py $T/12.gba $T/13.gba          # last letter of a text box reaches VRAM at the fastest text speed
 python3 tools/field_fixes.py $T/13.gba $T/14.gba         # church door, menu, class name; opening/whiteout fixes if this ROM still has the old bytes
 python3 tools/task_data.py $T/14.gba $T/15.gba
-python3 tools/shackle_item.py $T/15.gba "$OUT"   # owner task 12 (part): SHACKLE BALL item in slot 89   # owner task list: Sandshrew/Sandslash/Sandgrave learnsets and evolution, species 251 renamed SANDGRAVE
+python3 tools/eirika_kestrel.py $T/15.gba $T/16.gba   # owner task 14: EIRIKA (slot 256) replaces KESTREL in Viridian
+python3 tools/shackle_item.py $T/16.gba "$OUT"   # owner task 12 (part): SHACKLE BALL item in slot 89   # owner task list: Sandshrew/Sandslash/Sandgrave learnsets and evolution, species 251 renamed SANDGRAVE
 python3 - "$OUT" <<'PY'
 import sys,zlib
 d=open(sys.argv[1],'rb').read(); print('rebuilt CRC32',hex(zlib.crc32(d)))
