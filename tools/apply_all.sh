@@ -35,7 +35,8 @@ python3 tools/task_data.py $T/14.gba $T/15.gba
 python3 tools/eirika_kestrel.py $T/15.gba $T/16.gba   # owner task 14: EIRIKA (slot 256) replaces KESTREL in Viridian
 python3 tools/fe8_allies.py $T/16.gba $T/17.gba     # owner task 15: eight FE8 allies as captains (species 257-264, pictures 22-29)
 python3 tools/sand_grave.py $T/17.gba $T/18.gba      # owner tasks 8-10: SAND GRAVE (move 358), description, Sandgrave learns it at 35
-python3 tools/shackle_item.py $T/18.gba "$OUT"   # owner task 12 (part): SHACKLE BALL item in slot 89   # owner task list: Sandshrew/Sandslash/Sandgrave learnsets and evolution, species 251 renamed SANDGRAVE
+python3 tools/sand_rocks.py $T/18.gba $T/19.gba  # owner task 8 (recolour): SAND GRAVE rocks sandy light brown (tag 10291)
+python3 tools/shackle_item.py $T/19.gba "$OUT"   # owner task 12 (part): SHACKLE BALL item in slot 89   # owner task list: Sandshrew/Sandslash/Sandgrave learnsets and evolution, species 251 renamed SANDGRAVE
 python3 - "$OUT" <<'PY'
 import sys,zlib
 d=open(sys.argv[1],'rb').read(); print('rebuilt CRC32',hex(zlib.crc32(d)))

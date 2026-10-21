@@ -737,3 +737,9 @@ Partial or open:
 - 13: SHACKLE option. Owner decision: a captured Pokemon goes into the party like any other Pokemon (the PC when the party is full).
 - 1, 2: emulator check of the death path.
 - 12: Shackle Balls in the Trainer Tower and Indigo lists, kept (owner's "every city except Pallet" rule).
+
+## Owner task list, pass 11 (2026-10-21): task 8 done (recolour and shake)
+- Shake: Rock Tomb's script already shakes the battle terrain after each rock (createvisualtask AnimTask_ShakeBattleTerrain). It is kept in SAND GRAVE's script.
+- tools/sand_rocks.py (new stage, after sand_grave.py): battle sprite tag 10291 with the rock tiles and a palette recoloured to sandy light brown (brightness kept). Picture and palette tables grow to 292 entries (same method as anim_throw.py). Rock template copy with tag 10291. SAND GRAVE's animation is Rock Tomb's script with the new tag and template.
+- Release: PokemonWarAndMurder.gba and IPS, CRC32 0x4a9104a0. newgame_test passes. Not tested in battle.
+- Still open: 13 (SHACKLE), 1 and 2 (emulator check).
