@@ -530,3 +530,9 @@ Partial or open:
 ## 2026-10-21 LEAF returns at 1 HP
 - When ARCEUS or GIRATINA sends the player back to Pallet, the permanent LEAF (species 255, not the empty-party stand-in) is set to 1 HP if she was fainted. The stand-in is left alone. Other party Pokemon are left alone.
 - The two return scripts (0xF2E6C4 and 0xF2EFBC) now jump to one script that heals her, fades, and warps to Pallet (11, 10). Not booted in the emulator.
+
+## 2026-10-21 Existing save boots normally
+- The LEAF / female auto-select only runs inside a new game (the Oak speech naming stub). Continue was already stock, so a save that the menu can see was never being renamed.
+- New Game now checks gSaveFileStatus first. Status 1 (a valid save) loads that save, the same way Continue does, and does not run the auto-select. An empty cart still starts one new game as LEAF.
+- Release is still only PokemonWarAndMurder.gba. CRC32 0x324a4267. Not booted in the emulator. Checked by reading the new-game branch and the gate at 0x175260.
+

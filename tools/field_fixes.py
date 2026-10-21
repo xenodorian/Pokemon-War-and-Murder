@@ -497,6 +497,47 @@ bx r3
 .ltorg
 ''' % (GETMON + 1, 0x0804037C + 1)
 
+# If a save is already on the cart, New Game does not run the LEAF / female auto-select.
+# It continues that save. A cart with no save still starts one new game as LEAF.
+GATE_AT = 0x175260
+SAVE_STATUS = 0x030053A0
+START_NEW = 0x0812EB2C
+CONT_GAME = 0x08110F14
+CLEAR_RAM = 0x08003ECC
+NEWGAME_BL = 0xCB3E
+
+def once(r):
+    d = r.b
+    if d[NEWGAME_BL:NEWGAME_BL + 4] != bytes([0x21, 0xF1, 0xF5, 0xFF]):
+        return
+    assert d[GATE_AT:GATE_AT + 64] == b'\xff' * 64, d[GATE_AT:GATE_AT + 8].hex()
+    code = r.asm(f'''
+        push {{r4, lr}}
+        ldr r4, =0x{SAVE_STATUS:x}
+        ldrh r4, [r4]
+        cmp r4, #1
+        beq saved
+        ldr r3, =0x{START_NEW + 1:x}
+        bl callr3
+        b done
+      saved:
+        ldr r3, =0x{CLEAR_RAM + 1:x}
+        bl callr3
+        movs r0, #0
+        ldr r3, =0x{CONT_GAME + 1:x}
+        bl callr3
+      done:
+        pop {{r4}}
+        pop {{r1}}
+        bx r1
+      callr3:
+        bx r3
+    ''', GATE_AT)
+    assert len(code) <= 64, len(code)
+    r.put(GATE_AT, code)
+    r.bl(NEWGAME_BL, GATE_AT)
+    print('once', hex(GATE_AT), len(code))
+
 def revive(r):
     """Arceus and Giratina send the player back to Pallet. The permanent LEAF comes back at 1 HP."""
     d = r.b
@@ -535,6 +576,7 @@ def install(r):
     mason_trigger(r)
     whiteout(r)
     revive(r)
+    once(r)
 
 if __name__ == '__main__':
     r = Rom(sys.argv[1])
