@@ -663,3 +663,9 @@ Partial or open:
 - NOT checked: the death path in the emulator (cry, gunshot, red flash, mauled text, and the transition holding red). Needs a permanent LEAF fainting to a soldier and to a wild Pokemon. Open until that test is run.
 - Release: PokemonWarAndMurder.gba and IPS, CRC32 0x20a7fd2d.
 - Tasks 8 to 10, 12 to 15: unchanged.
+
+## Owner task list, pass 4 (2026-10-21): task 12 part 1 (the item)
+- tools/shackle_item.py (stage after task_data.py in apply_all.sh): SHACKLE BALL in unused item slot 89, a copy of NET BALL's record (Net Ball graphics and pocket), price 1000 (best judgement), with a description. Verified in the built ROM: name, ID 89, price 1000. Boot test passes.
+- Not done (task 12): selling it in every city's PokeMart except Pallet Town. The 15 mart lists are in tools/build.py (MARTS); the city that each list belongs to is not yet matched.
+- Not done (task 13): the SHACKLE option on the captain's bless/shoot menu, and its liberty (+5 capture, +10 shoot) and roster effects.
+- Release: PokemonWarAndMurder.gba and IPS, CRC32 0x33520286.
