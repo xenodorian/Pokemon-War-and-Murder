@@ -73,11 +73,10 @@ void partner_choose_move(void){
     u8 chosen=BattleAI_ChooseMoveOrAction();
     if(chosen>3) chosen=0;
     u8 tgt=gBattleMoves[12*moves[chosen]+6];
+    // a move with a selected target (or both foes) goes to a foe; the target is set every time, so a stale battler (the player or the partner itself) is never kept
+    gBattlerTarget=GetBattlerAtPosition(1);                              // B_POSITION_OPPONENT_LEFT
+    if(gAbsentBattlerFlags&gBitTable[gBattlerTarget]) gBattlerTarget=GetBattlerAtPosition(3);
     if(tgt&(2|16)) gBattlerTarget=gActiveBattler;                      // user, or user or selected
-    if(tgt&8){                                                          // both foes
-        gBattlerTarget=GetBattlerAtPosition(1);                          // B_POSITION_OPPONENT_LEFT
-        if(gAbsentBattlerFlags&gBitTable[gBattlerTarget]) gBattlerTarget=GetBattlerAtPosition(3);
-    }
     EmitTwoReturnValues(1,10,chosen|(gBattlerTarget<<8));               // 10 = B_ACTION_EXEC_SCRIPT
     exec_done();
 }

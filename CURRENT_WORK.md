@@ -743,3 +743,10 @@ Partial or open:
 - tools/sand_rocks.py (new stage, after sand_grave.py): battle sprite tag 10291 with the rock tiles and a palette recoloured to sandy light brown (brightness kept). Picture and palette tables grow to 292 entries (same method as anim_throw.py). Rock template copy with tag 10291. SAND GRAVE's animation is Rock Tomb's script with the new tag and template.
 - Release: PokemonWarAndMurder.gba and IPS, CRC32 0x4a9104a0. newgame_test passes. Not tested in battle.
 - Still open: 13 (SHACKLE), 1 and 2 (emulator check).
+
+## Team battle fix (2026-10-21): partner allies attacked the player or themselves
+- Cause (from the code, not yet confirmed in the emulator): partner_choose_move in story/viri_native.c set the target only for user / user-or-selected (2, 16) and both-foes (8) moves. A move with a selected target (0) or depends (1) kept whatever gBattlerTarget held before, often the player (0) or the partner itself (2).
+- Fix: every choice sets gBattlerTarget to the opposing left battler (3 if absent), then user / user-or-selected moves go to the partner itself.
+- Release ROM and IPS: CRC32 0x99958592. newgame_test passes. The partner double battle was not reached in the emulator (viri_test.py ran the default wild Pidgey battle).
+
+## Team battle fix: still to verify in the emulator (partner double battle, Viridian or Cerulean).
