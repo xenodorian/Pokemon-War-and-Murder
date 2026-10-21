@@ -4,13 +4,14 @@ as in PoekEmblem (Leg 1), and her learnset is PoekEmblem's sEirikaLevelUpLearnse
 Art: story_assets/eirika/eirika_front.png and eirika_back.png (PoekEmblem's Eirika portrait crop).
 Icon, cry and footprint are copied from SCIZOR, not PoekEmblem (not transplanted yet).
 Team: KESTREL's team without AIPOM and CORSOLA, plus EIRIKA Lv 15 last: ELEKID 11, CHINCHOU 12, CLEFFA 13, EIRIKA 15.
-The trainer keeps KESTREL's class and picture; only the name and party change.
+The trainer keeps KESTREL's class and gets Eirika's portrait in picture slot 30.
 usage: eirika_kestrel.py IN.gba OUT.gba"""
 import sys, os, struct
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE); sys.path.insert(1, '/home/claude/work/tools')
 from inc import Rom
 import species_add as SA
+import fe8_allies as FA
 
 A = os.path.join(HERE, '..', 'story_assets', 'eirika')
 SLOT = 256; DONOR = 212; KESTREL = 24
@@ -41,6 +42,7 @@ def apply(r):
     eirika = bytearray(aipom); struct.pack_into('<H', eirika, 2, 15); struct.pack_into('<H', eirika, 4, SLOT)
     party = elekid + chinchou + cleffa + bytes(eirika)
     b[t + 32] = 4
+    FA.pic_from_png(r, 30, os.path.join(A, 'eirika_front.png')); b[t + 3] = 30   # picture 30 (unused by any trainer record)
     r.w32(t + 36, 0x08000000 + r.alloc(party, 4))
     print('task 14: KESTREL -> EIRIKA (species %d, Scizor donor), party ELEKID 11, CHINCHOU 12, CLEFFA 13, EIRIKA 15' % SLOT)
 

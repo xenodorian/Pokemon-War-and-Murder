@@ -693,3 +693,28 @@ Partial or open:
 ## Still open after pass 7
 - 15 (FE8 allies as captains): not started. PoekEmblem source: decomp_overlay/graphics/pokemon/<name>/ (front, back, icon, pal) and decomp_overlay/src/data/pokemon/level_up_learnsets.h. These files are outside the sparse checkout and were read with git show.
 - 8, 9, 10, 12 (selling check), 13: see the earlier passes.
+
+## Owner task list, pass 8 (2026-10-21): tasks 14 (picture) and 15 done
+- Task 14 addition: EIRIKA trainer picture is her portrait in picture slot 30 (tools/eirika_kestrel.py).
+- Task 15: tools/fe8_allies.py (new stage, after eirika_kestrel, before shackle_item). Captains, one per city:
+  - PALLET HAWTHORN (trainer 15) -> LARACHEL (species 257, donor Clefable, picture 22)
+  - PEWTER MARLOW (6) -> CORMAG (258, Dragonite, picture 23)
+  - CERULEAN VANCE (442) -> INNES (259, Fearow, picture 24)
+  - VERMILION DRAYTON (86) -> DUESSEL (260, Golem, picture 25)
+  - LAVENDER CORVIN (460) -> DOZLA (261, Machamp, picture 26)
+  - CELADON ASHFORD (176) -> TANA (262, Pidgeot, picture 27)
+  - SAFFRON THORNE (284) -> JOSHUA (263, Scyther, picture 28)
+  - FUCHSIA BRANDT (399) -> MYRRH (264, Dragonair, picture 29)
+  - LOCKHART (433) unchanged.
+  - Each captain keeps class, team and level; the last Pokemon becomes the ally's species, so the ally's Pokemon is the one captured.
+  - Learnsets: PoekEmblem sAlly*LevelUpLearnset (story_assets/allies/learnsets.json). ROCK_BLAST (Duessel) becomes ROCK SLIDE (no Rock Blast in gen 3).
+  - Art: story_assets/allies/<name>/front.png and back.png (PoekEmblem FE8 portrait crops). Pictures 22-29 were unused by any trainer record. Those pictures could still be used by a script (not checked).
+  - Names had to fit the captain name length (the ROM text has no room to grow): LARACHEL (not L'ARACHEL), and the in-text rename pads with spaces. All in-text captain and KESTREL names are renamed outside the trainer table (about 10 texts each). Trainers with the same names (VANCE 34 and 613) are not changed.
+  - Not transplanted: ally icons, cries and footprints (copied from donors), Pokedex entries, FE8 dialogue.
+- Release: PokemonWarAndMurder.gba and PokemonWarAndMurder.ips, CRC32 0xa443d584. newgame_test passes (LEAF, MASON, pos (4,5)). Not tested in battle.
+
+## Still open after pass 8
+- 1, 2: emulator check of the death path.
+- 8, 9, 10: Sand Grave move, its animation, text, and Sandgrave learning it at 35.
+- 13: SHACKLE option in the captain bless/shoot script.
+- Captain pictures and names for Viridian (Eirika) and the eight allies are done. The captain intro dialogue is still the old army text where it says the name in a form the text pass did not catch.
