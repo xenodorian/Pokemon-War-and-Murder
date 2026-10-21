@@ -645,3 +645,10 @@ Partial or open:
 - 13 (SHACKLE option in the captain bless/shoot menu; liberty +5 and +10): not started.
 - 14 (Eirika replaces Kestrel): not started. Needs the Eirika species from PoekEmblem (species data, sprites, moves) brought into this ROM.
 - 15 (FE8 allies as captains, with names, profile art and final Pokemon): not started. Source: sparse PoekEmblem clone at /home/user/poekemblem (ally_attack folders, docs/LEG2_ALLIES.md). Lockhart unchanged.
+
+## Owner task list, pass 2 (2026-10-21): analysis only, no ROM change
+- Tasks 1 and 2 (faint messages): the permanent-LEAF death path is whiteout() in tools/story_yveltal.py, which jumps to the 'soul' branch and then to the afterlife death script (ex['death'], tools/story_afterlife.py). The "You were shot" text used for the afterlife belongs to the JRA shooting system (tools/gun.py, story_viridian.py).
+  Plan: a native check before the afterlife branch: trainer battle flag (gBattleTypeFlags 0x02022B4C bit 0x8, as in wrap_after), the opponent trainer id (0x020386AE), and its class from the trainer table (TRAINERS 0x08798790, class byte at +1). JRA classes: 44 (captain), 45 (general/king), 48 (soldier). If JRA: play SE_SHOT, flash red, show the existing shot text. Otherwise: play the cry of the enemy species (GETMON field 11 on gEnemyParty[0]), flash red, show "You were mauled to death by a pokemon". The afterlife (Arceus/Giratina) then runs as now.
+  Blocked on: the addresses of PlayCry and BeginNormalPaletteFade (the red flash) in the ROM. They need the pret symbol map (docs/ANIMATION_NOTES.md: build pokefirered with agbcc). Not yet installed in this session.
+- Tasks 8, 9, 10: unchanged (needs a new move slot, see pass 1).
+- Tasks 12, 13, 14, 15: unchanged (not started).
