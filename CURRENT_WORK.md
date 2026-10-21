@@ -564,3 +564,9 @@ Partial or open:
 - Limit: the game sees only the ten GBA signals the emulator sends. It cannot tell physical X from Y. A physical button that sends nothing shows "No button pressed".
 - Checked in the emulator only (mGBA harness): the menu entry and description; all ten prompts and acknowledgements with B and SELECT swapped and UP skipped; the swapped layout takes effect (the physical B acts as SELECT, SELECT backs out); START + SELECT + UP resets to the normal layout with no side effect; newgame_test passes. Not tested: a save and reload of the mapping, and the console.
 - Release: the current PokemonWarAndMurder.gba with this stage applied. CRC32 0xc2774680, both release names and both IPS files. The IPS reproduces it from the Outlaw base. tools/apply_all.sh now ends with this stage (the chain runs, but still does not reproduce the release byte for byte; see the 2026-10-21 notes above).
+
+## 2026-10-21 CONTROLS archived; release restored (owner decision)
+- The CONTROLS start-menu entry was NOT kept. tools/controls_menu.py is archived at tools/archive/controls_menu.py. It is not in tools/apply_all.sh, so the build and the release no longer include it.
+- Release restored to the build before it: PokemonWarAndMurder.gba and PokemonWarAndMurder.ips, CRC32 0x2f906b52 (from commit 7c72c6e). The IPS and ROM are the same build.
+- "Pokemon War.gba" is removed from the repo and tools/publish_rom.sh no longer writes it. PokemonWarAndMurder.gba is the only release ROM.
+- The "Bypass in the game" section of docs/R36S_CONTROLS.md is removed. The owner reports the controls are working now; the cause of the earlier problem is not determined.

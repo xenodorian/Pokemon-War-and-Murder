@@ -30,8 +30,7 @@ python3 tools/story_sniper.py $T/11f.gba $T/11g.gba     # MAX shot by the sniper
 python3 tools/story_mason.py $T/11g.gba $T/11h.gba      # MASON as the rival at every rival encounter, KO-and-carry-home rule              # NERO replaces the General: arrest / execute / crown, father reaction, titles, epilogue cards
 python3 tools/decal_layer.py $T/11h.gba $T/12.gba
 python3 tools/text_flush.py $T/12.gba $T/13.gba          # last letter of a text box reaches VRAM at the fastest text speed
-python3 tools/field_fixes.py $T/13.gba $T/14.gba         # church door, menu, class name; opening/whiteout fixes if this ROM still has the old bytes
-python3 tools/controls_menu.py $T/14.gba "$OUT"      # CONTROLS start-menu entry: full in-game input mapping, reset with START+SELECT+UP
+python3 tools/field_fixes.py $T/13.gba "$OUT"         # church door, menu, class name; opening/whiteout fixes if this ROM still has the old bytes
 python3 - "$OUT" <<'PY'
 import sys,zlib
 d=open(sys.argv[1],'rb').read(); print('rebuilt CRC32',hex(zlib.crc32(d)))

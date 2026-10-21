@@ -32,9 +32,3 @@ Possible fixes once the cause is known: set the GBA system default to mGBA (syst
 - The fault follows the copy the updater last wrote, and a fresh name was fine until updated. A per-game remap would not follow a rename. A per-core remap would break every GBA game. A content-directory remap (RetroArch saves it under the folder's name) applies to every ROM in one folder and nothing else. If the updater writes into its own folder and a remap was ever saved there (for example while trying fixes), every updated copy inherits it.
 - Check on the console: in the affected game, Quick Menu, Controls, Manage Remap Files. A loaded remap, or a "Delete Content Directory Remap" option, means this is it. Delete it and retest B. Also check Quick Menu, Overrides for a content-directory override.
 - tools/r36s_diag.sh now also lists every gpSP/mGBA remap and override (any name) and the folder each copy of the game sits in. The first version only searched for files named after the game and would have missed a directory remap.
-
-## Bypass in the game (2026-10-21): START menu, CONTROLS
-- Open the START menu, choose CONTROLS. The game names each button ("Press A."). Press the physical button you want for it. It shows which signal that press arrived as, or "No button pressed" after 5 seconds.
-- Hold START + SELECT + UP together at any time to go back to the normal layout.
-- The mapping is saved with the game, so updating the ROM keeps it.
-- If a physical button shows "No button pressed", the emulator is not sending anything for it; the game cannot see it.

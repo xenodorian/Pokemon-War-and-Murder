@@ -24,7 +24,7 @@ Read this first if you are a fresh Grok session starting from scratch on this pr
 
 ## Owner rules and style
 - Push straight to main. Never delete or overwrite uploaded ROMs, IPS patches, saves, states or art.
-- GitROMs has two lookups in this repo. Pokemon War and Murder is PokemonWarAndMurder.gba. Pokemon War is "Pokemon War.gba". Both are the same build, written by tools/publish_rom.sh. Do not publish a third name, and do not write roms/Pokemon War and Murder.gba. That older file went stale, got patched, and was copied back over the real game.
+- GitROMs has one lookup in this repo: PokemonWarAndMurder.gba (Pokemon War and Murder). "Pokemon War.gba" was removed on 2026-10-21 at the owner's request. Do not publish another name, and do not write roms/Pokemon War and Murder.gba. That older file went stale, got patched, and was copied back over the real game.
 - No em dashes, no emoji. Be concise.
 - Verify before claiming done, and say when a check was emulator-only.
 - Do not ask questions the repos or ROM can answer. Decisions are delegated: use judgment and record the choice.
