@@ -652,3 +652,14 @@ Partial or open:
   Blocked on: the addresses of PlayCry and BeginNormalPaletteFade (the red flash) in the ROM. They need the pret symbol map (docs/ANIMATION_NOTES.md: build pokefirered with agbcc). Not yet installed in this session.
 - Tasks 8, 9, 10: unchanged (needs a new move slot, see pass 1).
 - Tasks 12, 13, 14, 15: unchanged (not started).
+
+## Owner task list, pass 3 (2026-10-21): tasks 1 and 2 implemented (not emulator-verified)
+- Native death_fx (story/story_native.c, placeholder 0x22222222 in the death script built by tools/story_native.py): if the battle is a trainer battle whose opponent (0x020386AE) is trainer class 44, 45 or 48 (captain, general/king, soldier), it plays SE_SHOT (347); otherwise it plays the cry of the enemy battler (gBattleMons[1]) via PlayCry_Normal. Then both start a fade to red (16 frames). GSV(12) = 1 for a non-JRA death.
+- Death script: non-JRA deaths show "You were mauled to death by a pokemon." after the cry. JRA deaths show no extra line. The death then holds the red screen for 40 frames (delay) instead of the black fade before the warp, in both heaven and hell.
+- Viridian loss (tools/story_viridian.py): a new red_flash native (MAGIC4 table, addrs5) is called after "BANG! You were shot!", before the afterlife. The gunshot and the shot line were already there.
+- Pallet/other: no change.
+- Addresses come from the pret FireRed symbol map (built from the decomp; sha1 41cb23 matches the original FireRed). PlayCry_Normal 0x08071df0, PlaySE 0x080722cc, BeginNormalPaletteFade 0x08070588, GetMonData 0x0803FBE8.
+- Checked: full chain builds; newgame_test passes (LEAF, MASON, (4,5), gender 1).
+- NOT checked: the death path in the emulator (cry, gunshot, red flash, mauled text, and the transition holding red). Needs a permanent LEAF fainting to a soldier and to a wild Pokemon. Open until that test is run.
+- Release: PokemonWarAndMurder.gba and IPS, CRC32 0x20a7fd2d.
+- Tasks 8 to 10, 12 to 15: unchanged.

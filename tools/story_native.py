@@ -12,7 +12,7 @@ import story_text as ST
 HERE=os.path.dirname(os.path.abspath(__file__)); SRC=os.path.join(HERE,'..','story'); WORK='/tmp/story_build'
 PRICE_SITE=0x9a916; BATTLE_SITE=0x7f6a2; CMD_TABLE=0x15F9B4; POKEMART=0x86
 TRAMP_FREE=[0x3b2450,0x3b2480,0x3b24b0]      # free padding runs inside BL range of the hook sites (see CURRENT_WORK.md)
-MAGIC=b'STORYFN1'; MAGIC2=b'STORYFN2'; MAGIC3=b'STORYFN3'
+MAGIC=b'STORYFN1'; MAGIC2=b'STORYFN2'; MAGIC3=b'STORYFN3'; MAGIC4=b'STORYFN4'
 def addrs(r):
     i=bytes(r.b).find(MAGIC,0xA00000)
     assert i>0,'story_native not applied'
@@ -20,6 +20,9 @@ def addrs(r):
 def addrs3(r):
     i=bytes(r.b).find(MAGIC2,0xA00000); assert i>0
     return dict(zip(('leaf_join','leaf_swap'),struct.unpack('<2I',r.b[i+8:i+16])))
+def addrs5(r):
+    i=bytes(r.b).find(MAGIC4,0xA00000); assert i>0,'red_flash not applied'
+    return dict(red_flash=struct.unpack('<I',r.b[i+8:i+12])[0])
 def addrs4(r):
     i=bytes(r.b).find(MAGIC3,0xA00000); assert i>0,'story death hooks not applied'
     return dict(zip(('leaf_down','heal_kind','soul_gate','death'),struct.unpack('<4I',r.b[i+8:i+24])))
@@ -55,12 +58,14 @@ def install(r):
     KO.fadescreen(1); KO.raw(0x25,0,0); KO.raw(0x39,4,0,0xff); KO._add(struct.pack('<HH',5,7)); KO.raw(0x27); KO.releaseall(); KO.end()
     mason_ko=0x08000000+put_script(r,KO)
     # permanent LEAF at 0 HP: heaven if karma >= 0 (zero counts as positive), hell if karma < 0. soul_gate is filled in after the link.
-    D=SB(); D.lockall(); D.raw(0x23); D.ptr(0x11111111); D.compare(0x8007,1); D.goto_if(1,'hell')
+    D=SB(); D.lockall(); D.raw(0x23); D.ptr(0x22222222); D.compare(0x800C,1); D.goto_if(1,'mauled'); D.lab('fx_done')
+    D.raw(0x23); D.ptr(0x11111111); D.compare(0x8007,1); D.goto_if(1,'hell')
     D.msg(ST.ptr_s(r,["The world goes white.","Something warm lifts you up."]),4)
-    D.fadescreen(1); D.raw(0x39,2,80,0xff); D._add(struct.pack('<HH',8,25)); D.raw(0x27); D.releaseall(); D.end()
+    D.raw(0x28,40,0); D.raw(0x39,2,80,0xff); D._add(struct.pack('<HH',8,25)); D.raw(0x27); D.releaseall(); D.end()
     D.lab('hell')
     D.msg(ST.ptr_s(r,["Your soul falls.","Flames rise to meet you."]),4)
-    D.fadescreen(1); D.raw(0x39,2,68,0xff); D._add(struct.pack('<HH',11,23)); D.raw(0x27); D.releaseall(); D.end()
+    D.raw(0x28,40,0); D.raw(0x39,2,68,0xff); D._add(struct.pack('<HH',11,23)); D.raw(0x27); D.releaseall(); D.end()
+    D.lab('mauled'); D.msg(ST.ptr_s(r,["You were mauled to death by a pokemon."]),4); D.goto('fx_done')
     death=0x08000000+put_script(r,D)
     plen=len(prompt(0).build(0)); r.cur=(r.cur+3)&~3; pat=r.cur; r.alloc(b'\xff'*plen,4)
     open(os.path.join(SRC,'story_gen.h'),'w').write('#define ORIG_POKEMART 0x%08x\n#define REFUSE_SCRIPT 0x%08x\n#define PROMPT_SCRIPT 0x%08x\n#define MASON_KO_SCRIPT 0x%08x\n#define DEATH_SCRIPT 0x%08x\n'%(orig,refuse,0x08000000+pat,mason_ko,death))
@@ -95,7 +100,11 @@ def install(r):
     hit=bytes(r.b[slot:slot+400]).find(struct.pack('<I',0x11111111))
     assert hit>=0,'soul_gate placeholder missing'
     r.w32(slot+hit, fn('soul_gate'))
+    hit4=bytes(r.b[slot:slot+600]).find(struct.pack('<I',0x22222222))
+    assert hit4>=0,'death_fx placeholder missing'
+    r.w32(slot+hit4, fn('death_fx'))
     r.alloc(MAGIC3+struct.pack('<4I',fn('leaf_down'),fn('heal_kind'),fn('soul_gate'),death),4)
+    r.alloc(MAGIC4+struct.pack('<I',fn('red_flash')),4)
     r.b[pat:pat+plen]=prompt(fn('leaf_swap')).build(pat)
     tramp(r,TRAMP_FREE[2],fn('leaf_join'))
     return dict(rep_calc=fn('rep_calc'))

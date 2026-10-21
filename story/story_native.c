@@ -63,6 +63,29 @@ void heal_kind(void){
     u8* w=SB1+0x1C;
     GSV(7)=(w[0]==4 && w[1]==0)?0:1;
 }
+// Owner task 1 and 2: how a permanent LEAF died. GSV(12) = 0 when the killer is a JRA soldier, captain or general
+// (trainer classes 48, 44, 45), 1 otherwise (a wild Pokemon or another trainer). The killer's cry or the gunshot plays here,
+// then the screen starts to fade to red (16 frames) and the death script holds it before the transition.
+#define DF_BTYPE (*(volatile u32*)0x02022B4C)     // gBattleTypeFlags
+#define DF_ENEMY_SPECIES (*(volatile u16*)(0x02023BE4+0x58))  // gBattleMons[1].species (the enemy battler)
+#define DF_TRAINERS 0x08798790                   // trainer table, 40 bytes each, class at +1
+#define DF_PlaySE ((void(*)(u16))(0x080722cc|1))
+#define DF_PlayCry ((void(*)(u16,signed char))(0x08071df0|1))
+#define DF_FadeCol ((u32(*)(u32,signed char,u8,u8,u16))(0x08070588|1))
+// Owner task 1: the screen goes red before the afterlife (used by the Viridian loss, where the soldiers shoot LEAF and MAX)
+void red_flash(void){ DF_FadeCol(0xFFFFFFFFu,0,0,16,0x001F); }
+void death_fx(void){
+    u8 mauled=1;
+    if(DF_BTYPE & 8){                                    // trainer battle
+        const u8* t=(const u8*)(DF_TRAINERS+40*(u32)(*(volatile u16*)0x020386ae));
+        u8 cls=t[1];
+        if(cls==44 || cls==45 || cls==48) mauled=0;
+    }
+    GSV(12)=mauled;
+    if(mauled) DF_PlayCry(DF_ENEMY_SPECIES,0);
+    else DF_PlaySE(347);                                 // SE_SHOT
+    DF_FadeCol(0xFFFFFFFFu,0,0,16,0x001F);               // screen to red
+}
 // GSV7 = 1 hell (karma < 0), 0 heaven. Zero karma is heaven.
 void soul_gate(void){
     int k=(int)*var(BLESS_VAR)-(int)kc_total();

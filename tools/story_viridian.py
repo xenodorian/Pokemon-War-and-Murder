@@ -92,6 +92,7 @@ def install(r):
     F.msg(T(["BANG!","MAX goes down."]),4)
     F.playse(SE_SHOT); F.raw(0x30)
     F.msg(T(["BANG!","You were shot!"]),4)
+    callnative(F,SN.addrs5(r)['red_flash'])                  # owner task 1: the screen goes red before the afterlife
     F.setflag(I.F_VLOST); F.setflag(I.F_MAXDEAD); F.setvar(I.VAR_SOUL,1)
     # both run modes visit the afterlife (spec 5b); story_afterlife.py plays MAX's soul once, then a NORMAL run is white-out-restored, a PLAYABLE run stays dead
     F.lab('afterlife')
