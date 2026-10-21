@@ -24,6 +24,17 @@ for base in /home/ark/.config/retroarch /root/.config/retroarch /opt/retroarch /
   say "-- remap folders (names only)"
   ls -R "$base/config/remaps" 2>/dev/null | head -40 >> "$OUT"
 done
+say "== folders that hold a copy of the game (content-directory remaps and overrides are named after these)"
+find / -xdev \( -path /proc -o -path /sys \) -prune -o \( -iname '*war*murder*.gba' -o -iname 'pokemonwar*.gba' -o -iname 'pokemon war*.gba' \) -print 2>/dev/null | while read -r f; do d=$(dirname "$f"); say "$f -> folder name: $(basename "$d")"; done
+say "== ALL remap and override files for the GBA cores (any name), with contents"
+for base in /home/ark/.config/retroarch /root/.config/retroarch /opt/retroarch /storage/.config/retroarch; do
+  for sub in config/remaps config; do
+    [ -d "$base/$sub" ] || continue
+    find "$base/$sub" -maxdepth 2 \( -iname '*.rmp' -o -iname '*.cfg' -o -iname '*.opt' \) 2>/dev/null | grep -i -E 'gpsp|mgba|gba' | while read -r f; do
+      say "FILE $f ($(ls -l --time-style=long-iso "$f" 2>/dev/null | cut -d' ' -f6-7))"; head -c 1500 "$f" >> "$OUT" 2>/dev/null; say "--"
+    done
+  done
+done
 say "== EmulationStation game list entries (alternative emulator lines)"
 find / -xdev \( -path /proc -o -path /sys \) -prune -o -name 'gamelist.xml' -print 2>/dev/null | while read -r g; do
   if grep -qi -E 'war|murder' "$g" 2>/dev/null; then
