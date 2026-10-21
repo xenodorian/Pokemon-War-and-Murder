@@ -20,3 +20,9 @@ What would settle it (on the console)
 4. If both entries run the same core and have the same labels, the difference is in a file the updater touches, not the core.
 
 Possible fixes once the cause is known: set the GBA system default to mGBA (system settings); set the per-game Alternative emulator; or unbind X and Y in gpSP and save a core remap (Quick Menu, Controls). Do not apply these blind.
+
+## Update 2026-10-21 (later): B does not go back, Y does; only this game
+- Owner: in this game pressing the physical B does not go back, Y does; no other game on the R36S behaves this way.
+- Emulator test (mGBA harness): B closes the Start menu as a 4-frame tap, a 40-frame hold and a 2-on/2-off pulse, on the current ROM and on the older 0x32dfc7de build. The ROM does not drop B. The two builds behave the same.
+- The repo contains no RetroArch remap, override or core-option files, so the updater is not delivering any from here.
+- That leaves something on the console that is specific to this game's name or entry: a per-game remap or override that sends the south button somewhere else, a different core for that entry, or an entry that the updater re-creates. tools/r36s_diag.sh (read-only) lists the per-game files, remaps, game-list entries and the last RetroArch log for the game so the cause can be read off instead of guessed.
