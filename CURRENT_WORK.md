@@ -722,3 +722,18 @@ Partial or open:
 ## Owner task list, pass 9 (2026-10-21): analysis only, no ROM change
 - 13 (SHACKLE): the defeated-trainer script is trainer_script in tools/leg2.py (pointer at ROM 0x1a4ed9). leg2.py runs only in build_full.sh, not in apply_all.sh. The shoot path calls the native shoot_do at 0x08a09b61 (from the base ROM, not rebuilt here). Disassembly of its start shows it loops over the party with a 0x40-slot roster table and marks flags on it. A capture-only path (captain's last Pokemon joins, liberty +5) needs that roster logic understood. Liberty +10 on shoot needs the liberty variable 0x40AC added to the shoot path. Not done; needs emulator testing.
 - 8, 9, 10 (Sand Grave): need a new move slot (moves_extend pattern), a 100% paralysis effect (no existing effect does that), a new Rock Tomb based animation with screen shake, and a battle text for "buried to the neck". Not started.
+
+## Owner task list, pass 10 (2026-10-21): tasks 8 (part), 9, 10 done
+- Owner decision: the 100% paralysis is a real 100% (not 30%).
+- tools/sand_grave.py (new stage, after fe8_allies.py, before shackle_item.py). tools/move_tables.py (new) finds the live move tables after the earlier relocations; it prefers the table code points to.
+  - Move 358 SAND GRAVE: Body Slam's record with power 120, GROUND, accuracy 100 (best judgement), PP 10 (best judgement), secondary effect chance 100 (Body Slam's paralysis effect, chance 30 in the base game). Effect applies on hit only.
+  - Task 9: description "The target is buried up to / the neck in dirt." No battle message was added.
+  - Task 10: Sandgrave (251) learns SAND GRAVE at 35, the level she evolves at.
+  - Task 8 NOT done: the animation is a copy of ROCK TOMB's script. Still open: the sandy light brown recolour (new palette for the rock sprite) and a screen shake on each rock drop (the rock sequence in Rock Tomb's script is 4 rock sprite steps).
+- Release: PokemonWarAndMurder.gba and IPS, CRC32 0x2ad818d5. newgame_test passes. Not tested in battle.
+
+## Still open after pass 10
+- 8: recolour and screen shake for SAND GRAVE animation.
+- 13: SHACKLE option. Owner decision: a captured Pokemon goes into the party like any other Pokemon (the PC when the party is full).
+- 1, 2: emulator check of the death path.
+- 12: Shackle Balls in the Trainer Tower and Indigo lists, kept (owner's "every city except Pallet" rule).
