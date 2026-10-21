@@ -3,7 +3,6 @@
 *.mgba
 !roms/*.gba
 !/PokemonWarAndMurder.gba
-!/Pokemon War.gba
 roms/Pokemon War and Murder.gba
 !saves/**/*.state
 __pycache__/

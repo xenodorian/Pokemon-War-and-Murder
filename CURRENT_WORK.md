@@ -625,3 +625,23 @@ Partial or open:
 - 19 (throw animation timing checked by eye only): owner will test later. Deferred to owner testing.
 - 20 (CryMon dialogue beyond the requested segments): not an issue. Resolved.
 - 21 (apply_all.sh reproducing PokemonWarAndMurder.gba byte for byte): not an issue. Resolved.
+
+## Owner task list execution, pass 1 (2026-10-21): tasks 3, 4, 5, 7, 11 done
+- Pokemon War.gba whitelist removed from .gitignore; only PokemonWarAndMurder.gba is updated (already no Pokemon War.gba in the repo).
+- tools/task_data.py (new stage, last in apply_all.sh before the final check):
+  - 3: Sandshrew (27) learnset: 1 Scratch, 7 Swords Dance, 9 Cut, 11 Rock Slide, 13 Strength, 15 Rock Smash, 17 Slash. Verified in the built ROM.
+  - 4: Sandshrew evolves into Sandslash (28) at level 17 (was 22). Verified.
+  - 5: Sandslash learnset: 1 Scratch, 1 Sand-Attack, 1 Defense Curl, 17 Slash, 19 Metal Claw, 21 Dig, 25 Stone Edge, 30 Earthquake. Verified.
+  - 7: species 251 renamed SANDGRAVE (move 201 SANDSTORM unchanged). Verified.
+  - 11: Sandgrave (251) learns Hyper Beam at 40. Verified (learnset: Sandslash list + Hyper Beam 40 + Hi Horsepwr 61, best judgement for Hi Horsepwr).
+  - Sandslash evolves into Sandgrave at 35 (task 6): already the ROM's entry. Verified.
+- Release: PokemonWarAndMurder.gba and PokemonWarAndMurder.ips, CRC32 0x785592b7. Boot test (newgame_test) passes.
+
+## Owner task list: still open after pass 1
+- 1, 2 (faint messages and transitions): not started.
+- 8 and 9 (Sand Grave move, its animation and text): needs a new move slot (MOVES_COUNT 358 to 359, with the same sentinel and compare patches as moves_extend), a new animation from the rock tomb move (317), recolour and screen shake.
+- 10 (Sandgrave learns Sand Grave at 35): depends on 8 and 9.
+- 12 (Shackle Balls sold in every city except Pallet): not started.
+- 13 (SHACKLE option in the captain bless/shoot menu; liberty +5 and +10): not started.
+- 14 (Eirika replaces Kestrel): not started. Needs the Eirika species from PoekEmblem (species data, sprites, moves) brought into this ROM.
+- 15 (FE8 allies as captains, with names, profile art and final Pokemon): not started. Source: sparse PoekEmblem clone at /home/user/poekemblem (ally_attack folders, docs/LEG2_ALLIES.md). Lockhart unchanged.
