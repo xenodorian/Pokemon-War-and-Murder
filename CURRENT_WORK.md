@@ -512,3 +512,9 @@ Partial or open:
 - The updater finds PokémonWarAndMurder.gba first (accents ignored, spaces not) and keeps the shortest path, so PokemonWarAndMurder.gba at the repo root wins over roms/Pokemon War and Murder.gba. A push that only changes the roms/ copy does not show as an update.
 - tools/publish_rom.sh copies a finished ROM to that root file and to roms/, and rebuilds both IPS files from the Outlaw base. tools/release.sh calls it. Root file on main is CRC32 0xabba66b6 (commit 879e917).
 
+
+## 2026-10-21 Bedroom ROM restored, second release ROM removed
+- The whiteout patch had been applied to the stale roms/Pokemon War and Murder.gba (brick house, CRC32 0x32dfc7de) and then copied over the root file. The stock bedroom lived only in bdceb7c:PokemonWarAndMurder.gba (CRC32 0xc37f0c81).
+- tools/field_fixes.py was run on that bedroom ROM. House map bytes and tileset pointer are unchanged. Menu, loading cover, church door, Oak, Anne, Mason trigger and whiteout are in the new file. 977 bytes differ from 0xc37f0c81.
+- Root PokemonWarAndMurder.gba is now the only release ROM. roms/Pokemon War and Murder.gba is deleted and gitignored. publish_rom.sh no longer writes it. The Outlaw base, c3_build_base.gba and m_final_latest_build.gba stay.
+- Not booted in the emulator this pass. Checked by reading the house metatiles, the tileset pointer, the menu nop, the loading timer and the whiteout script pointers.
