@@ -718,3 +718,7 @@ Partial or open:
 - 8, 9, 10: Sand Grave move, its animation, text, and Sandgrave learning it at 35.
 - 13: SHACKLE option in the captain bless/shoot script.
 - Captain pictures and names for Viridian (Eirika) and the eight allies are done. The captain intro dialogue is still the old army text where it says the name in a form the text pass did not catch.
+
+## Owner task list, pass 9 (2026-10-21): analysis only, no ROM change
+- 13 (SHACKLE): the defeated-trainer script is trainer_script in tools/leg2.py (pointer at ROM 0x1a4ed9). leg2.py runs only in build_full.sh, not in apply_all.sh. The shoot path calls the native shoot_do at 0x08a09b61 (from the base ROM, not rebuilt here). Disassembly of its start shows it loops over the party with a 0x40-slot roster table and marks flags on it. A capture-only path (captain's last Pokemon joins, liberty +5) needs that roster logic understood. Liberty +10 on shoot needs the liberty variable 0x40AC added to the shoot path. Not done; needs emulator testing.
+- 8, 9, 10 (Sand Grave): need a new move slot (moves_extend pattern), a 100% paralysis effect (no existing effect does that), a new Rock Tomb based animation with screen shake, and a battle text for "buried to the neck". Not started.
