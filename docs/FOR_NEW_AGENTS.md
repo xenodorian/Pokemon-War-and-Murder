@@ -24,6 +24,7 @@ Read this first if you are a fresh Grok session starting from scratch on this pr
 
 ## Owner rules and style
 - Push straight to main. Never delete or overwrite uploaded ROMs, IPS patches, saves, states or art.
+- GitROMs updates only PokemonWarAndMurder.gba at the repo root. After every ROM change, run tools/publish_rom.sh on the finished ROM and push that root file. The copy at roms/Pokemon War and Murder.gba does not show up in the updater while the root file exists.
 - No em dashes, no emoji. Be concise.
 - Verify before claiming done, and say when a check was emulator-only.
 - Do not ask questions the repos or ROM can answer. Decisions are delegated: use judgment and record the choice.

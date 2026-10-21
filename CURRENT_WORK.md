@@ -507,3 +507,8 @@ Partial or open:
 - Shots: shots/text_fullstop_before.png, text_fullstop_after.png, text_fullstop_before_after.png, text_fullstop_after_father_boxes.png, text_fullstop_stock_select_after.png.
 - Leaf state: new file saves/ported/leaf/Pokemon War and Murder (ROM 0xc37f0c81).state, made like the 2026-10-17 one: the release ROM booted with a copy of saves/ported/leaf/Pokemon War and Murder.srm, Continue, raw state at frame 900, wrapped by tools/make_state.py on the 56898276 R36S template (ROM CRC in the state checked). The old .state (0x873b6735) and the .srm are unchanged. Rename the new file to "Pokemon War and Murder.state" on the device to use it. Checked: Continue shows Broski in Vermilion as the Leaf sprite; the state unpacked from the new file reloads with Leaf and she walks (shots/save_leaf_continue_0xc37f0c81.png, save_leaf_state_0xc37f0c81.png). Not tested on the R36S.
 - Release: PokemonWarAndMurder.ips applied to the Outlaw base = apply_all output, 16,777,240 bytes, CRC32 0xc37f0c81.
+
+## 2026-10-21 GitROMs publish path
+- The updater finds PokémonWarAndMurder.gba first (accents ignored, spaces not) and keeps the shortest path, so PokemonWarAndMurder.gba at the repo root wins over roms/Pokemon War and Murder.gba. A push that only changes the roms/ copy does not show as an update.
+- tools/publish_rom.sh copies a finished ROM to that root file and to roms/, and rebuilds both IPS files from the Outlaw base. tools/release.sh calls it. Root file on main is CRC32 0xabba66b6 (commit 879e917).
+
