@@ -750,3 +750,11 @@ Partial or open:
 - Release ROM and IPS: CRC32 0x99958592. newgame_test passes. The partner double battle was not reached in the emulator (viri_test.py ran the default wild Pidgey battle).
 
 ## Team battle fix: still to verify in the emulator (partner double battle, Viridian or Cerulean).
+
+## Owner task 13: SHACKLE (2026-10-21)
+- Owner decision: a captured Pokemon goes into the party like any other (PC when the party is full).
+- story/story_native.c: shackle_check (GSV12 = 1 for a captain not yet shackled, captain ids 15, 6, 442, 86, 460, 176, 284, 399, 24, 433), shackle_do (ScriptGiveMon with the captain's last party member; result in VAR_RESULT 0x800D; flag 0x871+index set; +5 liberty), shoot_captain (base shoot_do, then +10 liberty for a captain). Table STORYFN5 (addrs6).
+- tools/shackle.py (new, last stage): the defeated-trainer script at 0x1a4ed9 gets a new front. For a captain with a SHACKLE BALL (item 89) it asks "Shackle this CAPTAIN with a SHACKLE BALL?". YES: uses one ball and shackles. NO / no ball / other trainers: the old bless/rob/shoot script. The 3 shoot_do calls in the script call shoot_captain.
+- Deviation: SHACKLE is a yes/no question before the bless/shoot menu, not a fourth menu entry (the menu is built by gun.py, outside the chain).
+- Not done: the captain's other Pokemon joining on shoot is left to the existing shoot_do (not checked whether it adds the captain's last Pokemon).
+- Release ROM and IPS: CRC32 0xc8f70d0f. newgame_test passes. Not tested in the emulator (no captain defeat reached).

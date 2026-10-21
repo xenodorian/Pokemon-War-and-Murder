@@ -157,3 +157,43 @@ void max_prepare(void){
 }
 // GSV7 = 1 when the party is empty (used by the white-out script: LEAF was the one who fell)
 void party_empty(void){ GSV(7)=(COUNT==0)?1:0; }
+// Owner task 13: SHACKLE. Captain trainers (class 44, by trainer id). The captain's last party member is the one captured.
+// GSV(12) = 1 when the defeated trainer is a captain. shackle_do gives that Pokemon like any other (party, or the PC when the party is full)
+// and sets the result (0 party, 1 PC, 2 cannot). shoot_captain is the shoot path: the base shoot_do, then +10 liberty for a captain.
+static const u16 captain_ids[]={15,6,442,86,460,176,284,399,24,433};
+#define SH_GiveMon ((u8(*)(u16,u8,u16,u32,u32,u8))(0x080a011c|1))     // ScriptGiveMon
+#define SH_ShootDo ((void(*)(void))(0x08a09b61|1))                     // base ROM shoot_do (the native the shoot script calls)
+#define SH_RESULT (*(volatile u16*)0x020370d0)                         // VAR_RESULT (0x800D)
+// one flag per captain (0x871 to 0x87A, in the save block flags at +0xEE0): a shackled captain is not offered again
+#define SH_FLAG_BASE 0x871
+static int shackle_index(void){
+    u16 id=*(volatile u16*)0x020386ae;
+    for(u32 i=0;i<sizeof captain_ids/sizeof captain_ids[0];i++) if(captain_ids[i]==id) return (int)i;
+    return -1;
+}
+static int shackle_flag_get(u32 f){ return (*(volatile u8*)(*(u8* volatile*)0x03005008+0xEE0+(f>>3))>>(f&7))&1; }
+static void shackle_flag_set(u32 f){ volatile u8* p=(volatile u8*)(*(u8* volatile*)0x03005008+0xEE0+(f>>3)); *p|=(u8)(1<<(f&7)); }
+static int shackle_captain(void){ return shackle_index()>=0; }
+static void shackle_liberty(int d){
+    volatile u16* lib=(volatile u16*)(*(u8* volatile*)0x03005008+0x1000+((0x40ac-0x4000)<<1));
+    *lib=(u16)(*lib+d);
+}
+void shackle_check(void){
+    int i=shackle_index();
+    GSV(12)=(i>=0 && !shackle_flag_get(SH_FLAG_BASE+(u32)i))?1:0;
+}
+void shackle_do(void){
+    u16 id=*(volatile u16*)0x020386ae;
+    const u8* t=(const u8*)(DF_TRAINERS+40*(u32)id);
+    u32 n=t[32];
+    const u8* last=(const u8*)(*(const u32*)(t+36))+8*(n-1);
+    u16 species=*(const u16*)(last+4);
+    u8 level=last[2];
+    SH_RESULT=SH_GiveMon(species,level,0,0,0,0);
+    shackle_flag_set(SH_FLAG_BASE+(u32)shackle_index());
+    shackle_liberty(5);
+}
+void shoot_captain(void){
+    SH_ShootDo();
+    if(shackle_captain()) shackle_liberty(10);
+}

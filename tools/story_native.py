@@ -12,7 +12,7 @@ import story_text as ST
 HERE=os.path.dirname(os.path.abspath(__file__)); SRC=os.path.join(HERE,'..','story'); WORK='/tmp/story_build'
 PRICE_SITE=0x9a916; BATTLE_SITE=0x7f6a2; CMD_TABLE=0x15F9B4; POKEMART=0x86
 TRAMP_FREE=[0x3b2450,0x3b2480,0x3b24b0]      # free padding runs inside BL range of the hook sites (see CURRENT_WORK.md)
-MAGIC=b'STORYFN1'; MAGIC2=b'STORYFN2'; MAGIC3=b'STORYFN3'; MAGIC4=b'STORYFN4'
+MAGIC=b'STORYFN1'; MAGIC2=b'STORYFN2'; MAGIC3=b'STORYFN3'; MAGIC4=b'STORYFN4'; MAGIC5=b'STORYFN5'
 def addrs(r):
     i=bytes(r.b).find(MAGIC,0xA00000)
     assert i>0,'story_native not applied'
@@ -23,6 +23,9 @@ def addrs3(r):
 def addrs5(r):
     i=bytes(r.b).find(MAGIC4,0xA00000); assert i>0,'red_flash not applied'
     return dict(red_flash=struct.unpack('<I',r.b[i+8:i+12])[0])
+def addrs6(r):
+    i=bytes(r.b).find(MAGIC5,0xA00000); assert i>0,'shackle natives not applied'
+    return dict(zip(('shackle_check','shackle_do','shoot_captain'),struct.unpack('<3I',r.b[i+8:i+20])))
 def addrs4(r):
     i=bytes(r.b).find(MAGIC3,0xA00000); assert i>0,'story death hooks not applied'
     return dict(zip(('leaf_down','heal_kind','soul_gate','death'),struct.unpack('<4I',r.b[i+8:i+24])))
@@ -105,6 +108,7 @@ def install(r):
     r.w32(slot+hit4, fn('death_fx'))
     r.alloc(MAGIC3+struct.pack('<4I',fn('leaf_down'),fn('heal_kind'),fn('soul_gate'),death),4)
     r.alloc(MAGIC4+struct.pack('<I',fn('red_flash')),4)
+    r.alloc(MAGIC5+struct.pack('<3I',fn('shackle_check'),fn('shackle_do'),fn('shoot_captain')),4)
     r.b[pat:pat+plen]=prompt(fn('leaf_swap')).build(pat)
     tramp(r,TRAMP_FREE[2],fn('leaf_join'))
     return dict(rep_calc=fn('rep_calc'))
