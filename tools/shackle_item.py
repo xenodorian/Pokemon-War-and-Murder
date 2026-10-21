@@ -26,6 +26,30 @@ def apply(r):
     rec[20:24] = struct.pack('<I', 0x08000000 + r.alloc(desc, 1))
     b[dst:dst + 44] = bytes(rec)
     print('shackle_item: SHACKLE BALL in item slot 89 (Net Ball graphics, price 1000)')
+    marts(r)
+
+def marts(r):
+    """Sell SHACKLE BALL in every PokeMart list that sells the BLESS TAG (item 56): every shop in the game, which means every
+    city's shop (Pallet Town has none). Each list is copied with 89 added before its end; every command that points at it is repointed."""
+    b = r.b
+    lists = {}
+    for q in range(0, len(b) - 8):
+        if b[q] == 0x86 and b[q + 4] == 0x08:
+            p = struct.unpack_from('<I', b, q + 1)[0]
+            if not (0x08000000 <= p < 0x08000000 + len(b) - 100):
+                continue
+            a = p - 0x08000000; ids = []; k = a
+            while len(ids) < 40:
+                v = struct.unpack_from('<H', b, k)[0]
+                if v == 0: break
+                ids.append(v); k += 2
+            if len(ids) >= 2 and ids[-1] == 56 and SLOT not in ids:
+                lists.setdefault(p, (ids, []))[1].append(q)
+    for p, (ids, sites) in lists.items():
+        new = r.alloc(struct.pack('<%dH' % (len(ids) + 2), *(ids + [SLOT, 0])), 4)
+        for q in sites:
+            r.w32(q + 1, 0x08000000 + new)
+    print('shackle_item: SHACKLE BALL added to', len(lists), 'PokeMart lists,', sum(len(v[1]) for v in lists.values()), 'shop commands')
 
 if __name__ == '__main__':
     r = Rom(sys.argv[1]); apply(r); r.save(sys.argv[2]); print('ok')

@@ -669,3 +669,9 @@ Partial or open:
 - Not done (task 12): selling it in every city's PokeMart except Pallet Town. The 15 mart lists are in tools/build.py (MARTS); the city that each list belongs to is not yet matched.
 - Not done (task 13): the SHACKLE option on the captain's bless/shoot menu, and its liberty (+5 capture, +10 shoot) and roster effects.
 - Release: PokemonWarAndMurder.gba and IPS, CRC32 0x33520286.
+
+## Owner task list, pass 5 (2026-10-21): task 12 done (selling); task 13 not started
+- tools/shackle_item.py now also adds SHACKLE BALL (89) to every PokeMart list that sells the BLESS TAG (item 56): 15 lists, 15 shop commands. Pallet Town has no PokeMart in the ROM (checked in allmaps.txt: none on Pallet's map), so every shop in the game is covered. The Trainer Tower and Indigo Plateau lists are included because they carry the Blessing Tag too; tell me if they should not sell the ball.
+- Verified in the built ROM: all 15 lists end 56, 89; boot test passes.
+- Release: PokemonWarAndMurder.gba and IPS, CRC32 0x96042281.
+- Task 13 (SHACKLE option on the captain's bless/shoot menu, +5 Liberty capture, +10 Liberty shoot, roster effects): not started.
