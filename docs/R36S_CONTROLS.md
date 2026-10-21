@@ -1,20 +1,22 @@
-# R36S controls: why X and Y act as A and B (finding 2026-10-21)
+# R36S controls: X and Y acting as A and B (investigation 2026-10-21, NOT resolved)
 
-Symptom (owner): on the R36S the A button is fine, but Y acts like B, and X acts like A in menus. It follows whichever game entry the updater (GitROMs) last updated. A renamed copy with a fresh controller layout was fine until the updater ran, then the problem moved to it.
+Symptom (owner): on the R36S the A button is fine, Y acts like B, and in menus only X acts like A. It follows whichever game entry the updater (GitROMs) last updated. A renamed copy with a fresh controller layout was fine until the updater ran, then the problem moved to it. The RetroArch Controls screen has always shown X and Y as Turbo A and Turbo B for the affected game.
 
-Finding: this is the gpSP core's turbo buttons, not the ROM.
-- gpSP (libretro) maps RetroPad X to "Turbo A" and RetroPad Y to "Turbo B" (libretro/gpsp, libretro.c: input descriptors for JOYPAD_Y "Turbo B" and JOYPAD_X "Turbo A"; input.c turbo_a/turbo_b).
-- mGBA (libretro) has no mapping for X or Y (mgba-emu/mgba, src/platform/libretro/libretro.c: only A and B plus the d-pad, Select, Start, L, R).
-- A GBA has no X or Y buttons. Nothing in the ROM can make them act as A or B. The ROM's own BUTTON MODE (HELP, LR, L=A, SWAP) only exchanges L, A and B.
-- So the entry that "has the weird controls" is being launched with gpSP, and the entry that "works normally" is being launched with mGBA. The ROM files are the same build.
+What is established
+- Turbo labels on X and Y exist in the gpSP core (libretro/gpsp: JOYPAD_X "Turbo A", JOYPAD_Y "Turbo B"). The mGBA core (mgba-emu/mgba, src/platform/libretro/libretro.c) does not map X or Y. So an entry whose Controls screen shows Turbo A and Turbo B is running gpSP. Whether the entry that "works normally" runs a different core is NOT known; the owner has not compared the two screens.
+- A GBA has no X or Y. The ROM cannot make them act as A or B. The ROM's own BUTTON MODE (HELP, LR, L=A, SWAP) only exchanges L, A and B.
+- Emulator test (mGBA harness, 2026-10-21, current PokemonWarAndMurder.gba): in the game, A as a 4-frame tap, a 40-frame hold, and a 2-on/2-off pulse (turbo-like) all open the POKEMON menu from the Start menu. The ROM does not ignore held or pulsed A. The ROM does not explain the symptom on mGBA.
+- Not tested: gpSP (not installed here) and the console itself.
 
-Likely mechanism (not verified on a device): the updater replaces or re-creates the game file or its entry, and the per-game emulator choice (the "alternative emulator" for that game in EmulationStation) is lost. The game then falls back to the system default core, which on many R36S firmwares is gpSP. A rename does not help because the new entry starts on the default core too.
+What is not known
+- Which core each entry launches, and whether it changed after an update.
+- What GitROMs writes besides the ROM (web search found nothing about it). It could replace or re-create files, or touch per-game files that sit next to the ROM (.srm, .state, .cfg, .rmp, .opt) or the game list.
+- What the physical B (south) button does in the affected entry. The owner reports Y acting as B; if B itself does nothing, that points at a remap, not the ROM.
 
-How to confirm on the console: load the game, open the RetroArch menu, Quick Menu, Controls. If X and Y are listed as "Turbo A" and "Turbo B", the core is gpSP. (Quick Menu, Information, Core Information also names the core.)
+What would settle it (on the console)
+1. For BOTH entries: Quick Menu, Information, Core Information (core name), and Quick Menu, Controls (are X and Y labelled Turbo?). Compare.
+2. For the affected entry: Quick Menu, Controls, and test each of the four face buttons and note what each does in the overworld and in a menu.
+3. Before and after an update, list the files next to the ROM (names and modified times) and the per-game override and remap folders. A new or changed file points at the updater.
+4. If both entries run the same core and have the same labels, the difference is in a file the updater touches, not the core.
 
-Fixes, in order of how permanent they are:
-1. Set the system default GBA emulator to mGBA in EmulationStation (system settings for Game Boy Advance). Every game and every update then uses mGBA.
-2. Set the per-game emulator: highlight the game, Edit this game's metadata, Alternative emulator, mGBA. Re-check it after each update, since the updater may reset it.
-3. If the game must stay on gpSP: Quick Menu, Controls, set X and Y to None, then Save Core Remap File. Turbo goes away for every gpSP game.
-
-mGBA is the intended core. The repo's .state files are mGBA save states made on the R36S, and the ROM was tested in mGBA. A .state made in one core does not load in the other.
+Possible fixes once the cause is known: set the GBA system default to mGBA (system settings); set the per-game Alternative emulator; or unbind X and Y in gpSP and save a core remap (Quick Menu, Controls). Do not apply these blind.

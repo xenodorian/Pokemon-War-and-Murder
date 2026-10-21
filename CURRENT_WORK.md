@@ -550,7 +550,8 @@ Partial or open:
 - Both release names are this build. CRC32 0x2f906b52.
 
 
-## 2026-10-21 R36S controls finding (docs/R36S_CONTROLS.md)
-- X acting as A in menus and Y acting as B is gpSP's Turbo A and Turbo B (RetroPad X and Y). mGBA does not map X or Y. The affected game entry is launching in gpSP, not mGBA. The ROM cannot cause this: a GBA has no X or Y.
-- This corrects the earlier note ("RetroArch was already handing the game the normal buttons"), which was not checked on a device. The SWAP hook bug fixed on 2026-10-21 was a separate, real bug.
-- Fix is on the console: default GBA emulator to mGBA (system), or per-game Alternative emulator; or unbind X and Y in gpSP and save a core remap. See the doc.
+## 2026-10-21 R36S controls (docs/R36S_CONTROLS.md): not resolved
+- X and Y as Turbo A and Turbo B is gpSP behavior; mGBA does not map them. The owner says the Controls screen has always shown them as turbo for the affected game, so the earlier claim that the two entries run different cores is unproven.
+- Emulator test on the current ROM (mGBA): A held, tapped and pulsed all work in the menu. The ROM does not drop held or pulsed A. Not tested on gpSP or the console.
+- Open: what the updater changes, which core each entry runs, and what the physical B does. The doc lists the on-console checks that settle it.
+- The earlier note ("RetroArch was already handing the game the normal buttons") was not verified on a device and is not relied on. The SWAP hook bug fixed earlier today was a separate, real bug.
