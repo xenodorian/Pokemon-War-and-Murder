@@ -570,3 +570,37 @@ Partial or open:
 - Release restored to the build before it: PokemonWarAndMurder.gba and PokemonWarAndMurder.ips, CRC32 0x2f906b52 (from commit 7c72c6e). The IPS and ROM are the same build.
 - "Pokemon War.gba" is removed from the repo and tools/publish_rom.sh no longer writes it. PokemonWarAndMurder.gba is the only release ROM.
 - The "Bypass in the game" section of docs/R36S_CONTROLS.md is removed. The owner reports the controls are working now; the cause of the earlier problem is not determined.
+
+## New task list (2026-10-21, from the owner). Status: NOT STARTED unless marked.
+
+### A. Faint messages and transitions
+1. Leaf faints to a JRA soldier, captain or the general/king: before the Arceus/Giratina screen, play the gunshot sound and flash the screen red as the screen changes.
+2. Leaf faints to any other trainer or wild Pokemon: play the cry of the Pokemon that caused the white-out, flash red as the screen changes, and show "You were mauled to death by a pokemon" in place of "you were shot".
+
+### B. Sandshrew and Sandslash
+3. Sandshrew learnset: 1 Scratch, 7 Swords Dance, 9 Cut, 11 Rock Slide, 13 Strength, 15 Rock Smash, 17 Slash.
+4. Sandshrew evolves into Sandslash at level 17 (was 22).
+5. Sandslash learnset: 1 Scratch, 1 Sand-Attack, 1 Defense Curl, 17 Slash, 19 Metal Claw, 21 Dig, 25 Stone Edge, 30 Earthquake.
+6. Sandslash evolves into the species below at level 35 (unchanged).
+
+### C. Sandstorm becomes Sandgrave
+7. Rename the custom species Sandstorm (slot 251) to Sandgrave. Move 201 (Sandstorm, the weather move) keeps its name. Move names and species names are separate tables.
+8. Sandgrave gets a new Ground move, SAND GRAVE: power 120, 100% paralysis chance. Animation: the tomb rock animation with the rocks recoloured a sandy light brown, and a strong screen shake on every rock drop.
+9. Sand Grave effect text: the target is swallowed by the ground and buried up to the neck in dirt.
+10. Sand Grave is learned at level 35 (per the owner's "when Sandshrew evolves into Sandgrave at 35"). Interpreted as the evolution level of Sandslash into Sandgrave, which is 35 in the ROM; confirm if the owner meant Sandshrew.
+11. Sandgrave learns Hyper Beam at level 40. The ROM currently has it at 35, so this moves it.
+
+### D. Shackle Balls and captains
+12. Every city except Pallet Town: merchants sell Shackle Balls. They use the Net Ball graphics and are not Poke Balls for normal Pokemon.
+13. After a captain is defeated, the bless/shoot menu gets a third option, SHACKLE, which uses one Shackle Ball to trap the captain.
+    - Shackle: +5 Liberty, the captain alone joins the player's roster.
+    - Shoot: +10 Liberty, the captain's other Pokemon join the roster, not the captain.
+    (Liberty count is the existing JRA liberty variable, 0x40AC, per gun.c.)
+
+### E. Eirika and the FE8 captains (needs the PoekEmblem repo)
+14. Replace the second in-game captain, Kestrel (captain trainer 24, Viridian), with Eirika:
+    - same Pokemon as Kestrel except Aipom and Corsola,
+    - Eirika is the last entry, a level 15 Eirika.
+15. For the other FE8 allies with animations in xenodorian/PoekEmblem decomp_overlay/graphics/battle_anims/ally_attack (for example Cormag and Innes): each becomes a captain in the remaining cities, with name, profile art, and a final Pokemon in their own roster. That final Pokemon is what gets captured.
+    - Repo not yet attached in this session. It needs to be attached before items 14 and 15 can start.
+    - Ambiguity: "Kestral" is "KESTREL" in the ROM. Treated as the same trainer.
