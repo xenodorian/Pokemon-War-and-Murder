@@ -518,3 +518,7 @@ Partial or open:
 - tools/field_fixes.py was run on that bedroom ROM. House map bytes and tileset pointer are unchanged. Menu, loading cover, church door, Oak, Anne, Mason trigger and whiteout are in the new file. 977 bytes differ from 0xc37f0c81.
 - Root PokemonWarAndMurder.gba is now the only release ROM. roms/Pokemon War and Murder.gba is deleted and gitignored. publish_rom.sh no longer writes it. The Outlaw base, c3_build_base.gba and m_final_latest_build.gba stay.
 - Not booted in the emulator this pass. Checked by reading the house metatiles, the tileset pointer, the menu nop, the loading timer and the whiteout script pointers.
+
+## 2026-10-21 Walk behind the church
+- Pallet grass at (7,8) and (8,8), the two solid tiles between the player's house and the back of the church, is open again. The house wall and the church itself stay solid. field_fixes.py no longer closes those tiles.
+- Release is still only PokemonWarAndMurder.gba. CRC32 0xc168d25e. Not booted in the emulator.

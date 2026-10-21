@@ -243,11 +243,11 @@ def church(r):
     sat = u32(d, sec + 20) - 0x08000000
     def cell(x, y):
         return mp + 2 * (y * w + x)
-    # grass directly north of the steeple. The lawn beside the house stays open.
+    # grass between the player's house and the back of the church stays open
     for x, y in ((7, 8), (8, 8)):
         v = u16(d, cell(x, y))
-        if ((v >> 10) & 3) == 0:
-            d[cell(x, y):cell(x, y) + 2] = struct.pack('<H', v | 0x0400)
+        if ((v >> 10) & 3) == 1:
+            d[cell(x, y):cell(x, y) + 2] = struct.pack('<H', v & ~0x0C00)
     # the drawn doors are the solid tiles one row north of the teleport steps
     for x, y in ((7, 14), (8, 14)):
         v = u16(d, cell(x, y))
