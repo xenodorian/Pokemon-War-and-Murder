@@ -294,11 +294,30 @@ def church(r):
     sat = u32(d, sec + 20) - 0x08000000
     def cell(x, y):
         return mp + 2 * (y * w + x)
-    # grass between the player's house and the back of the church stays open
-    for x, y in ((7, 8), (8, 8)):
+    # grass between the player's house and the back of the church stays open.
+    # (7,8) and (8,8) are the full lawn row. (7,9) and (8,9) are the same lawn
+    # with only the cross and the roof tip drawn on them, and they were still solid.
+    # (6,15) and (9,15) are the empty lawn on either side of the church steps.
+    for x, y, expect in ((7, 8, None), (8, 8, None), (7, 9, 729), (8, 9, 730), (6, 15, 749), (9, 15, 752)):
         v = u16(d, cell(x, y))
-        if ((v >> 10) & 3) == 1:
-            d[cell(x, y):cell(x, y) + 2] = struct.pack('<H', v & ~0x0C00)
+        mt = v & 0x3ff
+        if expect is not None:
+            assert mt == expect, (x, y, mt)
+        if ((v >> 10) & 3) == 1 or ((v >> 12) & 15) != 3:
+            d[cell(x, y):cell(x, y) + 2] = struct.pack('<H', mt | 0x3000)
+    # Oak's pallet object stands on (10,8), on that same lawn, with no script.
+    # Hide him with the flag the pallet entry script already sets.
+    ev = u32(d, h + 4) - 0x08000000
+    po = u32(d, ev + 4) - 0x08000000
+    hidden = 0
+    for i in range(d[ev]):
+        t = po + 24 * i
+        x, y = struct.unpack_from('<hh', d, t + 4)
+        if (x, y) == (10, 8) and d[t] == 3:
+            assert u16(d, t + 20) in (0x002C, 0x04F5), hex(u16(d, t + 20))
+            d[t + 20:t + 22] = struct.pack('<H', 0x04F5)
+            hidden += 1
+    assert hidden == 1, hidden
     # the drawn doors are the solid tiles one row north of the teleport steps
     for x, y in ((7, 14), (8, 14)):
         v = u16(d, cell(x, y))

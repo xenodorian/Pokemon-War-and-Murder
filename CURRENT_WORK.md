@@ -544,3 +544,8 @@ Partial or open:
 - The hook now loads 0x030030F0 into r1 and returns with pop {r0, pc}. SWAP still exchanges A and B only when BUTTON MODE is SWAP. HELP, LR and L=A are unchanged. 13 bytes changed, all inside the old stub. The following routine at 0x175260 is unchanged. A second run changes nothing.
 - Release is still only PokemonWarAndMurder.gba. CRC32 0x8e5fa45d. Not booted in the emulator.
 
+## 2026-10-21 Empty lawn behind the church
+- The lawn row in front of the player's door was already open. The tiles under the church cross, (7,9) and (8,9), were still solid even though most of each tile is empty lawn. So were the lawn tiles on either side of the church steps, (6,15) and (9,15). Those four are open now. The house wall, the church body, and the roof under the cross stay solid. Oak's object on (10,8) now uses the hide flag the pallet entry script already sets, so he does not stand on that lawn.
+- Checked in the emulator only: from the door lawn, one step south walks onto the old cross tiles and then right; from the church steps, right walks onto the old solid lawn; two steps south from the cross stays out of the church. Not tested on a device.
+- Both release names are this build. CRC32 0x2f906b52.
+
