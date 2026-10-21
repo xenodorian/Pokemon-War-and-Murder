@@ -617,3 +617,11 @@ Partial or open:
 - Kestrel is the trainer name (KESTREL in the ROM). Eirika replaces Kestrel.
 - Lockhart remains as he is (no FE8 ally). The ninth captain in item 15 is Lockhart and is unchanged.
 - PoekEmblem: do not clone the whole repo. Only the files needed for the transplant are cloned (sparse checkout).
+
+## Owner decisions on open items (2026-10-21)
+- 16 (.claude/settings.json allowlist): stays denied. Resolved; no further action.
+- 17 (LEAF not removed on catches with fewer than 6 Pokemon): not an issue. Resolved.
+- 18 (Mt. Moon sight trigger; script 0x081be11d Strength branch): owner will test later. Deferred to owner testing.
+- 19 (throw animation timing checked by eye only): owner will test later. Deferred to owner testing.
+- 20 (CryMon dialogue beyond the requested segments): not an issue. Resolved.
+- 21 (apply_all.sh reproducing PokemonWarAndMurder.gba byte for byte): not an issue. Resolved.
