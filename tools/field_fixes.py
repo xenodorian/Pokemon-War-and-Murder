@@ -443,6 +443,86 @@ def whiteout(r):
     r.w32(pool, wrap + 1)
     print('whiteout', hex(sc), 'leaf', hex(leaf + 1), 'death', hex(death), 'wrap', hex(wrap + 1), 'old', hex(old_after))
 
+REVIVE_LEAF = r'''
+push {r4, r5, r6, lr}
+ldr r4, =0x02024029
+ldrb r4, [r4]
+movs r5, #0
+lp:
+cmp r5, r4
+bge dn
+movs r0, #100
+muls r0, r5
+ldr r1, =0x02024284
+adds r6, r0, r1
+movs r0, r6
+movs r1, #11
+movs r2, #0
+bl getmon
+cmp r0, #255
+bne nx
+movs r0, r6
+movs r1, #1
+movs r2, #0
+bl getmon
+ldr r1, =0x53544E44
+cmp r0, r1
+beq nx
+movs r0, r6
+movs r1, #0x39
+movs r2, #0
+bl getmon
+cmp r0, #0
+bne nx
+movs r1, #1
+push {r1}
+mov r2, sp
+movs r0, r6
+movs r1, #0x39
+bl setmon
+pop {r1}
+nx:
+adds r5, #1
+b lp
+dn:
+pop {r4, r5, r6}
+pop {r0}
+bx r0
+getmon:
+ldr r3, =0x%08x
+bx r3
+setmon:
+ldr r3, =0x%08x
+bx r3
+.ltorg
+''' % (GETMON + 1, 0x0804037C + 1)
+
+def revive(r):
+    """Arceus and Giratina send the player back to Pallet. The permanent LEAF comes back at 1 HP."""
+    d = r.b
+    sites = (0xF2E6C4, 0xF2EFBC)
+    seq = bytes([0x97, 1, 0x39, 3, 0, 0xFF, 11, 0, 10, 0, 0x27, 0x6B, 0x02])
+    if d[sites[0]:sites[0] + 1] == b'\x05' and d[sites[1]:sites[1] + 1] == b'\x05':
+        return
+    for at in sites:
+        assert d[at:at + len(seq)] == seq, (hex(at), d[at:at + len(seq)].hex())
+    fn = 0x08000000 + r.fn(REVIVE_LEAF)
+    S = SB()
+    S.raw(0x23)
+    S.ptr(fn + 1)
+    S.raw(0x97, 1)
+    S.raw(0x39, 3, 0, 0xFF)
+    S.raw(*struct.pack('<HH', 11, 10))
+    S.raw(0x27)
+    S.releaseall()
+    S.end()
+    sc = 0x08000000 + put_script(r, S)
+    jump = bytes([0x05]) + struct.pack('<I', sc) + bytes([0x02] * 8)
+    assert len(jump) == len(seq)
+    for at in sites:
+        d[at:at + len(jump)] = jump
+    print('revive', hex(sc), 'leaf', hex(fn + 1))
+
 def install(r):
     if r.b[0x1304EE] == 0x19:
         loading_cover(r)
@@ -454,6 +534,7 @@ def install(r):
     anne(r)
     mason_trigger(r)
     whiteout(r)
+    revive(r)
 
 if __name__ == '__main__':
     r = Rom(sys.argv[1])

@@ -526,3 +526,7 @@ Partial or open:
 ## 2026-10-21 Button mode can be reset in the game
 - The key reader was unchanged from the Outlaw base. OPTIONS now has a fourth BUTTON MODE, SWAP, which exchanges A and B. HELP is the normal layout, LR and L=A are unchanged. The choice is stored in the save, the same place as the old button mode.
 - Release CRC32 checked after publish. Not booted in the emulator.
+
+## 2026-10-21 LEAF returns at 1 HP
+- When ARCEUS or GIRATINA sends the player back to Pallet, the permanent LEAF (species 255, not the empty-party stand-in) is set to 1 HP if she was fainted. The stand-in is left alone. Other party Pokemon are left alone.
+- The two return scripts (0xF2E6C4 and 0xF2EFBC) now jump to one script that heals her, fades, and warps to Pallet (11, 10). Not booted in the emulator.
