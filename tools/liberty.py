@@ -9,7 +9,7 @@ usage: liberty.py IN.gba OUT.gba
 - Shackle is offered only for the ten captains (class 44) and Nero (trainer 530, the general).
 - Marts: BUY / SELL / LIBERTY / QUIT. LIBERTY opens SELL POKEMON, BUY LIBERTY, CANCEL.
   BUY LIBERTY sells the BLESS TAG, GLOCK, 9MM ROUND, SHACKLE BALL, the vitamins, and RARE CANDY.
-  Those leave the town marts (mutagens stay) and the Celadon vitamin counter, which now opens
+  Those leave the town marts (mutagens stayed until tools/liberty_mutagen.py) and the Celadon vitamin counter, which now opens
   BUY LIBERTY directly. Liberty prices use the liberty count the way reputation prices use
   reputation: 0 is the normal price, each point above is 1% off (floor 1), each point below is
   1% more. Other counters stay on reputation.
