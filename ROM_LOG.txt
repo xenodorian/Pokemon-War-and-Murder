@@ -11,3 +11,4 @@
 0x2d239ac0 sand_rough_skin.py 2026-10-22
 0xb1a9853b unstable_effects.py 2026-10-22
 0x0fab62aa unstable_drastic.py 2026-10-22
+0xd4de896d accuracy_table.py 2026-10-22
