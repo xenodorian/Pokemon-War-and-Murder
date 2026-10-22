@@ -18,7 +18,7 @@ Only the Outlaw original (roms/outlaw-2015-09-05 ..., CRC 0x5e460b23) may sit be
 - Harness: tools/harness_new (mGBA). Key masks are HEX (A=1 B=2 Select=4 Start=8 Right=10 Left=20 Up=40 Down=80).
 
 ## Approved features in the ROM
-Opening and bedroom, Oak robbed, LEAF protagonist with the Hitmonchan-based stand-in, splatter order, JRA bases (Pallet, Viridian), Mason, Anne, Max, Shinigami/Yveltal/Nero storyline, double battles and partner AI, run mode and death rule, afterlife beats, task data, SHACKLE (item 89, captains, liberty), Eirika and Kestrel, FE8 allies, Sand Grave (move 358), Sand Rocks, UNSTABLE GROUND (move 359, Sandshrew at level 8; final behavior is commit bc36755, not the earlier passes below), accuracy stages −1..−6 at 80/60/40/30/20/10, Dragonfly (move 360, Gyarados at 20, base Sp. Atk 125), Xatwo (species 430, commit 4c49e84), death effects (gunshot or cry, red fade, "mauled" line).
+Opening and bedroom, Oak robbed, LEAF protagonist with the Hitmonchan-based stand-in, splatter order, JRA bases (Pallet, Viridian), Mason, Anne, Max, Shinigami/Yveltal/Nero storyline, double battles and partner AI, run mode and death rule, afterlife beats, task data, SHACKLE (item 89, captains, liberty), Eirika and Kestrel, FE8 allies, Sand Grave (move 358), Sand Rocks, UNSTABLE GROUND (move 359, Sandshrew at level 8; final behavior is commit bc36755, not the earlier passes below), accuracy stages −1..−6 at 80/60/40/30/20/10, Dragonfly (move 360, Gyarados at 20, base Sp. Atk 125), Xatwo (species 430, commit 4c49e84), death effects (gunshot or cry, red fade, "mauled" line), Liberty mart (tools/liberty.py: bless/threaten locks, captain-or-Nero shackle, town third option LIBERTY).
 Details of each are in docs/history/ (old notes, history only).
 
 ## Open items
@@ -27,11 +27,19 @@ See the dated list at the bottom of this file.
 ## Log
 - 2026-10-22: single-file workflow created; old ROMs and old save states purged from git history; Sandshrew's learnset end marker fixed (the allocator in tools/inc.py now keeps new data off a trailing 0xFF terminator).
 
-## Open items (2026-10-22, after the Xatwo pull)
-- Dragonfly's party menu and Fly map work with no badge. The town warp was not finished. See the field note at the bottom.
-- Accuracy stage table: bytes checked, hit rate never measured.
-- Move sounds (Earthquake, stat change, Fly): not isolated from the harness.
-- Not in the ROM and not committed: story/liberty_native.c, story/liberty_gen.h, tools/liberty.py.
+## Open items (2026-10-22, after Liberty)
+- Accuracy stage table: bytes checked, hit rate never measured. Not retried; the harness cannot hold a battle stat and the RNG repeats from a savestate.
+- Move sounds (Earthquake, stat change, Fly): not isolated from the harness. Fly's dive was seen; no waveform.
+
+## 2026-10-22 Dragonfly field check, corrected
+The note below this one ("fail on the warp") is stale. On the same scratch setup (Gyarados 20, no badges, Route 1), the Fly map cursor is: start ROUTE 1, Up = VIRIDIAN CITY, Down = ROUTE 1, Down = PALLET TOWN. One Down from the start skips Pallet and lands on Route 21. Up, Down, Down, A, A warps to Pallet. No ROM change. Party menu still offers DRAGONFLY with a clear Thunder Badge flag.
+
+## 2026-10-22 Liberty mart (tools/liberty.py)
+Applied on top of the Xatwo ROM. Town marts are BUY / SELL / LIBERTY / SEE YA. LIBERTY opens SELL POKéMON / BUY LIBERTY / CANCEL. BUY LIBERTY (and the old Celadon vitamin counter) opens the liberty goods directly: BLESS TAG, GLOCK, 9MM ROUND, SHACKLE BALL, HP UP, PROTEIN, IRON, CALCIUM, ZINC, CARBOS, RARE CANDY. Those items left the town lists; PHYS MUTAGEN and SPEC MUTAGEN stayed. Prices while that flag is set follow the liberty count (0 = 100%, each point above is 1% off, floor 1, each point below is 1% more). Other counters stay on reputation.
+
+The 4-way shop menu is the engine's pokemart command, so a nested pokemart looked identical to "A did nothing." The shop task's first instructions now jump to a hook: if special var 0x800F is 0x4C42 (set by shop_lib_on, cleared by the hook, shop_lib_off, and map load), it calls the Buy handler instead of waiting. A normal mart never sets that value; the Viridian 4-way menu still waits for a choice. Checked in mGBA from the empty-party state, warped to the Viridian mart with the clerk scene var at 4: submenu on BUY LIBERTY, then the item list with BLESS TAG at $1000 (liberty 0) and the bless-charm description. Bless, threaten, shoot, and shackle were not played through in the emulator.
+
+Skipped, same reasons as before: accuracy hit-rate sampling, and naming individual sound effects.
 
 ## Tests
 All current tests are in tools/tests/ (see its README.md): they build a scratch ROM with tools/mk_test_rom.sh, start from saves/ported/new_game_empty_party.raw and write to /tmp/emu_out. Old scripts that needed retired ROMs, states or switches are in tools/archive/old_tests/ (do not run). The owner is testing the rest by hand; the test pass below is closed.
