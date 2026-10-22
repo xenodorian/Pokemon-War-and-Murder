@@ -731,6 +731,10 @@ def main():
             tb.releaseall(); tb.raw(0x39, wg, wn, 0xff, wx & 255, wx >> 8, wy & 255, wy >> 8); tb.raw(0x27); tb.end()
         elif os.environ.get('TEST_TRAINER'):   # TEST ONLY: TEST_TRAINER=id starts that trainer battle (mode 0) instead of the wild one
             tt = 0x08000000 + r.alloc(enc("TEST ")[:-1] + b' \xff', 1)
+            if os.environ.get('TEST_ITEM'):   # TEST ONLY: TEST_ITEM=id,qty gives that item before the test battle
+                ti, tq = [int(x) for x in os.environ['TEST_ITEM'].split(',')]; tb.raw(0x44, ti & 255, ti >> 8, tq & 255, tq >> 8)
+            if os.environ.get('TEST_AFTER'):   # TEST ONLY: after the battle, jump to the defeated-trainer script (placeholder 0x33333333, filled by shackle.py)
+                tb.raw(0x05); tb.ptr(0x33333333)
             tb.raw(0x5c, 0, int(os.environ['TEST_TRAINER']) & 255, int(os.environ['TEST_TRAINER']) >> 8, 0, 0); tb.ptr(tt); tb.ptr(tt); tb.releaseall(); tb.end()
         else:
             tb.raw(0xb6, foe[0] & 255, foe[0] >> 8, foe[1], 0, 0); tb.raw(0xb7); tb.end()

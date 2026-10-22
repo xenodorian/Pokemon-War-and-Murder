@@ -44,6 +44,10 @@ def apply(r):
         if b[o] == 0x23 and struct.unpack_from('<I', b, o + 1)[0] == SHOOT_DO:
             r.w32(o + 1, fns['shoot_captain']); n += 1
     assert n >= 1, 'no shoot call found'
+    if os.environ.get('TEST_AFTER'):   # TEST ONLY: the test battle jumps to the defeated-trainer script
+        hit = [o for o in range(0xA00000, len(b) - 4) if struct.unpack_from('<I', b, o)[0] == 0x33333333]
+        for o in hit: r.w32(o, new)
+        print('shackle: test jump placeholders filled', len(hit))
     print('shackle: script %s, shoot calls redirected %d' % (hex(new), n))
 
 if __name__ == '__main__':

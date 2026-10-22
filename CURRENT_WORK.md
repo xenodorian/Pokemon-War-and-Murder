@@ -780,3 +780,9 @@ Partial or open:
 - Not confirmed from stills: the gunshot sound and the red fade (no audio captured).
 - Open: one wild run went to heaven and another went to the Pokemon Center after "The world goes white". Needs a look at the soul gate / karma branch.
 - Release ROM and IPS: CRC32 0x3cc320d3.
+
+## Emulator tests, round 2 (2026-10-22)
+- Captain battle: Pallet's captain is LARACHEL (renamed from Hawthorn). Her trainer name, portrait and ally Pokemon (Larachel, Lv 6) appear in battle. Passed.
+- SHACKLE: after beating the captain, the question "Shackle this CAPTAIN with a SHACKLE BALL?" appears. Presses on A did not answer it in the harness, so the YES path, the liberty change and the party change are NOT confirmed. Open: check whether the yes/no answer works on the console and in the harness.
+- Test-only switches (environment variables, never set for a release build): TEST_ITEM=id,qty gives an item before a test trainer battle; TEST_AFTER=1 jumps to the defeated-trainer script after it.
+- Partner targeting fix: not tested (needs a Max partner double battle).
