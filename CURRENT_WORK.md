@@ -191,3 +191,6 @@ The captain/soldier chooser ended the script, so the choice was never read. Shoo
 
 ## 2026-10-22 Shoot freeze and shackle despawn
 Shoot froze after "You took $..." because the captain-loot wrapper was Thumb-2 (lsl.w) and this CPU is Thumb-1. tools/jra_shoot_thumb.py rewrote it in place with 16-bit instructions. The call still goes through the existing bx thunk. Shackling now sets each captain's hide flag to the shackle flag (0x871 + index, 11 people including the general) and removeobject on the one you talked to, so they leave and stay gone. Not played through in the emulator.
+
+## 2026-10-22 Bless Tag is a key item
+Item 56 stays. Importance 1, pocket 2 (key items), price still 1000. The four removeitem 56 instructions are nops. You still need the tag to bless. A map-load hook moves a copy out of the items pocket into key items. Not played through in the emulator.
