@@ -14,7 +14,7 @@ for k in e.get('KEYS', '').split(';'):
         L += ["%s %s" % (fr, m), "%d 0" % (int(fr) + hold)]
 end = int(e.get('END', '4000'))
 for f in range(int(e.get('SHOT_FROM', '1300')), end, int(e.get('SHOT_STEP', '60'))): L.append('shot %d' % f)
-for f in range(1300, end, 120): L.append('ram %d 2023be4 176' % f)
+for f in range(1300, end, int(e.get('RAMSTEP', '120'))): L.append('ram %d 2023be4 176' % f)
 for a in e.get('RAMS', '').split(';'):
     if a.strip(): L.append('ram %d %s' % (end - 60, a))
 L.append('end %d' % end)
@@ -30,5 +30,5 @@ for l in res.stderr.split('\n'):
     elif l.startswith('RAM'):
         f, a, rest = l.split(' ', 2) if False else (l.split(' ')[1], l.split(' ')[2], l.split(': ', 1)[1])
         b = [int(x, 16) for x in rest.split()]
-        def mon(o): return 'hp=%d stages=%s st=%#x' % (b[o+0x28] | b[o+0x29] << 8, b[o+0x18:o+0x20], int.from_bytes(bytes(b[o+0x4c:o+0x50]), 'little'))
+        def mon(o): return 'hp=%d stages=%s st=%#x pp=%s mv=%s' % (b[o+0x28] | b[o+0x29] << 8, b[o+0x18:o+0x20], int.from_bytes(bytes(b[o+0x4c:o+0x50]), 'little'), b[o+0x24:o+0x28], [b[o+0xc+2*i] | b[o+0xd+2*i] << 8 for i in range(4)])
         print(f, 'player', mon(0), '| foe', mon(0x58))
