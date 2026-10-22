@@ -34,3 +34,8 @@ See the dated list at the bottom of this file.
 
 ## Emulator runners
 tools/emu_runs/{battle,death,shackle}.py TAG: build a scratch test ROM (TEST_* env switches, see tools/test_stage.py), run the harness from the current-ROM state, write sheets to /tmp/emu_out. Example: `TEST_PLAYABLE=1 TEST_LEAF=1 TEST_FOE=143,70 python3 tools/emu_runs/death.py t1`.
+
+## 2026-10-22 fixes
+- death_fade.py: the red fade on death now shows (the game refused it while the battle fade was still running; the death script retries until it starts). The "mauled" line breaks after "death" so it fits the box. Checked in the emulator from the current-ROM state: red screen, two-line text, Heaven.
+- viridian_red_fade.py: the Viridian arrest loss shows the red screen again before the afterlife. Checked by running the helper script directly through test_stage (TEST_GOTO), not through the full arrest fight.
+- Heaven vs Pokemon Center: with the stand-in LEAF, a lost battle in a PLAYABLE run goes to the Pokemon Center. Only a fainted permanent LEAF goes to Heaven. docs/SPEC_ARREST_AND_PARTY.md says PLAYABLE means any lost battle is death. Owner decision needed. Not changed.

@@ -3,7 +3,7 @@ Make the scratch copy with tools/mk_test_rom.sh, which writes to /tmp (the guard
 Stepping on the bedroom door tile then runs a test script instead of the normal one. Switches (same names as the old chain build):
   TEST_FOE=species,level (default 16,5) wild battle | TEST_TRAINER=id trainer battle | TEST_GIVE=species,level adds a mon first
   TEST_GIVE_MORE=species,level;species,level | TEST_ITEM=id,qty | TEST_MASTER=1 five MASTER BALLs | TEST_LEAF=1 LEAF joins
-  TEST_PLAYABLE=1 sets the playable-run flag (loss = death) | TEST_AFTER=1 (with TEST_TRAINER) jump to the SHACKLE script after the battle | TEST_WARP=group,num,x,y warp instead of battle"""
+  TEST_PLAYABLE=1 sets the playable-run flag (loss = death) | TEST_GOTO=0xADDR run the script at that ROM address | TEST_AFTER=1 (with TEST_TRAINER) jump to the SHACKLE script after the battle | TEST_WARP=group,num,x,y warp instead of battle"""
 import sys, os, struct
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 from inc import Rom
@@ -19,7 +19,9 @@ def apply(r):
     if e.get('TEST_GIVE'):
         gs, gl = [int(x) for x in e['TEST_GIVE'].split(',')]; tb.raw(0x79, gs & 255, gs >> 8, gl, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
     if e.get('TEST_LEAF'): tb.raw(0x23); tb.ptr(0x083b24b1)
-    if e.get('TEST_WARP'):
+    if e.get('TEST_GOTO'):
+        tb.lockall(); tb.raw(0x05); tb.ptr(int(e['TEST_GOTO'], 16))
+    elif e.get('TEST_WARP'):
         wg, wn, wx, wy = [int(x) for x in e['TEST_WARP'].split(',')]
         tb.releaseall(); tb.raw(0x39, wg, wn, 0xff, wx & 255, wx >> 8, wy & 255, wy >> 8); tb.raw(0x27); tb.end()
     elif e.get('TEST_TRAINER'):
