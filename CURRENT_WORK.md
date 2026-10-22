@@ -51,3 +51,6 @@ All current tests are in tools/tests/ (see its README.md): they build a scratch 
 
 ## 2026-10-22 church tower walk-behind (church_walkbehind.py)
 Pallet Town church: tiles (7,10) and (8,10) are unblocked, and the cross and tower top (tiles (7,9) (8,9) (7,10) (8,10), metatiles 729 to 732) are drawn over the player (layer type COVERED to NORMAL). The row below (6..9,11) stays blocked. Checked in the emulator: the player walks up behind the tower and is covered by it, and stops at the roof row. The owner listed "7/9, 7/10, 7/10, 8/10"; I took the repeated 7/10 to mean 8/9.
+
+## 2026-10-22 Sandshrew line ability (sand_rough_skin.py)
+SANDSHREW, SANDSLASH and SANDGRAVE now have ROUGH SKIN (ability id 24) in slot 1, slot 2 empty, replacing SAND VEIL. The ability is read from the species data, so existing Pokemon in a save get it. Checked in the emulator: a lv 30 Rattata that hit a lv 12 Sandshrew lost 3 of 63 HP (1/16); on the unchanged ROM it lost none.
