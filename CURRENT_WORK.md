@@ -39,3 +39,12 @@ tools/emu_runs/{battle,death,shackle}.py TAG: build a scratch test ROM (TEST_* e
 - death_fade.py: the red fade on death now shows (the game refused it while the battle fade was still running; the death script retries until it starts). The "mauled" line breaks after "death" so it fits the box. Checked in the emulator from the current-ROM state: red screen, two-line text, Heaven.
 - viridian_red_fade.py: the Viridian arrest loss shows the red screen again before the afterlife. Checked by running the helper script directly through test_stage (TEST_GOTO), not through the full arrest fight.
 - Heaven vs Pokemon Center: with the stand-in LEAF, a lost battle in a PLAYABLE run goes to the Pokemon Center. Only a fainted permanent LEAF goes to Heaven. docs/SPEC_ARREST_AND_PARTY.md says PLAYABLE means any lost battle is death. Owner decision needed. Not changed.
+
+## 2026-10-22 test pass (emulator only, from the current-ROM state; every stage above was checked on a scratch copy first)
+- UNSTABLE GROUND: foe accuracy and evasion each -2 (Rattata 4,4); a Keen Eye foe (Pidgey) only loses evasion; a Ground-type foe (Diglett) is skipped; the user is unaffected; no damage. Pass.
+- SAND GRAVE: Sandgrave (Lv 40) learns it, rocks fall, red X, 10 PP, Ground type, KOs a Rattata. Pass.
+- SHACKLE: real battle with JRA captain LARACHEL (trainer 15), Yes at the prompt: she joins the party, captain flag 0x871 set, liberty +5. Pass. Not tested: the +10 liberty when a captain is shot, the No answer, a second attempt.
+- Partner fix: Viridian arrest double battle, MAX's Pikachu used Thunder Wave, Tail Whip and Thundershock on the foes (not itself). Pass.
+- Death: LEAF dead goes to Heaven with a red fade. Wild killer: "mauled" line plus the cry. JRA soldier killer: no "mauled" line (death_class_fix.py; the class saved at battle start was always 0 for trainer battles). The gunshot sound itself was not checked, only that its branch is taken (no way to isolate one sound effect from the harness audio).
+- The "The world goes white." line now reads "The world goes red." in the white-out death script and the Viridian loss (death_text_red.py). Three more copies of the line (Pallet base 0xF31A11, story blob 0xF62902 and 0xF62AAF) still say white and have no red fade. Owner decision needed.
+- Still open: Heaven vs Pokemon Center for the stand-in (see above).

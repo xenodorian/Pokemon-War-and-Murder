@@ -28,8 +28,10 @@ def apply(r):
         tid = int(e['TEST_TRAINER']); tt = 0x08000000 + r.alloc(enc("TEST ")[:-1] + b' \xff', 1)
         if e.get('TEST_ITEM'):
             ti, tq = [int(x) for x in e['TEST_ITEM'].split(',')]; tb.raw(0x44, ti & 255, ti >> 8, tq & 255, tq >> 8)
-        if e.get('TEST_AFTER'): tb.raw(0x05); tb.ptr(r.r32(SHACKLE_ENTRY))
-        tb.raw(0x5c, 0, tid & 255, tid >> 8, 0, 0); tb.ptr(tt); tb.ptr(tt); tb.releaseall(); tb.end()
+        if e.get('TEST_AFTER'):    # real trainer battle, then the script the game runs after a defeated trainer (the SHACKLE script)
+            tb.lockall(); tb.battle(tid, tt, tt, 'after'); tb.raw(0x05); tb.ptr(r.r32(SHACKLE_ENTRY))
+        else:
+            tb.raw(0x5c, 0, tid & 255, tid >> 8, 0, 0); tb.ptr(tt); tb.ptr(tt); tb.releaseall(); tb.end()
     else:
         foe = [int(x) for x in e.get('TEST_FOE', '16,5').split(',')]
         tb.raw(0xb6, foe[0] & 255, foe[0] >> 8, foe[1], 0, 0); tb.raw(0xb7); tb.end()

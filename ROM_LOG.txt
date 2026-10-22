@@ -3,3 +3,5 @@
 0x19bcec0d fix_sandshrew_learnset.py 2026-10-22
 0x97cda3ef death_fade.py 2026-10-22
 0x24667a7b viridian_red_fade.py 2026-10-22
+0xf89a966f death_class_fix.py 2026-10-22
+0x80f607f2 death_text_red.py 2026-10-22
