@@ -2,6 +2,7 @@
 # Rebuilds roms/Pokemon War and Murder.gba from the ROM as it was before the 2026-10-13 opening work (git commit 16adfb2).
 # usage: tools/apply_all.sh [OUT.gba]     (run from the repo root; needs python3 with keystone, capstone, Pillow, numpy; the harness is not needed)
 set -e
+echo 'WARNING: this chain starts from commit 16adfb2 (an older build). Its output is NOT the bedroom release (0xabba66b6). Do not publish it over PokemonWarAndMurder.gba (publish_rom.sh refuses unless ALLOW_RELEASE_OVERWRITE=1).' >&2
 OUT=${1:-/tmp/war_and_murder_rebuilt.gba}
 T=$(mktemp -d)
 git show 16adfb2:"roms/Pokemon War and Murder.gba" > $T/0.gba

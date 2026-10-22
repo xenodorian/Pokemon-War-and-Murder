@@ -786,3 +786,10 @@ Partial or open:
 - SHACKLE: after beating the captain, the question "Shackle this CAPTAIN with a SHACKLE BALL?" appears. Presses on A did not answer it in the harness, so the YES path, the liberty change and the party change are NOT confirmed. Open: check whether the yes/no answer works on the console and in the harness.
 - Test-only switches (environment variables, never set for a release build): TEST_ITEM=id,qty gives an item before a test trainer battle; TEST_AFTER=1 jumps to the defeated-trainer script after it.
 - Partner targeting fix: not tested (needs a Max partner double battle).
+
+## RELEASE LINEAGE: incident and fix (2026-10-22)
+- Problem: from commit f97b395 on, PokemonWarAndMurder.gba was replaced by builds from tools/apply_all.sh, which starts from commit 16adfb2 (an older build). Those builds lost the bedroom, opening and CONTROLS work. The owner noticed the wrong bedroom.
+- Fix: PokemonWarAndMurder.gba and PokemonWarAndMurder.ips restored from commit e7f2901 (bedroom release, CRC32 0xabba66b6). This is the correct release.
+- Guard: tools/publish_rom.sh refuses to replace a root ROM with CRC32 0xabba66b6 unless ALLOW_RELEASE_OVERWRITE=1 is set. tools/apply_all.sh prints a warning at start.
+- Not yet done: the owner's task changes (tasks 1-15, Sand Grave, UNSTABLE, SHACKLE, death fix, team battle fix) exist only in the apply_all chain. They must be re-applied on top of the bedroom release (0xabba66b6), or the chain must start from it. Needs the owner's decision.
+- Until then: no new releases. Emulator tests use scratch test ROMs only, not the release file.

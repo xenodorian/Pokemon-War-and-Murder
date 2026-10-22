@@ -8,6 +8,16 @@ set -e
 cd "$(dirname "$0")/.."
 SRC=$1
 test -n "$SRC" && test -f "$SRC"
+# GUARD: 0xabba66b6 is the bedroom release (commit e7f2901). tools/apply_all.sh starts from the older commit 16adfb2, so a
+# release built by it drops the bedroom, opening and CONTROLS work. Refuse to replace the bedroom release unless
+# ALLOW_RELEASE_OVERWRITE=1 is set on purpose (only after the release base in CURRENT_WORK.md has been switched).
+PROTECTED_CRC=0xabba66b6
+CUR_CRC=$(python3 -c "import sys,zlib; print(hex(zlib.crc32(open(sys.argv[1],'rb').read()) & 0xffffffff))" PokemonWarAndMurder.gba)
+if [ "$CUR_CRC" = "$PROTECTED_CRC" ] && [ -z "$ALLOW_RELEASE_OVERWRITE" ]; then
+  echo "REFUSED: the root ROM is the bedroom release ($PROTECTED_CRC). Not replaced. See CURRENT_WORK.md (release lineage)."
+  exit 1
+fi
+echo "publishing $(python3 -c "import sys,zlib; print(hex(zlib.crc32(open(sys.argv[1],'rb').read()) & 0xffffffff))" "$SRC") over $CUR_CRC"
 cp "$SRC" PokemonWarAndMurder.gba
 rm -f "roms/Pokemon War and Murder.gba"
 BASE=""
