@@ -1,7 +1,7 @@
 """Decal layering/collision walk test, emulator only. Builds a TEST ROM warped next to a decal and walks LEAF over it from the west, the east, the south and the north,
 taking a frame every STEP frames; writes a labelled contact sheet.
 usage: layer_test.py NAME G,N,X,Y OUT.png [POKES] [FLAGS] [CLEAR]    (X,Y = the decal tile; the player starts 2 tiles west of it)
- POKES  = viri_test VIRI_POKE (e.g. 0x1130=2), FLAGS = VIRI_FLAGS, CLEAR = VIRI_CLEAR. Env ROMSRC=ROM.gba tests an already built ROM-less variant (default: rebuild with apply_all)."""
+ POKES  = viri_test VIRI_POKE (e.g. 0x1130=2), FLAGS = VIRI_FLAGS, CLEAR = VIRI_CLEAR. Env ROMSRC=ROM.gba tests an already built ROM-less variant (default: rebuild with mk_test_rom.sh)."""
 import sys,os,subprocess,glob
 from PIL import Image,ImageDraw
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__))); os.chdir(ROOT)

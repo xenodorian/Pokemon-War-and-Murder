@@ -8,7 +8,7 @@ ROOT='/home/claude/work'; os.chdir(ROOT)
 lv,slot,foe,flv,sheet_out=int(sys.argv[1]),int(sys.argv[2]),sys.argv[3],sys.argv[4],sys.argv[5]
 tmp=os.environ.get('TMPDIR','/tmp')
 rom=os.path.join(tmp,'damage_rom_%d.gba'%lv); script=os.path.join(tmp,'damage_test.txt')
-subprocess.run(['sh','tools/apply_all.sh',rom],check=True,env=dict(os.environ,TEST_BATTLE='1',TEST_GIVE='107,%d'%lv,TEST_FOE='%s,%s'%(foe,flv)),capture_output=True)
+subprocess.run(['sh','tools/mk_test_rom.sh',rom],check=True,env=dict(os.environ,TEST_BATTLE='1',TEST_GIVE='107,%d'%lv,TEST_FOE='%s,%s'%(foe,flv)),capture_output=True)
 L=[]
 for f in range(60,600,40): L+=[f"{f} 2",f"{f+4} 0"]
 L+=["700 80","760 0"]

@@ -1,7 +1,7 @@
 import sys,os,struct,subprocess
 sys.path.insert(0,'/home/claude/work/tools'); os.chdir('/home/claude/work')
 import gun_t3 as t
-ROM=os.environ.get('WALK_ROM','/home/user/Pokemon-Outlaw-Mod/roms/Pokemon War and Murder.gba')
+ROM=os.environ.get('WALK_ROM','PokemonWarAndMurder.gba')
 KEY={'U':'40','D':'80','L':'20','R':'10'}
 def test(name,g,n,sx,sy,k,t0=900,hold=64):
     t.mkw(ROM,'out/wt_%s.gba'%name,g,n,sx,sy,[])
@@ -10,7 +10,7 @@ def test(name,g,n,sx,sy,k,t0=900,hold=64):
     L+=[f"{t0} {KEY[k]}",f"{t0+hold} 0"]
     L+=["ram %d 3005008 4"%(t0-6),"ram %d 2000000 262144"%(t0-5),"ram %d 3005008 4"%(t0+hold+25),"ram %d 2000000 262144"%(t0+hold+26),"end %d"%(t0+hold+40)]
     open('/tmp/claude-0/wt.txt','w').write('\n'.join(L))
-    r=subprocess.run(['./tools/harness_new','out/wt_%s.gba'%name,'/tmp/claude-0/wt.txt','shots/wt_'+name],env=dict(os.environ,LOADSTATE='out/user_new.raw'),capture_output=True,text=True,timeout=600)
+    r=subprocess.run(['./tools/harness_new','out/wt_%s.gba'%name,'/tmp/claude-0/wt.txt','shots/wt_'+name],env=dict(os.environ,LOADSTATE='saves/ported/new_game_empty_party.raw'),capture_output=True,text=True,timeout=600)
     rams=[l.split() for l in (r.stdout+r.stderr).splitlines() if l.startswith('RAM')]
     def pos(i):
         sb=struct.unpack('<I',bytes(int(x,16) for x in rams[i][3:]))[0]; ew=bytes(int(x,16) for x in rams[i+1][3:]); off=sb-0x2000000

@@ -1,3 +1,5 @@
+> OLD NOTES. They describe the retired multi-ROM build chain. Do not follow any build or release step here. See /CURRENT_WORK.md and /docs/FOR_NEW_AGENTS.md.
+
 # Spec: Max, the Viridian arrest, soldier fights, rewards, and party death rules
 
 Status: written 2026-10-16 from the user's instructions in the working session. Items marked DECISION were not stated by the user; the stated default is what gets built unless the user changes it. Plain text only (no em dashes, no emoji).

@@ -5,7 +5,7 @@ from PIL import Image
 ROOT='/home/claude/work'; os.chdir(ROOT)
 warp,keys,out=sys.argv[1],sys.argv[2],sys.argv[3]
 tmp=os.environ.get('TMPDIR','/tmp'); rom=os.path.join(tmp,'warp_rom.gba'); script=os.path.join(tmp,'warp_test.txt')
-subprocess.run(['sh','tools/apply_all.sh',rom],check=True,env=dict(os.environ,TEST_BATTLE='1',TEST_WARP=warp),capture_output=True)
+subprocess.run(['sh','tools/mk_test_rom.sh',rom],check=True,env=dict(os.environ,TEST_BATTLE='1',TEST_WARP=warp),capture_output=True)
 KEY={'U':0x40,'D':0x80,'L':0x20,'R':0x10}
 L=[]
 for f in range(60,600,40): L+=[f"{f} 2",f"{f+4} 0"]

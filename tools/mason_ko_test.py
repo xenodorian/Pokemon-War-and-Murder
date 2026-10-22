@@ -9,7 +9,7 @@ ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__))); os.chdir(ROOT)
 sheet_out=sys.argv[1]
 tmp=os.environ.get('TMPDIR','/tmp')
 rom=os.path.join(tmp,'battle_test_rom.gba'); script=os.path.join(tmp,'battle_test.txt')
-subprocess.run(['sh','tools/apply_all.sh',rom],check=True,env=dict(os.environ,TEST_BATTLE='1',TEST_TRAINER=os.environ.get('TRAINER','426'),MASON_TEST_LV='80',MASON_TEST_SPECIES='68'),capture_output=True)
+subprocess.run(['sh','tools/mk_test_rom.sh',rom],check=True,env=dict(os.environ,TEST_BATTLE='1',TEST_TRAINER=os.environ.get('TRAINER','426'),MASON_TEST_LV='80',MASON_TEST_SPECIES='68'),capture_output=True)
 L=[]
 for f in range(60,600,40): L+=[f"{f} 2",f"{f+4} 0"]         # B closes the save prompt in the saved state
 L+=["700 80","760 0"]                                        # walk down onto the door tile

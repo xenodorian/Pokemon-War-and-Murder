@@ -1,3 +1,5 @@
+> OLD NOTES. They describe the retired multi-ROM build chain. Do not follow any build or release step here. See /CURRENT_WORK.md and /docs/FOR_NEW_AGENTS.md.
+
 STALE (2026-10-16 reconciliation): this handoff predates the later build passes. Use CURRENT_WORK.md (newest sections) for status.
 
 HANDOFF: Pokemon War and Murder (for Grok)

@@ -1,39 +1,32 @@
 # For new agents
 
-Read this first if you are a fresh Grok session starting from scratch on this project.
+Read /CURRENT_WORK.md first. It has the one rule and the one workflow.
 
 ## Quick start
-- Repos: xenodorian/Pokemon-War-and-Murder (this one, push straight to main), xenodorian/CryMon, pret/pokefirered, pret/pokeemerald (reference for partner battle logic, e.g. battle_controller_player_partner.c).
-- The base ROM is the Pokemon Outlaw hack in roms/. It is itself a FireRed hack and has no decomp. All edits are Python binary patches built by tools/apply_all.sh. Do NOT use tools/build_full.sh, which is the old chain.
-- Build ROMs roms/c3_build_base.gba and roms/m_final_latest_build.gba must stay.
+- Repos: xenodorian/Pokemon-War-and-Murder (this one, push straight to main, never create branches), xenodorian/CryMon, pret/pokefirered, pret/pokeemerald (reference only).
+- The game is ONE file, PokemonWarAndMurder.gba at the repo root. Change it only with `tools/patch.sh tools/STAGE.py`. The older ROMs (c3_build_base.gba, m_final_latest_build.gba and all earlier builds) were deleted and purged from history. They must never come back.
+- The archived chain scripts are in tools/archive/old_chain/. Do not run them. They rebuild an old lineage and would reintroduce the old bedroom.
+- Never use an older save state or ROM to test. Tests run from saves/ported/new_game_empty_party.raw (made from the current ROM) or newer.
 
 ## Environment setup that worked
 - pip: keystone-engine capstone Pillow numpy scipy scikit-image
-- apt: clang lld llvm (llvm-objcopy) gcc-arm-none-eabi, and libmgba0.10t64 so tools/harness_ls and tools/harness_new run.
-- Scripts expect /home/claude/work: ln -s /workspace/Pokemon-War-and-Murder /home/claude/work. Also mkdir /tmp/claude-0.
-- Use shallow clones (git clone --depth 1) for the pret repos.
+- apt: clang lld llvm (llvm-objcopy), and libmgba0.10t64 so tools/harness_new runs.
+- Scripts expect /home/claude/work: ln -s <repo path> /home/claude/work. Also mkdir /tmp/claude-0.
 
-## Pitfalls hit early
-- The computer can take a long time to start. Shell may fail with "still starting up". Retry. Do not ask the user to touch the machine; they are in the cloud.
-- The GitHub connector is text-only and truncates large files. Read big files from a clone.
-- Push with git, not the connector: gh auth login --web, approve the code at github.com/login/device in the box browser (already signed in as xenodorian), then gh auth setup-git. After that git push works with binaries.
-- The local checkout drifts behind origin when others push. Run git fetch and git pull --rebase before any commit.
+## Pitfalls
+- Push with git to main. Fetch and rebase before any commit.
 - Coord event trigger 0 runs immediately, so use a var as the trigger.
-- Test-only env switches (TEST_BATTLE, TEST_WARP, TEST_GIVE, TEST_FOE, VIRI_FORCE, VIRI_LEVEL and similar) never go in release builds.
-- A rebuild differed from the repo ROM by 5 bytes of compiled code, likely a compiler version difference. Not a behaviour bug found so far.
+- Test-only switches live in tools/test_stage.py and only ever touch a scratch copy outside the repo.
+- tools/inc.py Rom.alloc starts after the last non-0xFF byte plus 4. Data that ends in its own 0xFF terminator must not be followed by new data in the same spot.
 
 ## Owner rules and style
-- Push straight to main. Never delete or overwrite uploaded ROMs, IPS patches, saves, states or art.
-- GitROMs has one lookup in this repo: PokemonWarAndMurder.gba (Pokemon War and Murder). "Pokemon War.gba" was removed on 2026-10-21 at the owner's request. Do not publish another name, and do not write roms/Pokemon War and Murder.gba. That older file went stale, got patched, and was copied back over the real game.
-- No em dashes, no emoji. Be concise.
-- Verify before claiming done, and say when a check was emulator-only.
-- Do not ask questions the repos or ROM can answer. Decisions are delegated: use judgment and record the choice.
-- After each large step, commit, push and add a dated note to CURRENT_WORK.md.
-- Stay in this project's scope. If blocked, search online first.
+- Work only on main. No em dashes, no emoji. Concise plain answers for simple questions.
+- Do not put model identifiers in commits or PRs.
+- Verify before claiming done, and say when a check was emulator-only. A screenshot from a loaded save state shows that state's graphics, not the ROM's.
+- GitROMs looks up one name: PokemonWarAndMurder.gba. Do not publish another name.
+- Stay in scope. If a needed edit goes beyond the request, stop and confirm.
 
 ## Where to look
-- CURRENT_WORK.md (newest notes at the end)
-- docs/SPEC_ARREST_AND_PARTY.md
-- docs/handoff/grok_handoff.txt
-- docs/ANIMATION_NOTES.md
-- docs/STORY_PLAN.md
+- CURRENT_WORK.md, ROM_LOG.txt
+- docs/SPEC_ARREST_AND_PARTY.md, docs/handoff/grok_handoff.txt (old notes), docs/ANIMATION_NOTES.md, docs/STORY_PLAN.md
+- docs/history/ (old notes, history only)

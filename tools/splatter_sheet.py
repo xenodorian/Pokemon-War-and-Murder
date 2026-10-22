@@ -1,6 +1,6 @@
 """Visual audit of every decal object (splatter 0x98, body 0x99, feather 155, army splatter alias 0xA1) on a ROM copy, emulator only.
 For each decal: native screenshot in place (player two tiles away), standing on it, and walking over it; crops 96x64 at 3x -> shots/splatter_crops/*.png and shots/splatter_all_sheet*.png.
-usage: splatter_sheet.py [ROM.gba]   (builds a TEST ROM with the final apply_all chain, TEST_BATTLE + a house door warp that is patched per decal)"""
+usage: splatter_sheet.py [ROM.gba]   (builds a TEST ROM with tools/mk_test_rom.sh, TEST_BATTLE + a house door warp that is patched per decal)"""
 import sys,os,subprocess,glob,struct,shutil
 from PIL import Image,ImageDraw
 ROOT=os.path.dirname(os.path.dirname(os.path.abspath(__file__))); os.chdir(ROOT); sys.path.insert(0,'tools')
@@ -24,7 +24,7 @@ def main():
     global M
     M=maps('/tmp/d1.gba' if not len(sys.argv)>1 else sys.argv[1])
     env=dict(os.environ,TEST_BATTLE='1',TEST_WARP='3,0,5,5')
-    subprocess.run(['sh','tools/apply_all.sh',BASE_ROM],check=True,env=env,capture_output=True)
+    subprocess.run(['sh','tools/mk_test_rom.sh',BASE_ROM],check=True,env=env,capture_output=True)
     base=open(BASE_ROM,'rb').read(); pat=b'\x39\x03\x00\xff\x05\x00\x05\x00\x27'; assert base.count(pat)==1
     at=base.index(pat)
     import leg1

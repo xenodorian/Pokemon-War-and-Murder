@@ -6,7 +6,7 @@ ROOT='/home/claude/work'; os.chdir(ROOT)
 lv,slot,foe,flv,out=int(sys.argv[1]),int(sys.argv[2]),sys.argv[3],sys.argv[4],sys.argv[5]
 S,E,ST=(int(x) for x in (sys.argv[6:9] if len(sys.argv)>8 else (1370,1700,8)))
 tmp=os.environ.get('TMPDIR','/tmp'); rom=os.path.join(tmp,'anim_rom.gba'); script=os.path.join(tmp,'anim_test.txt')
-subprocess.run(['sh','tools/apply_all.sh',rom],check=True,env=dict(os.environ,TEST_BATTLE='1',TEST_GIVE='%s,%d'%(os.environ.get('SPECIES','107'),lv),TEST_FOE='%s,%s'%(foe,flv)),capture_output=True)
+subprocess.run(['sh','tools/mk_test_rom.sh',rom],check=True,env=dict(os.environ,TEST_BATTLE='1',TEST_GIVE='%s,%d'%(os.environ.get('SPECIES','107'),lv),TEST_FOE='%s,%s'%(foe,flv)),capture_output=True)
 L=[]
 for f in range(60,600,40): L+=[f"{f} 2",f"{f+4} 0"]
 L+=["700 80","760 0"]

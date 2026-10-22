@@ -9,7 +9,7 @@ rom=os.environ.get('VIRI_ROM') or '/tmp/viri_rom.gba'; script='/tmp/viri_test.tx
 if not os.environ.get('VIRI_ROM'):
     env=dict(os.environ,TEST_BATTLE='1')
     if os.environ.get('VIRI_WARP')!='none': env['TEST_WARP']=os.environ.get('VIRI_WARP','3,1,23,38')
-    subprocess.run(['sh','tools/apply_all.sh',rom],check=True,env=env,capture_output=True)
+    subprocess.run(['sh','tools/mk_test_rom.sh',rom],check=True,env=env,capture_output=True)
 KEY={'U':0x40,'D':0x80,'L':0x20,'R':0x10}
 L=[]
 for fl in os.environ.get('VIRI_FLAGS','').split(','):      # e.g. VIRI_FLAGS=0x84a sets F_PLAYABLE from the start
