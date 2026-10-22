@@ -3,7 +3,7 @@
    Earthquake's animation is used (its battle animation entry is copied).
  - effect 14 (unused in this ROM): a custom battle script. Ground-type targets are skipped. Other targets get accuracy -2, then evasion -2.
    The user is not affected (the owner's choice).
- - name "UNST GROUND" (the name field holds 12 characters, so "UNSTABLE GROUND" does not fit). Description is a best guess.
+ - name "UNSTABLE" (the name field holds 12 characters, so "UNSTABLE GROUND" does not fit). Description is a best guess.
  - the move tables grow to 360 entries (same method as sand_grave.py), the code sentinels and the battle text limit go from 359 to 360
  - Sandshrew learns it at level 8."""
 import sys, os, struct
@@ -62,7 +62,7 @@ def apply(r):
     md_new = r.alloc(bytes(b[L['md']:L['md'] + 12 * OLD_N]) + bytes(rec), 4)
     # 3. names (13 bytes)
     names = bytes(b[L['mn']:L['mn'] + 13 * OLD_N])
-    n = SA.text('UNST GROUND'); assert len(n) <= 13
+    n = SA.text('UNSTABLE'); assert len(n) <= 13
     names += n + b'\xff' * (13 - len(n))
     mn_new = r.alloc(names, 4)
     # 4. description

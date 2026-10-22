@@ -765,3 +765,10 @@ Partial or open:
 - Effect 14 (unused in the ROM): custom battle script. attackcanceler, attackstring, ppreduce, then Ground targets go to BattleScript_StatDownEnd. Others: accuracy -2, then evasion -2 (setbyte on gBattleScripting.statChanger 0x02023fde, statbuffchange). Accuracy-check and the substitute check are not used, so the move cannot miss and a substitute does not block it.
 - Sandshrew learns it at 8.
 - Release ROM and IPS: CRC32 0x82974e43. newgame_test passes. Emulator: the move list shows UNST GROUND in the third slot for a level 8 Sandshrew. The stat drop was not reached in battle (the harness inputs did not select the move).
+
+## UNSTABLE rename and input fix (2026-10-22)
+- Owner: the name is UNSTABLE (fits the 12-character field). Done: move 359 is "UNSTABLE". Release ROM and IPS: CRC32 0x2edd8c89. newgame_test passes.
+- Harness input bug (the cause): tools/harness.c reads key masks as HEX (sscanf %x). The earlier tests wrote Down as decimal 128, which the harness read as 0x128 (R plus Left, a wrong combination). Use hex: A=1, B=2, Select=4, Start=8, Right=10, Left=20, Up=40, Down=80. Example: "2300 80" holds Down from frame 2300.
+- Verified in the emulator: a level 8 Sandshrew (TEST_GIVE=27,8, wild Pidgey) selects UNSTABLE and uses it. The opponent's evasion stage went from 6 to 4 (RAM 0x02023c54 = gBattleMons[1].statStages). Accuracy stayed at 6 because Pidgey has KEEN EYE (correct: "prevents accuracy loss"). The evasion message was not caught in the frame shots.
+- Not verified: the Ground-type exemption (no Ground-type foe was in the test), and the message text for the evasion drop.
+- RAM watch works with "ram <frame> <addr> <count>" lines (printed to stderr as RAM lines).
