@@ -69,18 +69,16 @@ void heal_kind(void){
 #define DF_BTYPE (*(volatile u32*)0x02022B4C)     // gBattleTypeFlags
 #define DF_ENEMY_SPECIES (*(volatile u16*)(0x02023BE4+0x58))  // gBattleMons[1].species (the enemy battler)
 #define DF_TRAINERS 0x08798790                   // trainer table, 40 bytes each, class at +1
+#define DF_TRAINERS_CLASS(id) (*(const u8*)(DF_TRAINERS+40*(u32)(id)+1))
 #define DF_PlaySE ((void(*)(u16))(0x080722cc|1))
 #define DF_PlayCry ((void(*)(u16,signed char))(0x08071df0|1))
 #define DF_FadeCol ((u32(*)(u32,signed char,u8,u8,u16))(0x08070588|1))
 // Owner task 1: the screen goes red before the afterlife (used by the Viridian loss, where the soldiers shoot LEAF and MAX)
 void red_flash(void){ DF_FadeCol(0xFFFFFFFFu,0,0,16,0x001F); }
 void death_fx(void){
-    u8 mauled=1;
-    if(DF_BTYPE & 8){                                    // trainer battle
-        const u8* t=(const u8*)(DF_TRAINERS+40*(u32)(*(volatile u16*)0x020386ae));
-        u8 cls=t[1];
-        if(cls==44 || cls==45 || cls==48) mauled=0;
-    }
+    // the class of the trainer who beat LEAF was saved when the battle started (VAR 0x40F8, 0 for a wild POKeMON). 44 captain, 45 general, 48 soldier: a gunshot
+    u8 cls=(u8)*var(0x40F8);
+    u8 mauled=(cls==44 || cls==45 || cls==48) ? 0 : 1;
     GSV(12)=mauled;
     if(mauled) DF_PlayCry(DF_ENEMY_SPECIES,0);
     else DF_PlaySE(347);                                 // SE_SHOT
@@ -148,6 +146,7 @@ void max_prepare(void){
     max_remove();
     int n=COUNT, perm=0; for(int i=0;i<n;i++) if(is_leaf_perm(i)) perm=1;
     *var(VAR_BSTART)=(n>=6&&perm)?1:0;
+    *var(0x40F8)=(DF_BTYPE&8)?DF_TRAINERS_CLASS(*(volatile u16*)0x020386ae):0;     // the trainer's class (0 for a wild POKeMON), read by death_fx
     if(n==0){
         CreateMon(PARTY,SP_MAX,1,32,0,0,1,STNDOT); COUNT=1;
         u16 one=1; SetMonData(PARTY,0x3a,&one); SetMonData(PARTY,0x39,&one);      // max HP 1, HP 1: one hit and she is down

@@ -772,3 +772,11 @@ Partial or open:
 - Verified in the emulator: a level 8 Sandshrew (TEST_GIVE=27,8, wild Pidgey) selects UNSTABLE and uses it. The opponent's evasion stage went from 6 to 4 (RAM 0x02023c54 = gBattleMons[1].statStages). Accuracy stayed at 6 because Pidgey has KEEN EYE (correct: "prevents accuracy loss"). The evasion message was not caught in the frame shots.
 - Not verified: the Ground-type exemption (no Ground-type foe was in the test), and the message text for the evasion drop.
 - RAM watch works with "ram <frame> <addr> <count>" lines (printed to stderr as RAM lines).
+
+## Death sound and text for JRA trainers (2026-10-22, emulator-tested)
+- Bug: after a permanent LEAF fell to a JRA soldier or captain, the death script showed "You were mauled to death by a pokemon." (wrong; should be the gunshot). The death check read the battle type flags after the battle had ended, so every trainer counted as a non-JRA kill.
+- Fix (story/story_native.c): max_prepare saves the trainer's class at battle start in VAR 0x40F8 (0 for wild). death_fx reads that var: 44, 45 or 48 gives the gunshot, anything else the mauled line.
+- Tested: Lockhart (captain, class 44) kills LEAF: no mauled text, "The world goes white", heaven. Wild Snorlax still shows the mauled line.
+- Not confirmed from stills: the gunshot sound and the red fade (no audio captured).
+- Open: one wild run went to heaven and another went to the Pokemon Center after "The world goes white". Needs a look at the soul gate / karma branch.
+- Release ROM and IPS: CRC32 0x3cc320d3.
