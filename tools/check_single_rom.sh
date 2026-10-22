@@ -5,6 +5,8 @@ cd "$(dirname "$0")/.."
 OUTLAW="roms/outlaw-2015-09-05 (original hack ROM, from user upload 3ad0b9f8).gba"
 bad=$(find . -name '*.gba' -not -path './.git/*' -not -path './PokemonWarAndMurder.gba' -not -path "./$OUTLAW")
 if [ -n "$bad" ]; then echo "REFUSED: extra ROM files (only PokemonWarAndMurder.gba and the Outlaw original may exist):"; echo "$bad"; exit 1; fi
+SAVES=$(find . \( -name '*.state*' -o -name '*.srm' -o -name '*.sgm' -o -name '*.sav' -o -name '*.raw' \) -not -path './.git/*' -not -path './saves/ported/new_game_empty_party.raw' -not -path './stage2/shot.raw')
+if [ -n "$SAVES" ]; then echo "REFUSED: old save states are banned (the only allowed one is saves/ported/new_game_empty_party.raw, made from the current ROM):"; echo "$SAVES"; exit 1; fi
 python3 - "$OUTLAW" <<'PY' || exit 1
 import sys, zlib
 d = open('PokemonWarAndMurder.gba', 'rb').read()
