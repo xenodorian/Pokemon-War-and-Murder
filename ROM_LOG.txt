@@ -22,3 +22,4 @@
 0xe3652050 viridian_flag_fix.py 2026-10-22
 0x975977a5 liberty_mutagen.py 2026-10-22
 0x3efeb6fb base_flag_split.py 2026-10-22
+0xeed11853 captain_shackle_menu.py 2026-10-22
