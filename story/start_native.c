@@ -13,9 +13,10 @@ typedef unsigned char u8; typedef unsigned short u16; typedef unsigned int u32;
 
 // ---- controller report: sample the raw key register once per frame (from the key hook) while a start menu script runs ----
 // Working memory is the save scratch buffer (4 KB, only live during a save): text first, then the sample state at +0x400.
-struct St { u16 mode, done, run, n, quiet, wait, idle, tlen; u16 raw[150]; u16 map[150]; };
+struct St { u16 mode, done, run, n, quiet, wait, idle, tlen, ca; u16 raw[150]; u16 map[150]; };
 #define ST ((volatile struct St*)(0x02039A3C + 0x400))
 static u16 mapped(u16 k);
+static u16 low(u16 k){ return k & (u16)(-k); }
 
 static void ch(char c){ if(ST->tlen < 0x3F0) BUF[ST->tlen++] = c; }        // the text may never reach the sample state at +0x400
 static void put(const char *s){ while(*s) ch(*s++); }
@@ -47,9 +48,14 @@ static void rle(volatile u16 *a, u16 n){
 // one sample per frame while a script holds the keys (0x8009 = 0xC0DE); k = raw pressed keys this frame
 static void rec(u16 k){
     volatile struct St *s = ST;
-    if(s->done) return;
+    if(s->done || s->mode > 4 || s->n >= 150) return;      // also ignores garbage left in the scratch buffer
     if(s->mode == 1){ if(k) s->quiet = 0; else s->quiet++; if(++s->wait >= 300 || s->quiet >= 20) s->done = 1; }
     else if(s->mode == 2){ s->idle |= k; if(++s->n >= 60) s->done = 1; }
+    else if(s->mode == 4){          // REMAP: the first allowed key wins; A may not be B, B may not be A or the key chosen for A
+        u16 p = low(k);
+        if(p && (s->run == 0 ? p != 2 : (p != 1 && p != s->ca))){ s->idle = p; s->done = 1; }
+        else if(++s->wait >= 1800){ s->idle = 0; s->done = 1; }
+    }
     else if(s->mode == 3){
         if(!s->run){ if(k) s->run = 1; else if(++s->wait >= 1800) s->done = 1; }
         if(s->run){
@@ -64,6 +70,11 @@ void kn_settle(void){ arm(1); }        // wait until no key has been held for 20
 void kn_idle(void){ arm(2); }          // 60 frames with the hands off
 void kn_rec(void){ arm(3); }           // wait for a first key, then record until 20 quiet frames
 void kn_poll(void){ RESULT = ST->done; }
+void kn_off(void){ volatile struct St *s = ST; s->mode = 0; s->done = 1; s->ca = 0; }     // REMAP start: no sampling, whatever the scratch buffer held
+void kn_pickA(void){ arm(4); ST->run = 0; }
+void kn_pickB(void){ arm(4); ST->run = 1; }
+// RESULT = 1 when a key was chosen (0x8004 = that key), 0 on timeout (30 seconds)
+void kn_got(void){ volatile struct St *s = ST; GSV(0x8004) = s->idle; RESULT = s->idle != 0; if(s->run == 0) s->ca = s->idle; }
 // start of the report: header lines
 void kn_begin(void){
     u32 i; u8 mode = SB2 ? SB2[19] : 0xFF;
@@ -85,13 +96,6 @@ static void fin(char which){
 }
 void kn_finA(void){ fin('A'); }
 void kn_finB(void){ fin('B'); }
-// 0x8004 = every key held right now
-void kn_now(void){ GSV(0x8004) = KEYS(); }
-static u16 low(u16 k){ return k & (u16)(-k); }
-// 0x8004 = lowest held key, 0 when none or when it is B (B may not be chosen for A)
-void kn_pickA(void){ u16 k = low(KEYS()); if(k == 2) k = 0; GSV(0x8004) = k; }
-// 0x8004 = lowest held key, 0 when none, or when it is A or the key already chosen for A (0x8005)
-void kn_pickB(void){ u16 k = low(KEYS()); if(k == 1 || k == GSV(0x8005)) k = 0; GSV(0x8004) = k; }
 // the report text is in the buffer: flash it to sector 31, VAR_RESULT = 1 on success
 void kn_write(void){ RESULT = WRITE_SECTOR(31, (const void*)BUF) == 1; }
 

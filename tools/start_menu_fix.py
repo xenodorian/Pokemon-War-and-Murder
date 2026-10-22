@@ -6,7 +6,10 @@ Here the tail, the two callbacks and the fade exemption list use the Thumb-1 cal
 REPORT: hands off, then press A, then press B. The key hook samples the raw key register every frame (and what the game would see after the remap),
 and the text report goes to flash sector 31 (the unused Trainer Tower sector) as PWAMRPT, which the GitROMs launcher lifts out of the .srm.
 REMAP: two prompts read the raw key register; the chosen key masks are kept in two saved script variables; the key hook that ReadKeys already
-calls (0x08175228) swaps the A and B bits with those keys."""
+calls (0x08175228) swaps the A and B bits with those keys.
+History: CRC 0xedb85fb0 was built by the first version of this stage, which kept the masks in 0x40C4 and 0x40DC. Those are inside the shot-trainer bit store
+(tools/build.py VARS_POOL), so REMAP corrupted it. start_menu_fix2.py runs this stage again on that ROM: new natives, scripts, callbacks, tail and fade
+list are written and everything is repointed to them; the first copies stay as dead bytes."""
 import sys, struct
 sys.path.insert(0, 'tools')
 from inc import Rom
@@ -21,8 +24,9 @@ HOOK = 0x175228       # key hook called by ReadKeys (0x080005E8)
 WRITE_SECTOR = 0x080DA5E1   # u8 WriteTrainerTowerSector(u8 sector, const void *src): copies 0xFFC bytes, returns 1 on success
 SECTOR = 31
 BUF = 0x02039A3C      # save scratch buffer + 4; the routine copies from here onto itself, so the report is written here
-V4, V5, V6, VR = 0x020370C0, 0x020370C2, 0x020370C4, 0x020370D2   # script scratch variables 0x8004, 0x8005, 0x8006, 0x800D
-VAR_A, VAR_B = 0x40C4, 0x40DC          # saved script variables holding the registered key masks: unnamed in ref/vars.h, no script op, coord event or literal in the ROM touches them
+VAR_A, VAR_B = 0x40AE, 0x40B5          # saved script variables holding the registered key masks. 0x40C4 and 0x40DC (first version) were inside the shot-trainer bit store
+VARS_POOL = list(range(0x4090, 0x40A0)) + list(range(0x40A1, 0x40AA)) + list(range(0x40BD, 0x40CF)) + list(range(0x40D0, 0x40E6))   # tools/build.py: first 64 are g_vars
+assert VAR_A not in VARS_POOL[:64] and VAR_B not in VARS_POOL[:64]
 VARS_OFF = 0x1000                      # offset of the script variable array inside the save block 1
 
 
@@ -99,53 +103,60 @@ def build_scripts(r, nat):
     def wait_release(S, lab):
         S.lab(lab); S.raw(0x28, 1, 0); cn(S, 'kn_now'); S.cmp(0x8004, 0); S.goto_if(5, lab)
     # REPORT: hands off, press A, press B, then flash the log. The key hook samples the raw key register every frame while 0x8009 = 0xC0DE.
-    S = SB(); S.lockall(); S.setvar(0x8009, 0xC0DE); cn(S, 'kn_begin')
+    # kn_begin runs before the mask is set so the hook never samples garbage left in the scratch buffer. Every wait is bounded.
     def phase(S, start, lab):
         cn(S, start); S.lab(lab); S.raw(0x28, 1, 0); cn(S, 'kn_poll'); S.cmp(0x800D, 0); S.goto_if(1, lab)
+    S = SB(); S.lockall(); cn(S, 'kn_begin'); S.setvar(0x8009, 0xC0DE)
     S.raw(0x67); S.ptr(t('Let go of every button.')); S.raw(0x66)
     phase(S, 'kn_settle', 'p0')
     S.raw(0x67); S.ptr(t('Do not touch the controller\nfor two seconds.')); S.raw(0x66)
     phase(S, 'kn_idle', 'p1'); cn(S, 'kn_idlefin')
     S.raw(0x67); S.ptr(t('Press and hold the A button\nfor one second, then let go.')); S.raw(0x66)
     phase(S, 'kn_rec', 'p2'); cn(S, 'kn_finA')
+    S.raw(0x67); S.ptr(t('Let go of every button.')); S.raw(0x66)
+    phase(S, 'kn_settle', 'p2b')
     S.raw(0x67); S.ptr(t('Now press and hold the B\nbutton for one second.')); S.raw(0x66)
     phase(S, 'kn_rec', 'p3'); cn(S, 'kn_finB')
     S.close(); S.setvar(0x8009, 0); cn(S, 'kn_write'); S.cmp(0x800D, 1); S.goto_if(1, 'ok')
     S.msg(t('The report could not be saved.'), 4); S.releaseall(); S.end()
     S.lab('ok'); S.msg(t('Controller report saved.\nGitROMs uploads it later.'), 4); S.releaseall(); S.end()
     report = put_script(r, S)
-    # REMAP
-    S = SB(); S.lockall(); S.setvar(0x8009, 0xC0DE)
-    wait_release(S, 'r0')
+    # REMAP: press the key for A, then the key for B (30 seconds each, then nothing changes). The masks are stored only when both were chosen.
+    S = SB(); S.lockall(); cn(S, 'kn_off'); S.setvar(0x8009, 0xC0DE)
+    phase(S, 'kn_settle', 'r0')
     S.raw(0x67); S.ptr(t('Press the button that\nshould be A. Not B.')); S.raw(0x66)
-    S.lab('pa'); S.raw(0x28, 1, 0); cn(S, 'kn_pickA'); S.cmp(0x8004, 0); S.goto_if(1, 'pa')
-    S.raw(0x19, 0x05, 0x80, 0x04, 0x80); S.raw(0x19, VAR_A & 255, VAR_A >> 8, 0x04, 0x80)
-    wait_release(S, 'r1')
+    phase(S, 'kn_pickA', 'pa'); cn(S, 'kn_got'); S.cmp(0x800D, 1); S.goto_if(1, 'aok'); S.goto('none')
+    S.lab('aok'); S.raw(0x19, 0x05, 0x80, 0x04, 0x80)
+    phase(S, 'kn_settle', 'r1')
     S.raw(0x67); S.ptr(t('Press the button that\nshould be B. Not A.')); S.raw(0x66)
-    S.lab('pb'); S.raw(0x28, 1, 0); cn(S, 'kn_pickB'); S.cmp(0x8004, 0); S.goto_if(1, 'pb')
-    S.raw(0x19, VAR_B & 255, VAR_B >> 8, 0x04, 0x80)
-    wait_release(S, 'r2')
+    phase(S, 'kn_pickB', 'pb'); cn(S, 'kn_got'); S.cmp(0x800D, 1); S.goto_if(1, 'bok'); S.goto('none')
+    S.lab('bok'); S.raw(0x19, VAR_B & 255, VAR_B >> 8, 0x04, 0x80); S.raw(0x19, VAR_A & 255, VAR_A >> 8, 0x05, 0x80)
+    phase(S, 'kn_settle', 'r2')
     S.close(); S.setvar(0x8009, 0); S.msg(t('A and B are registered.\nThe game uses them now.'), 4); S.releaseall(); S.end()
+    S.lab('none'); S.close(); S.setvar(0x8009, 0); S.msg(t('Nothing was pressed.\nThe buttons are unchanged.'), 4); S.releaseall(); S.end()
     remap = put_script(r, S)
     return report, remap
 
 
 def install_hook(r, nat):
-    # restore the key function at 0x15c898 that the failed remap hijacked, then hook the one ReadKeys really calls
-    orig = bytes.fromhex('10b507480088074a')
-    assert bytes(r.b[0x15C898:0x15C8A0]) == bytes.fromhex('004b1847a932ff08'), 'unexpected bytes at 0x15c898'
-    r.b[0x15C898:0x15C8A0] = orig
+    # restore the key function at 0x15c898 that the failed remap hijacked (first pass only), then hook the one ReadKeys really calls
+    if bytes(r.b[0x15C898:0x15C8A0]) != bytes.fromhex('10b507480088074a'):
+        assert bytes(r.b[0x15C898:0x15C8A0]) == bytes.fromhex('004b1847a932ff08'), 'unexpected bytes at 0x15c898'
+        r.b[0x15C898:0x15C8A0] = bytes.fromhex('10b507480088074a')
     src = ('push {lr}\neors r3,r1\nmovs r0,r3\nldr r1,=%d\nbl cv\nmovs r3,r0\nldr r1,=0x030030f0\npop {r0}\nbx r0\ncv:\nbx r1\n.ltorg\n' % nat['kn_map'])
     hook = fn(r, src, 'hook')
-    assert bytes(r.b[HOOK:HOOK + 2]) == bytes.fromhex('01b5'), 'hook entry not as expected'
-    r.b[HOOK:HOOK + 8] = struct.pack('<HHI', 0x4A00, 0x4710, 0x08000000 + hook + 1)      # ldr r2,[pc,#0]; bx r2; .word hook
+    if bytes(r.b[HOOK:HOOK + 4]) == bytes.fromhex('01b54b40'):          # first pass: the original hook is still there
+        r.b[HOOK:HOOK + 8] = struct.pack('<HHI', 0x4A00, 0x4710, 0x08000000 + hook + 1)      # ldr r2,[pc,#0]; bx r2; .word hook
+    else:                                                                # second pass: only the target changes
+        assert bytes(r.b[HOOK:HOOK + 4]) == bytes.fromhex('004a1047'), 'hook entry not as expected'
+        r.w32(HOOK + 4, 0x08000000 + hook + 1)
     return hook
 
 
 def install(r):
     b = r.b
     assert bytes(b[THUNK1:THUNK1 + 2]) == bytes([0x08, 0x47]) and bytes(b[THUNK2:THUNK2 + 2]) == bytes([0x10, 0x47])
-    nat = compile_natives(r, ['kn_now', 'kn_pickA', 'kn_pickB', 'kn_begin', 'kn_settle', 'kn_idle', 'kn_rec', 'kn_poll', 'kn_idlefin', 'kn_finA', 'kn_finB', 'kn_write', 'kn_map'])
+    nat = compile_natives(r, ['kn_off', 'kn_pickA', 'kn_pickB', 'kn_got', 'kn_begin', 'kn_settle', 'kn_idle', 'kn_rec', 'kn_poll', 'kn_idlefin', 'kn_finA', 'kn_finB', 'kn_write', 'kn_map'])
     scripts = dict(zip((SEND, REG), build_scripts(r, nat)))
     cbs = {}
     for k, s in scripts.items():

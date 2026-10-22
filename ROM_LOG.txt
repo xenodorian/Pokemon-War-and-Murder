@@ -36,3 +36,4 @@
 0x47673377 start_controls.py 2026-10-22
 0xbcbe6f1b start_controls.py 2026-10-22
 0xedb85fb0 start_menu_fix.py 2026-10-22
+0x150d1f92 start_menu_fix2.py 2026-10-22

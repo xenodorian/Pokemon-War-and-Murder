@@ -2,7 +2,7 @@
 Starts from saves/ported/new_game_empty_party.raw and checks, with the mGBA harness:
  1 menu    every row is reachable by scrolling (POKEMON .. EXIT, REPORT, REMAP), also with the POKEDEX row (12 rows)
  2 report  REPORT writes a PWAMRPT text into flash sector 31 of the save file and touches nothing else
- 3 remap   REMAP stores the chosen keys in saved vars 0x40C4/0x40DC and the game then sees those keys as A and B (read from gMain)
+ 3 remap   REMAP stores the chosen keys in saved vars 0x40AE/0x40B5 and the game then sees those keys as A and B (read from gMain)
  4 hook    with no remap the key hook changes nothing: a browse of bag, quests and walking gives the same frames with the hook removed
 Pictures go to /tmp/emu_out/startmenu_*.png (contact sheets). Exit code 1 if anything fails."""
 import os, subprocess, struct, sys, glob, shutil
@@ -72,13 +72,19 @@ check('report: B line shows raw 0002*30', 'B press: first=0002(B)' in txt and '0
 check('report: written in sector 31 only', d.find(b'PWAMRPT') >= 0x1F000 and set(d[:0x1F000]) == {0xFF})
 
 # 3 remap: Left as A, Right as B, then game keys read from gMain while Left and Right are held
-for f in glob.glob(OUT + '/sr.sav'): os.remove(f)
+for f in glob.glob(OUT + '/sr*.sav'): os.remove(f)
 keys = '60 8;' + downs(10) + ';420 1;700 20 20;900 10 20;1150 20 8;1400 20 30;1500 10 30'
 ram = run('remap', keys, 1800, 100, sav=OUT + '/sr.sav', rams=['1410 3003118 4', '1510 3003118 4'], dumps=[1300]); sheet('remap', 6)
 sb1 = open('%s/remap_01300.sb1' % OUT, 'rb').read()
-check('remap: saved vars hold LEFT and RIGHT', (var(sb1, 0x40C4), var(sb1, 0x40DC)) == (0x20, 0x10), (hex(var(sb1, 0x40C4)), hex(var(sb1, 0x40DC))))
+check('remap: saved vars hold LEFT and RIGHT', (var(sb1, 0x40AE), var(sb1, 0x40B5)) == (0x20, 0x10), (hex(var(sb1, 0x40AE)), hex(var(sb1, 0x40B5))))
 check('remap: Left is seen as A', struct.unpack('<H', ram[(1410, 0x3003118)][:2])[0] == 1)
 check('remap: Right is seen as B', struct.unpack('<H', ram[(1510, 0x3003118)][:2])[0] == 2)
+
+# 3b remap with no key pressed: nothing changes, the key mask flag is cleared, the game gets its keys back
+ram = run('remapto', '60 8;' + downs(10) + ';420 1', 4300, 500, sav=OUT + '/sr2.sav', rams=['4200 20370ca 2'], dumps=[4200]); sheet('remapto', 6)
+sb1 = open('%s/remapto_04200.sb1' % OUT, 'rb').read()
+check('remap timeout: vars unchanged', (var(sb1, 0x40AE), var(sb1, 0x40B5)) == (0, 0))
+check('remap timeout: key mask flag 0x8009 cleared', ram[(4200, 0x20370ca)] == b'\x00\x00', ram[(4200, 0x20370ca)])
 
 # 4 hook: no remap, same frames with the hook stub restored (bytes of the key hook entry before start_menu_fix)
 orig = bytes.fromhex('01b54b4009480068')
