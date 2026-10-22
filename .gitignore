@@ -12,3 +12,4 @@ shots/*.ppm
 shots/*_0[0-9][0-9][0-9][0-9].png
 shots/bt_*.ppm
 !saves/ported/new_game_empty_party.raw
+shots/
