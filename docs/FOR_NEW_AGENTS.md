@@ -16,7 +16,8 @@ Read /CURRENT_WORK.md first. It has the one rule and the one workflow.
 ## Pitfalls
 - Push with git to main. Fetch and rebase before any commit.
 - Coord event trigger 0 runs immediately, so use a var as the trigger.
-- Test-only switches live in tools/test_stage.py and only ever touch a scratch copy outside the repo.
+- Test-only switches live in tools/test_stage.py and only ever touch a scratch copy outside the repo. Tests are in tools/tests/ (README there).
+- The save block moves in RAM between battle start and white-out; do not carry state across a battle in script variables.
 - tools/inc.py Rom.alloc starts after the last non-0xFF byte plus 4. Data that ends in its own 0xFF terminator must not be followed by new data in the same spot.
 
 ## Owner rules and style

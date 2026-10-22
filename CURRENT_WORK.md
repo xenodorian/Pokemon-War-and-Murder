@@ -28,17 +28,16 @@ See the dated list at the bottom of this file.
 - 2026-10-22: single-file workflow created; old ROMs and old save states purged from git history; Sandshrew's learnset end marker fixed (the allocator in tools/inc.py now keeps new data off a trailing 0xFF terminator).
 
 ## Open items (2026-10-22)
-- Tests that still use old chain-only switches (VIRI_FORCE, VIRI_POKE, VIRI_FLAGS, MASON_TEST_LV and similar: tools/viri_test.py, mason_ko_test.py, splatter_sheet.py, layer_test.py) now build through mk_test_rom.sh but those switches are not ported to tools/test_stage.py yet.
-- Sand Grave, Unstable Ground, partner-move fix, SHACKLE capture, death gunshot: not yet tested on this ROM.
-- Death message clipping, missing red fade, heaven-vs-center choice, Viridian arrest red flash: see the dated notes below as they are resolved.
+- None. All work on the list is done; the owner tests the rest by hand.
 
-## Emulator runners
-tools/emu_runs/{battle,death,shackle}.py TAG: build a scratch test ROM (TEST_* env switches, see tools/test_stage.py), run the harness from the current-ROM state, write sheets to /tmp/emu_out. Example: `TEST_PLAYABLE=1 TEST_LEAF=1 TEST_FOE=143,70 python3 tools/emu_runs/death.py t1`.
+## Tests
+All current tests are in tools/tests/ (see its README.md): they build a scratch ROM with tools/mk_test_rom.sh, start from saves/ported/new_game_empty_party.raw and write to /tmp/emu_out. Old scripts that needed retired ROMs, states or switches are in tools/archive/old_tests/ (do not run). The owner is testing the rest by hand; the test pass below is closed.
 
 ## 2026-10-22 fixes
 - death_fade.py: the red fade on death now shows (the game refused it while the battle fade was still running; the death script retries until it starts). The "mauled" line breaks after "death" so it fits the box. Checked in the emulator from the current-ROM state: red screen, two-line text, Heaven.
 - viridian_red_fade.py: the Viridian arrest loss shows the red screen again before the afterlife. Checked by running the helper script directly through test_stage (TEST_GOTO), not through the full arrest fight.
-- Heaven vs Pokemon Center: with the stand-in LEAF, a lost battle in a PLAYABLE run goes to the Pokemon Center. Only a fainted permanent LEAF goes to Heaven. docs/SPEC_ARREST_AND_PARTY.md says PLAYABLE means any lost battle is death. Owner decision needed. Not changed.
+- Heaven vs Pokemon Center (owner decided): in a PLAYABLE run, if the player is in the party as a playable POKeMON (a real LEAF, or the stand-in that joins when the party is empty) when everything faints, she dies and goes to Heaven or Hell by reputation. If she is not in the party, the normal Pokemon Center respawn. A normal run is unchanged. standin_death.py: the stand-in is noted when the battle starts (the battle-end callback deletes her before the white-out script runs) in script scratch word 0x800A; the white-out check reads it. Checked in the emulator: playable plus stand-in goes to Heaven; not playable plus stand-in goes to the Pokemon Center; playable with a real POKeMON and no LEAF goes to the Pokemon Center.
+- Lesson: the save block (script variables, flags) moves in RAM between the battle start and the white-out, so a value stored in a script variable at battle start was gone at the white-out. Use the script scratch words (0x8000 to 0x800F) or RAM outside the save block for that.
 
 ## 2026-10-22 test pass (emulator only, from the current-ROM state; every stage above was checked on a scratch copy first)
 - UNSTABLE GROUND: foe accuracy and evasion each -2 (Rattata 4,4); a Keen Eye foe (Pidgey) only loses evasion; a Ground-type foe (Diglett) is skipped; the user is unaffected; no damage. Pass.

@@ -1,4 +1,4 @@
-# usage: TEST_...=.. KEYS="frame mask [hold];frame mask [hold];..." [AUTO_TO=1300] [END=4000] [SHOT_FROM=1300 SHOT_STEP=60] python3 tools/emu_runs/moves.py TAG
+# usage: TEST_...=.. KEYS="frame mask [hold];frame mask [hold];..." [AUTO_TO=1300] [END=4000] [SHOT_FROM=1300 SHOT_STEP=60] python3 tools/tests/moves.py TAG
 # Walks onto the door tile (test script), presses A through the battle intro until AUTO_TO, then sends the KEYS (hex masks), then shots and RAM reads of both battlers.
 import sys, os, subprocess, glob
 R = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))); os.chdir(R); os.makedirs('/tmp/emu_out', exist_ok=True)
