@@ -135,35 +135,42 @@ nob:
     # The bl 0x08015C899 above would recurse if we patch the entry. So remap
     # does the read itself and we patch the entry to jump to remap.
     remap2 = r.fn('''
-    push {r4, lr}
+    push {r4, r5, lr}
     ldr r0, =0x04000130
     ldrh r0, [r0]
     ldr r1, =0x03FF
     eors r0, r1
     ldr r4, =0x03002060
     ldrh r1, [r4]
-    bics r2, r0, r1
+    mov r2, r0
+    bics r2, r1
     ldr r3, =0x03002062
     strh r2, [r3]
-    ldr r1, =0x0203F900
-    ldrh r2, [r1]
-    cmp r2, #0
-    beq na
-    tst r0, r2
-    beq na
+    ldr r5, =0x0203F900
+    ldrh r1, [r5]
+    cmp r1, #0
+    beq noa
+    tst r0, r1
+    beq noa
     movs r3, #1
     orrs r0, r3
-na:
-    ldrh r2, [r1, #2]
-    cmp r2, #0
-    beq nb
-    tst r0, r2
-    beq nb
+    ldrh r2, [r4, #2]
+    orrs r2, r3
+    strh r2, [r4, #2]
+noa:
+    ldrh r1, [r5, #2]
+    cmp r1, #0
+    beq nob
+    tst r0, r1
+    beq nob
     movs r3, #2
     orrs r0, r3
-nb:
+    ldrh r2, [r4, #2]
+    orrs r2, r3
+    strh r2, [r4, #2]
+nob:
     strh r0, [r4]
-    pop {r4, pc}
+    pop {r4, r5, pc}
     .ltorg
     ''')
     # Patch entry of key function to jump to remap2
@@ -223,6 +230,11 @@ nb:
     na = r.alloc(bytes(new_acts), 4)
     for lit in (0x6ef9c, 0x6f374, 0x6f3f8):
         r.w32(lit, 0x08000000 + na)
+    # The scroll code baked the old table address. Point it at the new one.
+    scroll_tbl = 0xececf4 + 0x100
+    if struct.unpack('<I', b[scroll_tbl:scroll_tbl+4])[0] != 0x08000000 + na:
+        r.w32(scroll_tbl, 0x08000000 + na)
+        print(f'scroll TBL repointed to {hex(0x08000000 + na)}')
     desc_ptr = struct.unpack('<I', b[0x6f138:0x6f138+4])[0] - 0x08000000
     new_desc = bytearray(b[desc_ptr:desc_ptr+4*n])
     new_desc += struct.pack('<II', t_send_d, t_reg_d)
