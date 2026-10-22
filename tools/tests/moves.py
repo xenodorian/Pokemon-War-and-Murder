@@ -17,6 +17,9 @@ for f in range(int(e.get('SHOT_FROM', '1300')), end, int(e.get('SHOT_STEP', '60'
 for f in range(1300, end, int(e.get('RAMSTEP', '120'))): L.append('ram %d 2023be4 176' % f)
 for a in e.get('RAMS', '').split(';'):
     if a.strip(): L.append('ram %d %s' % (end - 60, a))
+for a in e.get('POKES', '').split(';'):      # POKES="hexaddr hexvalue;...": written every 20 frames from 1300 (holds a value fixed)
+    if a.strip():
+        for f in range(1300, end, 20): L.append('poke %d %s' % (f, a))
 L.append('end %d' % end)
 def _fr(l):
     t = l.split(); return int(t[0]) if t[0].isdigit() else int(t[1])
