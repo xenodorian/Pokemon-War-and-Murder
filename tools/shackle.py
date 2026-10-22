@@ -1,4 +1,4 @@
-"""Owner task 13: SHACKLE on a defeated captain (usage: shackle.py IN.gba OUT.gba). Runs after shackle_item.py.
+"""Owner task 13: SHACKLE on a defeated captain (usage: shackle.py IN.gba OUT.gba). Runs after rebase_natives.py (its natives).
  - the defeated-trainer script at ROM 0x1a4ed9 gets a new front: for a captain (story_native.c shackle_check) that is defeated with a SHACKLE BALL
    (item 89) the player is asked "Shackle this CAPTAIN with a SHACKLE BALL?". YES uses one ball and calls shackle_do: +5 liberty and the captain's
    last Pokemon is given like any other (party, or the PC when the party is full). NO, no ball, or any other trainer goes to the old script
@@ -10,7 +10,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE); sys.path.insert(1, '/home/claude/work/tools')
 from inc import Rom
 from shinigami import SB, put_script
-import story_native as SN
+import rebase_natives as RN
 import leg1
 
 ENTRY = 0x1a4ed9; SHOOT_DO = 0x08a09b61; ITEM_SHACKLE = 89
@@ -20,7 +20,7 @@ def apply(r):
     b = r.b
     old = struct.unpack_from('<I', b, ENTRY)[0]
     assert old >= 0x08000000, hex(old)
-    fns = SN.addrs6(r)
+    fns = RN.addrs(r)
     T = lambda s: 0x08000000 + r.alloc(leg1.enc(s), 1)
     t_ask = T('Shackle this CAPTAIN with a\nSHACKLE BALL?')
     t_done = T('The CAPTAIN is shackled!')
