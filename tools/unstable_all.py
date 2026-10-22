@@ -16,37 +16,40 @@ def script_bytes(base, msg_id, up_id, down_id):
     def lab(n): labels[n] = sum(len(x[1]) if x[0] == 'b' else 4 for x in parts)
     def ref(n): parts.append(('r', n))
     def text(sid): emit(bytes([0x10]) + W(sid) + bytes([0x12]) + W(0x40))
-    # start
-    emit(bytes([0x00, 0x02, 0x03]))  # attackcanceler, attackstring, ppreduce
-    # first-target flag
+    def arrows(battler, shown):
+        # Gen 3 only has arrow graphics for 1 and 2 stages. The stage is already applied;
+        # show the 2-stage arrows for a 3-stage change.
+        emit(bytes([0x2e]) + P(UE.STATCHANGER) + bytes([shown]))
+        emit(bytes([0x47, 0x45, battler, 0x01]) + P(UE.ANIM_ARG1))
+        emit(bytes([0x0a]))
+    # attackcanceler, attackstring ("X used UNSTABLE!"), ppreduce. One call covers every target.
+    emit(bytes([0x00, 0x02, 0x03]))
     emit(bytes([0x29, 1]) + P(UE.ANIM_TARGETS_HIT) + bytes([0])); ref('notfirst')
-    emit(bytes([0x2e]) + P(FIRST) + bytes([1])); ref('go')
+    emit(bytes([0x2e]) + P(FIRST) + bytes([1]))
+    emit(bytes([0x28])); ref('go')
     lab('notfirst'); emit(bytes([0x2e]) + P(FIRST) + bytes([0]))
     lab('go')
-    # Earthquake only on first
+    # Earthquake visual + sound before any effect text, and only on the first entry.
     emit(bytes([0x29, 1]) + P(FIRST) + bytes([1])); ref('skipanim')
-    emit(bytes([0x09, 0x0a]))  # attackanimation, waitanimation
+    emit(bytes([0x09, 0x0a]))
     lab('skipanim')
-    # message only on first
-    emit(bytes([0x29, 1]) + P(FIRST) + bytes([1])); ref('skipmsg')
+    emit(bytes([0x29, 1]) + P(FIRST) + bytes([1])); ref('loop')
     text(msg_id)
-    lab('skipmsg')
-    # skip Ground
+    # every other living battler (jumpifnexttargetvalid walks them; the engine's first target is already set)
+    lab('loop')
     emit(bytes([0x22, 0, UE.TYPE_GROUND])); ref('next')
-    # Debuff this target: accuracy -3
     emit(bytes([0x2e]) + P(UE.STATCHANGER) + bytes([UE.stat_down(UE.STAT_ACC, STAGES)]))
-    emit(bytes([0x89, 1])); ref('next')  # statbuffchange on target, fail -> next
-    text(down_id)  # print for this target
-    emit(bytes([0x47, 0x45, 0x00, 0x01]) + P(UE.ANIM_ARG1))  # setgraphical + playanimation
-    emit(bytes([0x0a]))  # waitanimation
+    emit(bytes([0x89, 1])); ref('next')
+    text(down_id)
+    arrows(0, UE.stat_down(UE.STAT_ACC, 2))
     lab('next')
-    # Buff user only on first target
+    emit(bytes([0x7a])); ref('loop')          # jumpifnexttargetvalid
+    # user +3 once, after every debuff
     emit(bytes([0x29, 1]) + P(FIRST) + bytes([1])); ref('end')
     emit(bytes([0x2e]) + P(UE.STATCHANGER) + bytes([UD.stat_up(UE.STAT_ACC, STAGES)]))
-    emit(bytes([0x89, 0x41])); ref('end')  # user flag
+    emit(bytes([0x89, 0x41])); ref('end')
     text(up_id)
-    emit(bytes([0x47, 0x45, 0x01, 0x01]) + P(UE.ANIM_ARG1))
-    emit(bytes([0x0a]))
+    arrows(1, UD.stat_up(UE.STAT_ACC, 2))
     lab('end')
     emit(bytes([0x28])); parts.append(('a', UE.STATDOWN_END))
     out = bytearray()
