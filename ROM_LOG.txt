@@ -1,0 +1,3 @@
+# CRC32 of PokemonWarAndMurder.gba after each change, newest last. tools/check_single_rom.sh compares the root ROM with the last line.
+0xe7880cc9 rebuilt-on-personal-build 2026-10-22
+0x19bcec0d fix_sandshrew_learnset.py 2026-10-22

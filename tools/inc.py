@@ -6,7 +6,8 @@ class Rom:
     def __init__(s,path):
         s.b=bytearray(open(path,'rb').read())
         s.end=max(i for i in range(0xA00000,len(s.b)) if s.b[i]!=0xff)+1
-        s.cur=(s.end+3)&~3
+        # the last data may end with its own 0xFF terminator (learnset FFFF, text EOS); keep new data off it
+        s.cur=(s.end+4+3)&~3
     def alloc(s,data,align=4):
         s.cur=(s.cur+align-1)&~(align-1); a=s.cur
         assert s.b[a:a+len(data)]==b'\xff'*len(data),hex(a)
