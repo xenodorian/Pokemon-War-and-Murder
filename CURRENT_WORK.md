@@ -758,3 +758,10 @@ Partial or open:
 - Deviation: SHACKLE is a yes/no question before the bless/shoot menu, not a fourth menu entry (the menu is built by gun.py, outside the chain).
 - Not done: the captain's other Pokemon joining on shoot is left to the existing shoot_do (not checked whether it adds the captain's last Pokemon).
 - Release ROM and IPS: CRC32 0xc8f70d0f. newgame_test passes. Not tested in the emulator (no captain defeat reached).
+
+## UNSTABLE GROUND (2026-10-22)
+- Request: Ground status move, learned by Sandshrew at level 8, lowers accuracy and evasion sharply of every battler except Ground types. Owner: status only; the user is not affected (skipped as too hard).
+- tools/unstable_ground.py (new stage, after sand_rocks.py): move 359 "UNST GROUND" (the name field holds 12 characters, so UNSTABLE GROUND does not fit). Ground type, power 0, accuracy 100, 5 PP, target FOES AND ALLY (Earthquake's target), Earthquake's animation. Description "Sharply lowers the accuracy / and evasion of all non-GROUND." is a best guess.
+- Effect 14 (unused in the ROM): custom battle script. attackcanceler, attackstring, ppreduce, then Ground targets go to BattleScript_StatDownEnd. Others: accuracy -2, then evasion -2 (setbyte on gBattleScripting.statChanger 0x02023fde, statbuffchange). Accuracy-check and the substitute check are not used, so the move cannot miss and a substitute does not block it.
+- Sandshrew learns it at 8.
+- Release ROM and IPS: CRC32 0x82974e43. newgame_test passes. Emulator: the move list shows UNST GROUND in the third slot for a level 8 Sandshrew. The stat drop was not reached in battle (the harness inputs did not select the move).
