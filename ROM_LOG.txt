@@ -24,3 +24,4 @@
 0x3efeb6fb base_flag_split.py 2026-10-22
 0xeed11853 captain_shackle_menu.py 2026-10-22
 0xec89c723 captain_loot.py 2026-10-22
+0x7bc42069 bystander.py 2026-10-22

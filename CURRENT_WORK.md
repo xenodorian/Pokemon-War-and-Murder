@@ -27,6 +27,9 @@ See the dated list at the bottom of this file.
 ## Log
 - 2026-10-22: single-file workflow created; old ROMs and old save states purged from git history; Sandshrew's learnset end marker fixed (the allocator in tools/inc.py now keeps new data off a trailing 0xFF terminator).
 
+## 2026-10-22 Bystander bless / threaten (tools/bystander.py)
+After a person who only walks and talks finishes their line, the menu is BLESS / THREATEN / LEAVE. One choice per person, then those two stay gray. Blessing gives no item and adds 1 reputation. Threatening adds 50 to 200 and subtracts 1 reputation. 333 people. Not played through in the emulator. Trainers, clerks, police, and anyone whose script changes the world are unchanged.
+
 ## Open items (2026-10-22, after Liberty)
 - Accuracy stage table: bytes checked, hit rate never measured. Not retried; the harness cannot hold a battle stat and the RNG repeats from a savestate.
 - Move sounds (Earthquake, stat change, Fly): not isolated from the harness. Fly's dive was seen; no waveform.
