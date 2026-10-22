@@ -28,3 +28,5 @@
 0x782f66d6 fe8_portrait_anim.py 2026-10-22
 0x313fda64 bystander.py 2026-10-22
 0x35a982c5 jra_menu_fix.py 2026-10-22
+0x0b62c210 jra_shoot_thumb.py 2026-10-22
+0x66ba0d07 shackle_despawn.py 2026-10-22

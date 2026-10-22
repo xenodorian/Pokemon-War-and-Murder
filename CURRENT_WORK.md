@@ -188,3 +188,6 @@ Bless and Threaten open in black (menu 87). After that person is blessed or thre
 
 ## 2026-10-22 JRA shoot and shackle
 The captain/soldier chooser ended the script, so the choice was never read. Shoot on a soldier and Shackle on a captain (Eirika included) did nothing. The chooser now returns. The shackle handler was also calling the wrong function; it now calls the same shackle_do2 as the post-battle prompt. Not played through in the emulator.
+
+## 2026-10-22 Shoot freeze and shackle despawn
+Shoot froze after "You took $..." because the captain-loot wrapper was Thumb-2 (lsl.w) and this CPU is Thumb-1. tools/jra_shoot_thumb.py rewrote it in place with 16-bit instructions. The call still goes through the existing bx thunk. Shackling now sets each captain's hide flag to the shackle flag (0x871 + index, 11 people including the general) and removeobject on the one you talked to, so they leave and stay gone. Not played through in the emulator.
