@@ -182,3 +182,6 @@ Other addresses already used by this ROM: gBattleMons 0x02023BE4 (0x58 each, spe
 Rom.alloc starts after the last non-0xFF byte plus 4. Data that ends in 0xFF must not be followed by new data in the same spot.
 
 Suggested stage name: tools/fe8_portrait_anim.py. One patch.sh run. Then an emulator check, labeled as such: a captain portrait with no green box, and a player-side ally attack that starts on the hit frame from the header. A loaded save shows that state's graphics, not the ROM's. Tests start from saves/ported/new_game_empty_party.raw or newer.
+
+## 2026-10-22 Bystander menu colors
+Bless and Threaten open in black (menu 87). After that person is blessed or threatened, those two are gray (menu 88) and choosing them does nothing. Leave stays black. The first version showed the gray menu immediately because a failed lookup was treated as already used, and gray rows could still be chosen. Not played through in the emulator.

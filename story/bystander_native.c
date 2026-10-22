@@ -12,14 +12,33 @@ typedef unsigned int u32;
 #define BLESS_VAR 0x40F4
 #define VAR_REPADJ 0x40E9
 #define BITS 0x348C
+#define CUR  (BITS + 396)
+#define MARK (BITS + 399)
+#define MARKV 0xA5
 
 static u16* sv(u32 id) { return (u16*)(SB1 + 0x1000 + ((id - 0x4000) << 1)); }
 
 static int bit_get(int i) { return (SB1[BITS + (i >> 3)] >> (i & 7)) & 1; }
 static void bit_set(int i) { SB1[BITS + (i >> 3)] |= (u8)(1u << (i & 7)); }
 
+/* Old saves have garbage in this unused block, which read as "already used". */
+static void ensure(void) {
+    if (SB1[MARK] == MARKV) return;
+    for (int i = BITS; i < MARK; i++) SB1[i] = 0;
+    SB1[MARK] = MARKV;
+}
+
+/* The dialogue can overwrite last-talked. The wrapper records who this is first. */
+void by_note(void) {
+    ensure();
+    u16 gm = GSV(1);
+    SB1[CUR] = (u8)(gm >> 8);
+    SB1[CUR + 1] = (u8)gm;
+    SB1[CUR + 2] = (u8)GSV(0);
+}
+
 static int find(void) {
-    u8 g = SB1[4], m = SB1[5], id = (u8)GSV(15);
+    u8 g = SB1[CUR], m = SB1[CUR + 1], id = SB1[CUR + 2];
     for (int i = 0; i < BY_N; i++) {
         if (BY_ENT[i * 3] == g && BY_ENT[i * 3 + 1] == m && BY_ENT[i * 3 + 2] == id)
             return i;
@@ -27,10 +46,11 @@ static int find(void) {
     return -1;
 }
 
-/* GSV8 = 1 when this person was already blessed or threatened (menu shows Leave only). */
+/* GSV8 = 1 only after this person was blessed or threatened. */
 void by_gate(void) {
+    ensure();
     int i = find();
-    GSV(8) = (i < 0 || bit_get(i)) ? 1 : 0;
+    GSV(8) = (i >= 0 && bit_get(i)) ? 1 : 0;
 }
 
 void by_bless(void) {

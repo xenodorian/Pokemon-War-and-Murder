@@ -26,3 +26,4 @@
 0xec89c723 captain_loot.py 2026-10-22
 0x7bc42069 bystander.py 2026-10-22
 0x782f66d6 fe8_portrait_anim.py 2026-10-22
+0x313fda64 bystander.py 2026-10-22

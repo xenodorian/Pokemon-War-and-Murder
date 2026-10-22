@@ -16,8 +16,11 @@ from shinigami import SB, put_script
 from g3 import ENC, dec
 
 MAGIC = b'BYSTAND1'
+MAGIC2 = b'BYSTAND2'
 GROUPS = 0x3526A8
-MENU_REF = 0x9CB58
+MENU_REFS = (0x9CB58, 0x9CFD4)
+BLACK = bytes.fromhex('fc04020003')
+GRAYC = bytes.fromhex('fc04030003')
 SRC = os.path.join(HERE, '..', 'story')
 WORK = '/tmp/bystander_build'
 EVENT_INC = '/tmp/event.inc'
@@ -124,15 +127,15 @@ def compile_native(r, entries, rep):
     sym = {}
     for ln in subprocess.run(['nm', e], capture_output=True, text=True, check=True, env=env).stdout.split('\n'):
         f = ln.split()
-        if len(f) == 3 and f[2] in ('by_gate', 'by_bless', 'by_threat'):
+        if len(f) == 3 and f[2] in ('by_note', 'by_gate', 'by_bless', 'by_threat'):
             sym[f[2]] = (int(f[0], 16) & ~1) | 1
-    assert set(sym) == {'by_gate', 'by_bless', 'by_threat'}
+    assert set(sym) == {'by_note', 'by_gate', 'by_bless', 'by_threat'}
     return sym
 
 
 def apply(r):
     b = r.b
-    if b.find(MAGIC, 0xA00000) >= 0:
+    if b.find(MAGIC2, 0xA00000) >= 0:
         print('bystander: already applied')
         return
     OPS = load_ops()
@@ -291,19 +294,26 @@ def apply(r):
                 if key in seen_obj:
                     continue
                 seen_obj.add(key)
+                # a previous pass already wrapped this person: call clone, goto menu
+                if b[sp - 0x08000000] == 0x04 and b[sp - 0x08000000 + 5] == 0x05:
+                    clone_p = r32(sp - 0x08000000 + 1)
+                    if inrom(clone_p):
+                        people.append((g, n, lid, clone_p, o + 0x10, None))
+                        continue
                 status, ins = walk(sp)
                 if status != 'ok':
                     reasons[status] += 1
                     continue
                 people.append((g, n, lid, sp, o + 0x10, ins))
 
-    # one clone per script
+    # one clone per script. None means the script is already a clone.
     clones = {}
     kept = []
     for g, n, lid, sp, ptr_at, ins in people:
-        if sp not in clones:
-            c = clone(ins)
-            clones[sp] = c
+        if ins is None:
+            clones[sp] = sp
+        elif sp not in clones:
+            clones[sp] = clone(ins)
         if clones[sp] is None:
             reasons['falloff'] += 1
             continue
@@ -316,14 +326,31 @@ def apply(r):
     rep = struct.unpack_from('<I', b, i + 8)[0]
     assert rep & 1, hex(rep)
 
-    tab = r32(MENU_REF) - 0x08000000
-    bless_b = enc('BLESS')[:-1]
+    tab = r32(MENU_REFS[0]) - 0x08000000
+    k = 0
+    while True:
+        p = r32(tab + 8 * k)
+        c = b[tab + 8 * k + 4]
+        if not (0x08000000 <= p < 0x0A000000) or c == 0 or c > 30:
+            break
+        k += 1
 
-    def menu_has(k):
-        lp = struct.unpack_from('<I', b, tab + 8 * k)[0]
-        text = struct.unpack_from('<I', b, lp - 0x08000000)[0]
-        return inrom(text) and bless_b in b[text - 0x08000000:text - 0x08000000 + 32]
-    assert menu_has(82) and menu_has(83), 'bless menu missing'
+    def add_menu(rows):
+        raws = b''
+        for text, gray in rows:
+            raw = (GRAYC if gray else BLACK) + enc(text)
+            raws += struct.pack('<II', 0x08000000 + r.alloc(raw, 1), 0)
+        return 0x08000000 + r.alloc(raws, 4), len(rows)
+
+    fresh_p, fresh_n = add_menu([('BLESS', 0), ('THREATEN', 0), ('LEAVE', 0)])
+    done_p, done_n = add_menu([('BLESS', 1), ('THREATEN', 1), ('LEAVE', 0)])
+    ents = bytes(b[tab:tab + 8 * k])
+    ents += struct.pack('<IBBBB', fresh_p, fresh_n, 0, 0, 0)
+    ents += struct.pack('<IBBBB', done_p, done_n, 0, 0, 0)
+    newtab = r.alloc(ents, 4)
+    for ref in MENU_REFS:
+        r.w32(ref, 0x08000000 + newtab)
+    fresh_id, done_id = k, k + 1
 
     entries = [(g, n, lid) for g, n, lid, sp, ptr_at in kept]
     fn = compile_native(r, entries, rep)
@@ -335,9 +362,11 @@ def apply(r):
     S.lock()
     S.raw(0x23); S.ptr(fn['by_gate'])
     S.compare(0x8008, 1); S.goto_if(1, 'used')
-    S.raw(0x6F, 0, 0, 82, 0); S.goto('chosen')
+    S.raw(0x6F, 0, 0, fresh_id, 0); S.goto('chosen')
     S.lab('used')
-    S.raw(0x6F, 0, 0, 83, 0)
+    S.raw(0x70, 0, 0, done_id, 2, 0)          # cursor starts on LEAVE
+    S.compare(0x800D, 1); S.goto_if(3, 'used')  # bless or threaten: dead, menu again
+    S.goto('leave')
     S.lab('chosen')
     S.compare(0x800D, 0); S.goto_if(1, 'bless')
     S.compare(0x800D, 1); S.goto_if(1, 'threat')
@@ -353,20 +382,19 @@ def apply(r):
     S.releaseall(); S.end()
     menu = 0x08000000 + put_script(r, S)
 
-    wraps = {}
     for g, n, lid, sp, ptr_at in kept:
-        if sp not in wraps:
-            W = SB()
-            W.raw(0x04); W.ptr(clones[sp])
-            W.raw(0x05); W.ptr(menu)
-            wraps[sp] = 0x08000000 + put_script(r, W)
-        assert r32(ptr_at) == sp
-        r.w32(ptr_at, wraps[sp])
+        W = SB()
+        W.raw(0x16); W._add(struct.pack('<HH', 0x8000, lid))
+        W.raw(0x16); W._add(struct.pack('<HH', 0x8001, n | (g << 8)))
+        W.raw(0x23); W.ptr(fn['by_note'])
+        W.raw(0x04); W.ptr(clones[sp])
+        W.raw(0x05); W.ptr(menu)
+        r.w32(ptr_at, 0x08000000 + put_script(r, W))
 
-    r.alloc(MAGIC, 4)
+    r.alloc(MAGIC2, 4)
     # a few towns, so a test can find someone
     show = [p for p in kept if p[0] == 3 and p[1] in (0, 1, 3)]
-    print('bystander: %d people, %d scripts, skipped %s' % (len(kept), len(wraps), dict(reasons)))
+    print('bystander: %d people, menus %d/%d, skipped %s' % (len(kept), fresh_id, done_id, dict(reasons)))
     print('bystander: menu', hex(menu), 'natives', {k: hex(v) for k, v in fn.items()})
     for g, n, lid, sp, ptr_at in show[:12]:
         print('  map', (g, n), 'lid', lid, 'at', hex(0x08000000 + ptr_at - 0x10))
