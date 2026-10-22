@@ -54,3 +54,6 @@ Pallet Town church: tiles (7,10) and (8,10) are unblocked, and the cross and tow
 
 ## 2026-10-22 Sandshrew line ability (sand_rough_skin.py)
 SANDSHREW, SANDSLASH and SANDGRAVE now have ROUGH SKIN (ability id 24) in slot 1, slot 2 empty, replacing SAND VEIL. The ability is read from the species data, so existing Pokemon in a save get it. Checked in the emulator: a lv 30 Rattata that hit a lv 12 Sandshrew lost 3 of 63 HP (1/16); on the unchanged ROM it lost none.
+
+## 2026-10-22 UNSTABLE effects (unstable_effects.py)
+UNSTABLE (move 359) now plays Earthquake's animation and sound (the effect script had no attackanimation, so nothing played), prints "The ground became unstable!" once per use (new battle string, id 367: the 355-entry strings table was copied with one more entry and its 24 references repointed; the message is skipped on later targets via animTargetsHit), and shows the stat animation and messages ("RATTATA's accuracy harshly fell!", "evasiveness harshly fell!"), which the old script changed silently. Checked in the emulator on a Rattata: used-line, message, shake, both stat messages, foe accuracy and evasion at -2. The sound itself was not isolated from the harness audio.
