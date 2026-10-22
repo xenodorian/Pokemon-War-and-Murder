@@ -185,3 +185,6 @@ Suggested stage name: tools/fe8_portrait_anim.py. One patch.sh run. Then an emul
 
 ## 2026-10-22 Bystander menu colors
 Bless and Threaten open in black (menu 87). After that person is blessed or threatened, those two are gray (menu 88) and choosing them does nothing. Leave stays black. The first version showed the gray menu immediately because a failed lookup was treated as already used, and gray rows could still be chosen. Not played through in the emulator.
+
+## 2026-10-22 JRA shoot and shackle
+The captain/soldier chooser ended the script, so the choice was never read. Shoot on a soldier and Shackle on a captain (Eirika included) did nothing. The chooser now returns. The shackle handler was also calling the wrong function; it now calls the same shackle_do2 as the post-battle prompt. Not played through in the emulator.
