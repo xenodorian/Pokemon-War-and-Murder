@@ -1,4 +1,5 @@
-"""Start menu: SEND REPORT and REGISTER A/B.
+"""SUPERSEDED by tools/start_menu_fix.py (this stage broke the start menu; never run it again).
+Start menu: SEND REPORT and REGISTER A/B.
 SEND REPORT writes a controller diagnostic into the save (magic PWAMRPT) so the
 launcher can copy it into sgba/reports for the GitROMs upload.
 REGISTER A/B asks for a button, then a button, and treats those GBA keys as A and B."""
