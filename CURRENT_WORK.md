@@ -18,7 +18,7 @@ Only the Outlaw original (roms/outlaw-2015-09-05 ..., CRC 0x5e460b23) may sit be
 - Harness: tools/harness_new (mGBA). Key masks are HEX (A=1 B=2 Select=4 Start=8 Right=10 Left=20 Up=40 Down=80).
 
 ## Approved features in the ROM
-Opening and bedroom, Oak robbed, LEAF protagonist with the Hitmonchan-based stand-in, splatter order, JRA bases (Pallet, Viridian), Mason, Anne, Max, Shinigami/Yveltal/Nero storyline, double battles and partner AI, run mode and death rule, afterlife beats, task data, SHACKLE (item 89, captains, liberty), Eirika and Kestrel, FE8 allies, Sand Grave (move 358), Sand Rocks, UNSTABLE GROUND (move 359, Sandshrew at level 8), death effects (gunshot or cry, red fade, "mauled" line).
+Opening and bedroom, Oak robbed, LEAF protagonist with the Hitmonchan-based stand-in, splatter order, JRA bases (Pallet, Viridian), Mason, Anne, Max, Shinigami/Yveltal/Nero storyline, double battles and partner AI, run mode and death rule, afterlife beats, task data, SHACKLE (item 89, captains, liberty), Eirika and Kestrel, FE8 allies, Sand Grave (move 358), Sand Rocks, UNSTABLE GROUND (move 359, Sandshrew at level 8; final behavior is commit bc36755, not the earlier passes below), accuracy stages −1..−6 at 80/60/40/30/20/10, Dragonfly (move 360, Gyarados at 20, base Sp. Atk 125), Xatwo (species 430, commit 4c49e84), death effects (gunshot or cry, red fade, "mauled" line).
 Details of each are in docs/history/ (old notes, history only).
 
 ## Open items
@@ -27,8 +27,11 @@ See the dated list at the bottom of this file.
 ## Log
 - 2026-10-22: single-file workflow created; old ROMs and old save states purged from git history; Sandshrew's learnset end marker fixed (the allocator in tools/inc.py now keeps new data off a trailing 0xFF terminator).
 
-## Open items (2026-10-22)
-- None. All work on the list is done; the owner tests the rest by hand.
+## Open items (2026-10-22, after the Xatwo pull)
+- Dragonfly's party menu and Fly map work with no badge. The town warp was not finished. See the field note at the bottom.
+- Accuracy stage table: bytes checked, hit rate never measured.
+- Move sounds (Earthquake, stat change, Fly): not isolated from the harness.
+- Not in the ROM and not committed: story/liberty_native.c, story/liberty_gen.h, tools/liberty.py.
 
 ## Tests
 All current tests are in tools/tests/ (see its README.md): they build a scratch ROM with tools/mk_test_rom.sh, start from saves/ported/new_game_empty_party.raw and write to /tmp/emu_out. Old scripts that needed retired ROMs, states or switches are in tools/archive/old_tests/ (do not run). The owner is testing the rest by hand; the test pass below is closed.
@@ -65,4 +68,20 @@ UNSTABLE no longer touches evasion. It now raises the user's own accuracy by 3 s
 Owner asked for this order: Earthquake animation and sound, "The ground became unstable!", the foe's accuracy line and debuff animation, then the user's accuracy line and buff animation. tools/unstable_order.py builds it and was checked on a scratch copy, and is applied to the ROM (see ROM_LOG.txt). Checked in the emulator on the root ROM: used line, ground message, foe line, user line, in that order; user accuracy +3, foe accuracy -3. The owner also asked whether UNSTABLE really moves accuracy 3 stages each way: the stages read 9 and 3 after one use and 12 and 0 after five (game memory), but a hit-rate measurement was not completed (UNSTABLE has 5 PP, the game RNG repeats from a saved state, so repeated runs are not independent samples).
 
 ## 2026-10-22 accuracy stage table (accuracy_table.py)
-Lowered accuracy now cuts the hit chance to -1: 80%, -2: 60%, -3: 40%, -4: 30%, -5: 20%, -6: 10% of the move's accuracy (vanilla 75, 60, 50, 43, 36, 33; raised stages unchanged). Table gAccuracyStageRatios at 0x082504FC. It is applied to the net stage (attacker accuracy stage minus target evasion stage), so it also covers evasion boosts and applies to every battler, the player included. Verified by reading the table back and by disassembling the accuracycheck command (it indexes this table, entries of 4 bytes, and this is the only reference to it). NOT verified by a hit-rate measurement in the emulator: the harness `poke` command writes relative to the save block, so it cannot hold a battle stat, and the RNG repeats from a saved state. tools/tests/hitrate.py is a failed attempt (it measured a normal foe).
+Lowered accuracy now cuts the hit chance to -1: 80%, -2: 60%, -3: 40%, -4: 30%, -5: 20%, -6: 10% of the move's accuracy (vanilla 75, 60, 50, 43, 36, 33; raised stages unchanged). Table gAccuracyStageRatios at 0x082504FC. It is applied to the net stage (attacker accuracy stage minus target evasion stage), so it also covers evasion boosts and applies to every battler, the player included. Verified by reading the table back and by disassembling the accuracycheck command (it indexes this table, entries of 4 bytes, and this is the only reference to it). NOT verified by a hit-rate measurement in the emulator: the harness `poke` command writes relative to the save block, so it cannot hold a battle stat, and the RNG repeats from a saved state. tools/tests/hitrate.py is a failed attempt (it measured a normal foe). Not retried on 2026-10-22.
+
+## 2026-10-22 after pulling Xatwo (do not trust the UNSTABLE sections above)
+Pulled origin/main before editing. HEAD 4c49e84, root ROM CRC 0x7ccc297f (xatwo_stage.py on top of dragonfly.py 0x50048f76). The UNSTABLE notes above are the earlier passes. The ROM's behavior is commits 32fa75d and bc36755: Earthquake first, user accuracy +3 once, every other non-Ground battler accuracy −3, with a line and arrows each. A missing goto opcode had been skipping that script in doubles; bc36755 put it back.
+
+Dragonfly is still in this ROM. Gyarados base Sp. Atk byte is 125. Learnset at 20 is Bite (44) then Dragonfly (360), no Bubblebeam. Live field list (pointer at 0x122A7C) is the old moves plus 360 before the 0x000C sentinel. The compare at 0x124670 is 0x0B. Dragonfly's jump-table entry is Fly's handler 0x0812474C.
+
+## 2026-10-22 Dragonfly field check (pass on the menu, fail on the warp)
+Scratch ROM only: `TEST_GIVE=130,20 TEST_WARP=3,19,10,20 tools/mk_test_rom.sh /tmp/emu_out/dfly_field.gba`, state `saves/ported/new_game_empty_party.raw`, harness `tools/harness_new` with `LD_LIBRARY_PATH=/tmp/mgba/build`. Four runs, then stopped.
+
+- The givemon is Gyarados, level 20, species 130, moves Thrash / Bite / Dragonfly (37, 44, 360), Dragonfly PP 15. Sp. Atk stat 52 fits base 125 with a Sp. Atk-lowering nature, not base 60.
+- No badges. Save block 1 was 0x02025584. The badge flag byte (flags 0x820–0x827, block + 0xFE4) was 0x00, so FLAG_BADGE03_GET (Thunder Badge, the vanilla Fly gate) is clear. Only FLAG_WORLD_MAP_PALLET_TOWN was set among the town-map flags.
+- Start → POKEMON → GYARADOS opens SUMMARY / DRAGONFLY / ITEM / CANCEL. The move is offered with no badge.
+- A on DRAGONFLY opens the Fly region map. The cursor starts on ROUTE 1, which is not a destination, so A does nothing. One Down steps to ROUTE 21 and skips Pallet. A still does nothing. Coords stayed x=10, y=20, map (3, 19).
+- The town warp was not completed.
+
+Skipped on purpose (more than a few tries, or the harness cannot answer them): a battle hit-rate for the new accuracy curve, and naming the Earthquake / stat / Fly sound effects. The untracked liberty sources were not applied.
