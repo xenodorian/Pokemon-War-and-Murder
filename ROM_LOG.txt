@@ -38,3 +38,4 @@
 0xedb85fb0 start_menu_fix.py 2026-10-22
 0x150d1f92 start_menu_fix2.py 2026-10-22
 0x8f45a064 start_menu_fix3.py 2026-10-23
+0x96dc0842 bless_key_fix.py 2026-10-23
