@@ -25,6 +25,10 @@ only 0x0203FC00 itself and the odd, unaligned 0x0203FCFF (data, not pointers); n
 from either (ldr word reach +0x7C, ldrh +0x3E).  Used neighbours: 0x0203F900 (old start_controls report, 16 refs), 0x0203FB74-0x0203FB88.
 (2) 0x0203F3A9-0x0203FFFF stayed all zero in the emulator at 10 sample frames from boot to inside a battle (tools/harness_new, battle.py flow).
 (3) The battle structs, gSprites and the save scratch buffer (0x02039A3C) are all far below.  EWRAM is cleared at boot, so 'active' starts at 0.
+Emulator-tested (scratch ROM with test hooks in PlayerDoMoveAnimation, dummy 2-part table, species 27): parts appear at the table centers, data[0]
+counts 1/frame, animEnded (0x3F bit 0x10) sets, the portrait is hidden while active and visible again after end(), RAM stays zero outside the state.
+NOTE for the data packer: an OamData is 8 bytes {y, shape<<6, x_lo, size<<6 | x_hi, tileNum_lo, priority<<2 | tileNum_hi, 0, 0};
+64x64 priority 1 = 00 00 00 C0 00 04 00 00 (the bytes quoted in CURRENT_WORK.md, 00 00 C0 00 04 00 00 00, draw an 8x8 sprite at x=0xC0).
 Verified addresses (disassembled on PokemonWarAndMurder.gba, see the report in the commit/notes):
   gSprites 0x0202063C stride 0x44 (CreateSpriteAt memcpy of 0x44), template* at +0x14 (NOT +0x00: CreateSpriteAt does str r1,[r7,#0x14]),
   oam attr2 at +0x04, data[0] at +0x2E and data[1] at +0x30 (battle code strh r,[spr,#0x2e]/[#0x30]), flags +0x3E (inUse 1, invisible 4),
