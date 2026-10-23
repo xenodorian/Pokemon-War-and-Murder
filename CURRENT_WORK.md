@@ -266,3 +266,6 @@ Fixed after the first audit pass:
 - deal_info (ROM 0xf22cd0) now compares liberty signed (ldrsh, blt): tools/deal_signed.py. The other liberty readers already had signed wrappers (jra_shoot_fix, kc_show_wrap, lib_text_wrap in liberty_native.c).
 Vars used as replacements are only unreferenced in the repo and allmaps.txt; a hidden decimal reference would not show up. If something odd appears in vars 0x4029..0x402F etc., look there first.
 Free vars: none are claimed free any more. The earlier free list was wrong because it did not see the g_vars pool.
+
+## Father in bed (tools/father_fix.py, test tools/tests/father_fix.py)
+House (4,0): the bed object (local id 1) and the two bed bg tiles (2,3), (2,5) now run one script: father revived (flag 0x4FC) = nothing; VAR_CHOICE 2 = "Your father is dead, and you chose power over family."; otherwise "Your father is dead." The object's hide flag is 0x4FC (gone on every map load) and the choice scene (frame script, VAR_STORY 7) was rebuilt with removeobject 1 after the revival talk so the bed is empty at once. The old father lines ("The army is at our gates, father...") and the bystander wrapper on these three interactions are no longer used. Checked in the emulator (4 cases). Before the choice scene is played the father also says "Your father is dead."
