@@ -269,3 +269,6 @@ Free vars: none are claimed free any more. The earlier free list was wrong becau
 
 ## Father in bed (tools/father_fix.py, test tools/tests/father_fix.py)
 House (4,0): the bed object (local id 1) and the two bed bg tiles (2,3), (2,5) now run one script: father revived (flag 0x4FC) = nothing; VAR_CHOICE 2 = "Your father is dead, and you chose power over family."; otherwise "Your father is dead." The object's hide flag is 0x4FC (gone on every map load) and the choice scene (frame script, VAR_STORY 7) was rebuilt with removeobject 1 after the revival talk so the bed is empty at once. The old father lines ("The army is at our gates, father...") and the bystander wrapper on these three interactions are no longer used. Checked in the emulator (4 cases). Before the choice scene is played the father also says "Your father is dead."
+
+## Mason sprite in Cerulean and Silph (tools/mason_gfx.py)
+The Cerulean (3,3) object 8 and SilphCo_7F (1,53) object 1 (rival hide flags 0x3C, 0x4E) used gfx 7, the base hack's girlfriend (looks like LEAF). Every other rival object uses gfx 72 (Gary). Both are gfx 72 now. Checked the Cerulean scene in the emulator; Silph uses the same change and was not walked. Not touched: the duplicate map entries in groups 0 and 1 (e.g. (0,58), (0,191), (1,186)) that match the same pattern but are not in allmaps.txt.

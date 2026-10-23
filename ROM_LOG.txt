@@ -63,3 +63,4 @@
 0x19c18644 gvars_fix2.py 2026-10-23
 0x23030057 deal_signed.py 2026-10-23
 0x124ed01c father_fix.py 2026-10-23
+0xe33c5bbc mason_gfx.py 2026-10-23
