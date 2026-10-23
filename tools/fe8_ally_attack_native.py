@@ -76,18 +76,18 @@ def alloc_cb(r):
 FIND = '''
 ldr r1, =%(table)d
 ldr r3, =0xFFFF
-1:
+floop:
 ldrh r2, [r1]
 cmp r2, r3
-beq 3f
+beq fnone
 cmp r2, r0
-beq 2f
+beq ffound
 adds r1, #16
-b 1b
-2:
+b floop
+ffound:
 adds r0, r1, #0
 bx lr
-3:
+fnone:
 movs r0, #0
 bx lr
 .ltorg
