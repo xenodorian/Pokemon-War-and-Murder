@@ -26,7 +26,7 @@
     "ANNE: Leaf. I'm so sorry.\nYour father died. Just now.",
     "LEAF: No. He was only sleeping.\nHe was fine when I left him.",
     "ANNE: His breath just stopped.\nI wanted you to hear it from me.",
-    "LEAF: Shinigami raises the dead.\nI have the scroll. I can fix this."
+    "LEAF: The scroll can wake the dead.\nI have to get home. Now."
   ],
   "choice_prompt": [
     "Use the scroll on Father,\nor speak YVELTAL's name?"
@@ -197,5 +197,9 @@
   ],
   "max_fights_bare_3": [
     "Fists up. She is not afraid."
+  ],
+  "father_bedside": [
+    "Leaf runs the whole way home to\nPallet Town.",
+    "Father lies still in his bed.\nLeaf holds the scroll in both hands."
   ]
 }
