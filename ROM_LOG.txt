@@ -44,3 +44,4 @@
 0xae99a8f5 fe8_ally_attack.py 2026-10-23 (ROM grown to 32 MB, IPS32)
 0x91186969 fe8_ally_attack_prio.py 2026-10-23
 0xa1caa8dd shinigami_cage.py 2026-10-23
+0x587d6788 shinigami_scene.py 2026-10-23
