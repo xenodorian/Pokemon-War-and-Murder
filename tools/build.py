@@ -594,7 +594,10 @@ import prep
 S2='/home/claude/work/stage2'
 IDS,SHOOT=prep.load()
 VARS_POOL=list(range(0x4090,0x40A0))+list(range(0x40A1,0x40AA))+list(range(0x40BD,0x40CF))+list(range(0x40D0,0x40E6))
-VARS_POOL=VARS_POOL[:64]; assert len(VARS_POOL)==64 and len(IDS)<=512
+VARS_POOL=VARS_POOL[:64]
+# gvars_fix2.py: 23 positions moved off story, quest-log, army and rob.c vars
+import gvars_fix2; VARS_POOL=gvars_fix2.final_pool()
+assert len(VARS_POOL)==64 and len(IDS)<=512
 def u16b(v): return struct.pack('<H',v)
 # harmless script for the splatter object: say something grim
 s_splat=alloc(text('A bloody mess.\nBest not to look.'),1)

@@ -59,3 +59,6 @@
 0xccdc9068 money_fix.py 2026-10-23
 0xe560dcff bystander_story.py 2026-10-23
 0x070a44cd qlvars_fix.py 2026-10-23
+0x09690cdf gvars_fix.py 2026-10-23
+0x19c18644 gvars_fix2.py 2026-10-23
+0x23030057 deal_signed.py 2026-10-23
