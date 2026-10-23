@@ -58,3 +58,4 @@
 0x3c0512dc questlog_gyms.py 2026-10-23
 0xccdc9068 money_fix.py 2026-10-23
 0xe560dcff bystander_story.py 2026-10-23
+0x070a44cd qlvars_fix.py 2026-10-23
