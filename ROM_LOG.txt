@@ -47,3 +47,5 @@
 0x587d6788 shinigami_scene.py 2026-10-23
 0xab4088cb story_anne_fix.py 2026-10-23
 0x7d15b282 mason_fix.py 2026-10-23
+0x0e9fdaa1 mason_fix2.py 2026-10-23
+0xb1e9647f mason_fix2.py 2026-10-23
