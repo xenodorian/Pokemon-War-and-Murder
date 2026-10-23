@@ -1,5 +1,6 @@
 """Bystander lines that recognize LEAF (usage: bystander_story.py IN.gba OUT.gba), run through tools/patch.sh.
 Replaces old vulgar, shock-value bystander lines (drugs, sex, slurs, spam jokes) with townspeople who know LEAF: they ask her to defeat the JRA, or thank her once it is beaten.
+Clone copies: bystander.py wrapped each person's script in a call to a CLONE of the original, so the msgbox exists twice (original and clone); both are patched (refs with 'clone').
 Data: story_assets/text/bystander_story.json (ptr, the msgbox pointer locations 'at' with their map, the ask and thanks boxes). Triage by Haiku agents, reviewed by hand.
 Gate: in a town map, the town's base cleared flag (0x4C0 + base index); anywhere else, FLAG_GENERAL 0x4CA (the General is beaten).
 Each msgbox `0f 00 ptr 09 std` is overwritten by `goto new_script` (5 bytes) and three nops; the new script checks the flag, shows one of the two texts, and jumps back to the byte after the msgbox.
@@ -20,6 +21,7 @@ def install(r):
             if ref['at'] in done: continue
             done.add(ref['at'])
             k=ref['at']-2
+            if b[k]==0x05: continue          # already patched by an earlier run
             assert b[k]==0x0f and b[k+1]==0 and struct.unpack('<I',b[k+2:k+6])[0]==0x08000000+ptr and b[k+6]==0x09,(hex(k),e['ptr'])
             flag=TOWN_FLAG.get((ref['g'],ref['n']),GENERAL); std=b[k+7]
             S=SB(); S.raw(0x2b); S._add(struct.pack('<H',flag)); S.goto_if(1,'t')

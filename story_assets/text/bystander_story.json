@@ -292,6 +292,13 @@
     "g": 3,
     "n": 6,
     "std": 4
+   },
+   {
+    "at": 16311448,
+    "g": 3,
+    "n": 6,
+    "std": 4,
+    "clone": true
    }
   ],
   "ask": [
@@ -388,6 +395,13 @@
     "g": 6,
     "n": 5,
     "std": 4
+   },
+   {
+    "at": 16312351,
+    "g": 6,
+    "n": 1,
+    "std": 4,
+    "clone": true
    }
   ],
   "ask": [
@@ -424,6 +438,13 @@
     "g": 9,
     "n": 1,
     "std": 2
+   },
+   {
+    "at": 16313382,
+    "g": 11,
+    "n": 7,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -442,6 +463,13 @@
     "g": 10,
     "n": 12,
     "std": 2
+   },
+   {
+    "at": 16310602,
+    "g": 1,
+    "n": 93,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -496,6 +524,13 @@
     "g": 16,
     "n": 0,
     "std": 2
+   },
+   {
+    "at": 16313574,
+    "g": 16,
+    "n": 0,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -514,6 +549,13 @@
     "g": 33,
     "n": 4,
     "std": 4
+   },
+   {
+    "at": 16310120,
+    "g": 1,
+    "n": 61,
+    "std": 4,
+    "clone": true
    }
   ],
   "ask": [
@@ -532,6 +574,13 @@
     "g": 35,
     "n": 1,
     "std": 2
+   },
+   {
+    "at": 16310310,
+    "g": 1,
+    "n": 62,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -629,6 +678,13 @@
     "g": 3,
     "n": 2,
     "std": 4
+   },
+   {
+    "at": 16311047,
+    "g": 3,
+    "n": 2,
+    "std": 4,
+    "clone": true
    }
   ],
   "ask": [
@@ -707,6 +763,13 @@
     "g": 3,
     "n": 64,
     "std": 4
+   },
+   {
+    "at": 16313468,
+    "g": 13,
+    "n": 0,
+    "std": 4,
+    "clone": true
    }
   ],
   "ask": [
@@ -725,6 +788,13 @@
     "g": 5,
     "n": 4,
     "std": 2
+   },
+   {
+    "at": 16310430,
+    "g": 1,
+    "n": 90,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -761,6 +831,13 @@
     "g": 7,
     "n": 3,
     "std": 2
+   },
+   {
+    "at": 16312526,
+    "g": 7,
+    "n": 3,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -803,6 +880,20 @@
     "g": 8,
     "n": 2,
     "std": 4
+   },
+   {
+    "at": 16312653,
+    "g": 8,
+    "n": 2,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16312663,
+    "g": 8,
+    "n": 2,
+    "std": 4,
+    "clone": true
    }
   ],
   "ask": [
@@ -901,6 +992,13 @@
     "g": 35,
     "n": 7,
     "std": 2
+   },
+   {
+    "at": 16310334,
+    "g": 1,
+    "n": 62,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -967,6 +1065,13 @@
     "g": 3,
     "n": 15,
     "std": 4
+   },
+   {
+    "at": 16310276,
+    "g": 1,
+    "n": 62,
+    "std": 4,
+    "clone": true
    }
   ],
   "ask": [
@@ -1027,6 +1132,13 @@
     "g": 6,
     "n": 5,
     "std": 2
+   },
+   {
+    "at": 16310478,
+    "g": 1,
+    "n": 91,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1045,6 +1157,13 @@
     "g": 10,
     "n": 2,
     "std": 2
+   },
+   {
+    "at": 16312806,
+    "g": 10,
+    "n": 2,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1063,6 +1182,13 @@
     "g": 10,
     "n": 3,
     "std": 2
+   },
+   {
+    "at": 16312866,
+    "g": 10,
+    "n": 4,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1081,6 +1207,13 @@
     "g": 11,
     "n": 1,
     "std": 2
+   },
+   {
+    "at": 16313286,
+    "g": 11,
+    "n": 2,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1099,6 +1232,13 @@
     "g": 11,
     "n": 4,
     "std": 2
+   },
+   {
+    "at": 16313334,
+    "g": 11,
+    "n": 4,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1117,6 +1257,13 @@
     "g": 12,
     "n": 5,
     "std": 2
+   },
+   {
+    "at": 16313430,
+    "g": 12,
+    "n": 5,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1153,6 +1300,13 @@
     "g": 33,
     "n": 2,
     "std": 2
+   },
+   {
+    "at": 16310046,
+    "g": 1,
+    "n": 60,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1171,6 +1325,13 @@
     "g": 34,
     "n": 1,
     "std": 2
+   },
+   {
+    "at": 16310130,
+    "g": 1,
+    "n": 61,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1189,6 +1350,13 @@
     "g": 1,
     "n": 89,
     "std": 6
+   },
+   {
+    "at": 1455523,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
    }
   ],
   "ask": [
@@ -1213,6 +1381,13 @@
     "g": 7,
     "n": 3,
     "std": 2
+   },
+   {
+    "at": 16310542,
+    "g": 1,
+    "n": 92,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1273,6 +1448,13 @@
     "g": 5,
     "n": 4,
     "std": 2
+   },
+   {
+    "at": 16310442,
+    "g": 1,
+    "n": 90,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1309,6 +1491,13 @@
     "g": 8,
     "n": 0,
     "std": 2
+   },
+   {
+    "at": 16310578,
+    "g": 1,
+    "n": 93,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1327,6 +1516,13 @@
     "g": 9,
     "n": 1,
     "std": 2
+   },
+   {
+    "at": 16312722,
+    "g": 9,
+    "n": 1,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1381,6 +1577,13 @@
     "g": 10,
     "n": 2,
     "std": 2
+   },
+   {
+    "at": 16312830,
+    "g": 10,
+    "n": 2,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1435,6 +1638,13 @@
     "g": 33,
     "n": 2,
     "std": 2
+   },
+   {
+    "at": 16310034,
+    "g": 1,
+    "n": 60,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1453,6 +1663,13 @@
     "g": 34,
     "n": 1,
     "std": 2
+   },
+   {
+    "at": 16310142,
+    "g": 1,
+    "n": 61,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1471,6 +1688,13 @@
     "g": 35,
     "n": 1,
     "std": 2
+   },
+   {
+    "at": 16310298,
+    "g": 1,
+    "n": 62,
+    "std": 2,
+    "clone": true
    }
   ],
   "ask": [
@@ -1478,6 +1702,2900 @@
   ],
   "thanks": [
    "Thanks, LEAF! The JRA is done.\nThe whole city thanks you."
+  ]
+ },
+ {
+  "ptr": "0x172f60",
+  "text": "Most of the passengers will\nbattle you.\n--\nDon't lose!\n--\nIf you lose they will ",
+  "refs": [
+   {
+    "at": 1444055,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16308874,
+    "g": 1,
+    "n": 5,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, LEAF! Most passengers\nwill battle you. Beat the JRA!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nThe ship is safe now. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x17404f",
+  "text": "I think that I saw a man \ndrag an unconscious woman \ninto his hotel room.\nCreepy",
+  "refs": [
+   {
+    "at": 1445165,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309218,
+    "g": 1,
+    "n": 22,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF? Please beat the JRA\nCaptain at the base nearby."
+  ],
+  "thanks": [
+   "LEAF! I heard you beat the\nCaptain. Our town is safer!"
+  ]
+ },
+ {
+  "ptr": "0x17459b",
+  "text": "I heard a damn SNORLAX is\nnear CELADON CITY.\nJust ridiculous!",
+  "refs": [
+   {
+    "at": 1445580,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309278,
+    "g": 1,
+    "n": 33,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Are you LEAF? Please beat\nthe JRA. Soldiers scare us."
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA base.\nThe road is clear now. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x175fd3",
+  "text": "I can't wait for the honeymoon.\nIt's going to get very freaky!",
+  "refs": [
+   {
+    "at": 1448205,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309517,
+    "g": 1,
+    "n": 52,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA\nso we can have a calm trip."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nNow we can enjoy a honeymoon."
+  ]
+ },
+ {
+  "ptr": "0x176dba",
+  "text": "I'm liek so high\u2026\n--\n\u2026",
+  "refs": [
+   {
+    "at": 1449381,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309795,
+    "g": 1,
+    "n": 56,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey... LEAF? Please beat\nthe JRA. They took the base."
+  ],
+  "thanks": [
+   "Hey... LEAF did it!\nThe JRA is gone. Thanks a lot."
+  ]
+ },
+ {
+  "ptr": "0x177b16",
+  "text": "Whoo!\nDrunk PARTY MANSION! \nWhoo!",
+  "refs": [
+   {
+    "at": 1451027,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309854,
+    "g": 1,
+    "n": 59,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey! Are you LEAF? Please\nbeat the JRA Captain. Go!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA!\nThe town is safe again. Great!"
+  ]
+ },
+ {
+  "ptr": "0x1a23b8",
+  "text": "I'm trying to get this girl to\ncome home with me after\nthe party.\nIt's working!",
+  "refs": [
+   {
+    "at": 1512305,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309914,
+    "g": 1,
+    "n": 59,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, LEAF! Our town needs you.\nBeat the JRA Captain. Go!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nOur town is free now. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x181f5d",
+  "text": "I'm so wasted!\nWhoo!\nMixing drugs and alcohol is\n\u2026\nfraking\n\u2026\nAMAZING!\n--\nI'm mak",
+  "refs": [
+   {
+    "at": 1472386,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309974,
+    "g": 1,
+    "n": 60,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "You're LEAF? Please beat\nthe JRA. We want peace again."
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA!\nNow the war can end. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x1a33db",
+  "text": "That girl, I need her as\na human sacrifice to CJ.\n\u2026\nDid you hear that?\nJust kidd",
+  "refs": [
+   {
+    "at": 1513743,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310166,
+    "g": 1,
+    "n": 61,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Are you LEAF? Please beat\nthe JRA Captain. Be careful."
+  ],
+  "thanks": [
+   "LEAF, you beat the Captain!\nWe can sleep at night. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x1a32ca",
+  "text": "Wazzup, home slice! \n--\nI'm DJ SWAGGY BOY! \n--\nI own this mansion. \nI'm a legend",
+  "refs": [
+   {
+    "at": 1513700,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 1513713,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16310240,
+    "g": 1,
+    "n": 62,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Yo, LEAF! Our town needs you.\nBeat the JRA. Save our town!"
+  ],
+  "thanks": [
+   "Yo, LEAF! You beat the JRA!\nOur homes are safe. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x179c41",
+  "text": "I need crack...CRACK!\nI'll blow you for some crack,man.\nI need help\u2026crack\u2026",
+  "refs": [
+   {
+    "at": 1454675,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310418,
+    "g": 1,
+    "n": 88,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Please, LEAF... beat the JRA.\nThey took our food and homes."
+  ],
+  "thanks": [
+   "LEAF... you beat the JRA?\nThank you. Life gets better."
+  ]
+ },
+ {
+  "ptr": "0x1838d7",
+  "text": "Hey, baby. \nI'm sexy and affordable.\nI'm good\u2026",
+  "refs": [
+   {
+    "at": 1474446,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310514,
+    "g": 1,
+    "n": 91,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, you! Are you LEAF?\nBeat the JRA for us. Please."
+  ],
+  "thanks": [
+   "You beat the JRA, LEAF?\nThe street is safe. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x172559",
+  "text": "My life was so uneventful until\nI found DRUGS! \n--\nI'm buying more from that \nde",
+  "refs": [
+   {
+    "at": 1443124,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310638,
+    "g": 1,
+    "n": 93,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Wow, LEAF! Beat the JRA!\nMy brother is stuck in there."
+  ],
+  "thanks": [
+   "Wow, LEAF beat the JRA!\nMy brother can come home now!"
+  ]
+ },
+ {
+  "ptr": "0x17f568",
+  "text": "GHOST POKEMON obviously\nexist, idiot. \n--\nYou're probably from the\nSLUMS! \n--\nLO",
+  "refs": [
+   {
+    "at": 1468564,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16311315,
+    "g": 3,
+    "n": 4,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, LEAF! Ghosts are real.\nThe JRA is worse. Beat them!"
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA!\nThe ghosts can wait. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x18fc2b",
+  "text": "I'm a teacher and I'm really\nunderpaid. It really SUCKS. ",
+  "refs": [
+   {
+    "at": 1482904,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16311928,
+    "g": 5,
+    "n": 2,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Are you LEAF? Beat the JRA!\nMy kids need a safe school."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nMy class can learn. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x19d85c",
+  "text": "I really like dancing in the club\nwith a nice girl while intoxicated.\nIt's a tru",
+  "refs": [
+   {
+    "at": 1505056,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312230,
+    "g": 6,
+    "n": 0,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA.\nWe want to dance in peace!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA!\nLet's dance at the club again!"
+  ]
+ },
+ {
+  "ptr": "0x1914de",
+  "text": "I brough a MAGIKARP for\n$500!\n--\n\u2026\n--\nI have a cocaine problem and\nI need seriou",
+  "refs": [
+   {
+    "at": 1484496,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312362,
+    "g": 6,
+    "n": 3,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "I paid 500 for a MAGIKARP!\nLEAF, please beat the JRA!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA! I'm broke,\nbut the town is safe. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x191840",
+  "text": "Why do you enter people's\nhouses uninvited?\nWhat's wrong with you?\nAre you some ",
+  "refs": [
+   {
+    "at": 1484776,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312458,
+    "g": 6,
+    "n": 7,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Oh! You're LEAF? Please beat\nthe JRA. Grandpa has POKEMON."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nThank you so much. Come in!"
+  ]
+ },
+ {
+  "ptr": "0x19397d",
+  "text": "Those horrible ROCKETS! \n--\nThat poor CUBONE's mother! \n--\nThey killed it and be",
+  "refs": [
+   {
+    "at": 1487415,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16312676,
+    "g": 8,
+    "n": 3,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! The JRA hurts our town.\nBeat their Captain, please!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA! Our town\nis safe. Thank you for this."
+  ]
+ },
+ {
+  "ptr": "0x195471",
+  "text": "I want to exchange MAIL with all\nsorts of people with my PIDGEY.\n--\nBy the way, ",
+  "refs": [
+   {
+    "at": 1489589,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312758,
+    "g": 9,
+    "n": 7,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "I'll trade MAIL with you if\nyou beat the JRA, LEAF!"
+  ],
+  "thanks": [
+   "Thanks, LEAF! You beat JRA.\nLet's trade MAIL later."
+  ]
+ },
+ {
+  "ptr": "0x195ca0",
+  "text": "PROTEIN raises ATTACK but\nalso can be used as a human\nsteroid.\n--\nIRON raises DE",
+  "refs": [
+   {
+    "at": 1489996,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312878,
+    "g": 10,
+    "n": 4,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "PROTEIN raises ATTACK.\nIRON raises DEFENSE. Beat JRA!"
+  ],
+  "thanks": [
+   "Thanks, LEAF! PROTEIN raises\nATTACK. IRON raises DEFENSE."
+  ]
+ },
+ {
+  "ptr": "0x1981c2",
+  "text": "Yeah!\nThis is easy money! \nKeep throwing all the cash\nat me! \nDancing is so easy",
+  "refs": [
+   {
+    "at": 1496372,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313262,
+    "g": 11,
+    "n": 2,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, LEAF! Please beat the JRA\nso we can perform in peace!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA! The show\ncan go on now. Thanks a lot!"
+  ]
+ },
+ {
+  "ptr": "0x19bed5",
+  "text": "The COPYCAT is hot!\nI'm getting her phone number!",
+  "refs": [
+   {
+    "at": 1503103,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313514,
+    "g": 14,
+    "n": 4,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA\nCaptain. COPYCAT fans need it."
+  ],
+  "thanks": [
+   "LEAF, you did it! JRA is out.\nThe COPYCAT fans thank you!"
+  ]
+ },
+ {
+  "ptr": "0x1733f8",
+  "text": "We're busy here, buddy!\nGet the hell of the way!",
+  "refs": [
+   {
+    "at": 1444533,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16308946,
+    "g": 1,
+    "n": 10,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, you are LEAF, right?\nTake down the JRA soon!"
+  ],
+  "thanks": [
+   "Hey, LEAF! You beat the JRA!\nThanks! Now we can work again."
+  ]
+ },
+ {
+  "ptr": "0x173b79",
+  "text": "Waiter, lick my boots! \nYou worthless bum!",
+  "refs": [
+   {
+    "at": 1444958,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309170,
+    "g": 1,
+    "n": 15,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, you are LEAF? Good!\nBeat the JRA Captains for us."
+  ],
+  "thanks": [
+   "You beat the JRA? Thank you!\nLEAF, you are a true hero."
+  ]
+ },
+ {
+  "ptr": "0x1745d9",
+  "text": "The DEPARTMENT STORE in CELADON\nhas a great selection.\n--\nGreat location for loo",
+  "refs": [
+   {
+    "at": 1445600,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309290,
+    "g": 1,
+    "n": 35,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "CELADON DEPT STORE has a great\nselection of items.",
+   "LEAF, stop the JRA for us!\nOur town needs you to win."
+  ],
+  "thanks": [
+   "CELADON DEPT STORE has a great\nselection of items.",
+   "You beat the JRA, LEAF! Wow!\nShoppers can relax now."
+  ]
+ },
+ {
+  "ptr": "0x176dce",
+  "text": "About me smoking weed\u2026\nKeep it a secret. ",
+  "refs": [
+   {
+    "at": 1449391,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309805,
+    "g": 1,
+    "n": 56,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "My brother joined the JRA.\nI miss him so much.",
+   "LEAF, please beat the JRA!\nBring him back home safe."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nNow my brother can come home."
+  ]
+ },
+ {
+  "ptr": "0x1a2332",
+  "text": "This guy is really getting\nannoying. \nHe just wants to get in my\npants.\nDamn\u2026",
+  "refs": [
+   {
+    "at": 1512286,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309926,
+    "g": 1,
+    "n": 59,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "This JRA guy is so annoying!\nLEAF, beat the JRA for us!"
+  ],
+  "thanks": [
+   "That JRA guy is gone for good!\nThank you, LEAF. You did it!"
+  ]
+ },
+ {
+  "ptr": "0x181d2f",
+  "text": "What is this device?\nHmmm\u2026\n\u2026\nI bet you're wondering\nwhy I'm not partying.\n--\nTha",
+  "refs": [
+   {
+    "at": 1472334,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309986,
+    "g": 1,
+    "n": 60,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "What is this device?\nHmmm...",
+   "Go beat the JRA, LEAF!\nOur whole town is waiting."
+  ],
+  "thanks": [
+   "What is this device?\nHmmm...",
+   "LEAF, you beat the JRA! Wow!\nNow I can read in peace."
+  ]
+ },
+ {
+  "ptr": "0x1a3379",
+  "text": "DJ SWAGGY BOY is one of \nthis world's true leaders!\nI love being with such a \npo",
+  "refs": [
+   {
+    "at": 1513733,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310250,
+    "g": 1,
+    "n": 62,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF, you are our true hero!\nPlease beat the JRA for us."
+  ],
+  "thanks": [
+   "Wow, LEAF! You are a hero!\nYou beat the JRA. We owe you!"
+  ]
+ },
+ {
+  "ptr": "0x179eae",
+  "text": "Hey baby, I'll make you feel real \ngood for a cheap rate\u2026 \n--\nOops, you're just ",
+  "refs": [
+   {
+    "at": 1454728,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310358,
+    "g": 1,
+    "n": 88,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey there! Are you LEAF?",
+   "Please beat the JRA soldiers.\nGood luck out there!"
+  ],
+  "thanks": [
+   "Hey there, LEAF! Great job!",
+   "You beat the JRA. Thank you!\nThe town is safe now."
+  ]
+ },
+ {
+  "ptr": "0x19d58b",
+  "text": "I love the rush I get from doing\nDRUGS!\nI CAN DO ANYTHING!\nCEREAL BARS TASTE LIK",
+  "refs": [
+   {
+    "at": 1504753,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310454,
+    "g": 1,
+    "n": 90,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "I love the snacks here!\nThe JRA took all our food.",
+   "Stop the JRA, LEAF!\nWe want our town back."
+  ],
+  "thanks": [
+   "I love the snacks here!\nThe JRA is gone. Thank you!",
+   "LEAF, you did it!\nNow the snacks can come back."
+  ]
+ },
+ {
+  "ptr": "0x17a0e3",
+  "text": "Come on, bro.\nYou know you want some\ndrugs, cheap and easy!",
+  "refs": [
+   {
+    "at": 1455157,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310526,
+    "g": 1,
+    "n": 92,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, you look like a fighter.",
+   "LEAF, the JRA hurt our town.\nPlease beat them for us!"
+  ],
+  "thanks": [
+   "Hey, you did it, fighter!",
+   "LEAF, you beat the JRA!\nOur town can finally breathe."
+  ]
+ },
+ {
+  "ptr": "0x17dbe4",
+  "text": "VIRIDIAN SLUMS!\nThere are some scary thugs but\nalso cheap drugs for a really goo",
+  "refs": [
+   {
+    "at": 1465010,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16310967,
+    "g": 3,
+    "n": 1,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "VIRIDIAN SLUMS! Be careful!",
+   "Stop the JRA, LEAF!\nThe slums need peace again."
+  ],
+  "thanks": [
+   "The SLUMS are calmer now.",
+   "You beat the JRA, LEAF!\nThe slums can breathe now."
+  ]
+ },
+ {
+  "ptr": "0x17f01d",
+  "text": "I got beat up and robbed by\nTHUGS when I visited the\nslums. The POLICE are too\nc",
+  "refs": [
+   {
+    "at": 1468171,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16311081,
+    "g": 3,
+    "n": 3,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF, the JRA took our town.",
+   "Please beat the JRA Captains.\nOur police can't help us now."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Wow!",
+   "Now the police can protect\nour town again."
+  ]
+ },
+ {
+  "ptr": "0x1895c2",
+  "text": "I'm about to get laid!\nThis call-girl from the SLUMS\nis hot!\nGet the hell out of",
+  "refs": [
+   {
+    "at": 1476433,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16311750,
+    "g": 3,
+    "n": 44,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, kid! Are you LEAF?\nPlease beat the JRA. Be safe!"
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA!\nThe slums are safe. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x18fc00",
+  "text": "OMG! School iz ,like, so boring.\nOMG! OMG!",
+  "refs": [
+   {
+    "at": 1482881,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16311952,
+    "g": 5,
+    "n": 2,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Wow, you are LEAF! Cool!",
+   "Please beat the JRA so we can\ngo back to school."
+  ],
+  "thanks": [
+   "Wow, LEAF! You beat the JRA!",
+   "School is open! Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x19d5e7",
+  "text": "I've drank and ate WAY too\nmuch. I'm gonna puke. \nThe bar is upstairs. It has gr",
+  "refs": [
+   {
+    "at": 1504763,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312242,
+    "g": 6,
+    "n": 0,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, you are LEAF! Please beat\nthe JRA. Our town needs you.",
+   "The cafe upstairs is good.\nTake a rest after your trip!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Yay!",
+   "Great food is upstairs now.\nLet's celebrate!"
+  ]
+ },
+ {
+  "ptr": "0xecf2bd",
+  "text": "Those friggin ROCKETS!\n--\nThey messed up my house!\nAnd you know government\nrun i",
+  "refs": [
+   {
+    "at": 1485187,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16312481,
+    "g": 7,
+    "n": 1,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA messed up my house!\nLEAF, go and beat them for us!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Yes!",
+   "Now my house can be fixed.\nThank you so much!"
+  ]
+ },
+ {
+  "ptr": "0x193ce5",
+  "text": "Why are so many people\ncommitting suicide in\nLAVENDER?\nIs it because of the emer",
+  "refs": [
+   {
+    "at": 1487698,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312686,
+    "g": 8,
+    "n": 5,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Lavender is scary right now.\nLEAF, stop the JRA for us!"
+  ],
+  "thanks": [
+   "Lavender is scary no more!\nThank you, LEAF. You did it!"
+  ]
+ },
+ {
+  "ptr": "0x195f98",
+  "text": "My sister is a TRAINER, believe it\nor not.\n--\nShe always beats me.\nI really suck",
+  "refs": [
+   {
+    "at": 1490980,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312890,
+    "g": 10,
+    "n": 5,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "My sister says you are LEAF!\nPlease beat the JRA for us."
+  ],
+  "thanks": [
+   "My sister says you won, LEAF!\nThanks! She is so jealous."
+  ]
+ },
+ {
+  "ptr": "0x197c30",
+  "text": "I'd love to but you're way to\nyoung!\nI only see 18 and up!",
+  "refs": [
+   {
+    "at": 1495713,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313206,
+    "g": 10,
+    "n": 19,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Are you LEAF? I heard of you!",
+   "Please beat the JRA. Be brave!"
+  ],
+  "thanks": [
+   "Hey, LEAF! You beat the JRA!",
+   "Thanks! Good work, trainer."
+  ]
+ },
+ {
+  "ptr": "0x19822a",
+  "text": "This girl can really shake it!\nShe's got quite the behind if\nyou ask me. \nWorth ",
+  "refs": [
+   {
+    "at": 1496381,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313274,
+    "g": 11,
+    "n": 2,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "This singer can really sing!",
+   "LEAF, stop the JRA!\nOur town needs a hero."
+  ],
+  "thanks": [
+   "This singer is great! Nice!",
+   "You beat the JRA, LEAF! Yay!\nThe concert can go on now."
+  ]
+ },
+ {
+  "ptr": "0x199fb3",
+  "text": "I hate that damned PARTY\nMANSION.\nThey are so loud and stay up\ntoo late! \nCan't ",
+  "refs": [
+   {
+    "at": 1499835,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313406,
+    "g": 12,
+    "n": 2,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA is so loud at night!",
+   "Beat them, LEAF!\nThen I can get back to work."
+  ],
+  "thanks": [
+   "The JRA is gone! Thank you!",
+   "LEAF, you did it!\nNow I can finally sleep."
+  ]
+ },
+ {
+  "ptr": "0x19bf8f",
+  "text": "REPELs are a waste of money.\nDon't be a PUSSY!\nTake on all challengers!\nEven wil",
+  "refs": [
+   {
+    "at": 1503150,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313526,
+    "g": 14,
+    "n": 5,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Trainers, don't be scared!\nThe JRA Captains are tough.",
+   "LEAF, beat them all for us!\nWe believe in you!"
+  ],
+  "thanks": [
+   "Trainers, you can relax now!",
+   "LEAF beat the JRA Captains!\nWhat a great trainer she is!"
+  ]
+ },
+ {
+  "ptr": "0x173429",
+  "text": "I saw an odd BERRY. \nI wonder if it could get me high. \n",
+  "refs": [
+   {
+    "at": 1444542,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16308958,
+    "g": 1,
+    "n": 10,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, do you know LEAF?\nShe is out to stop the JRA."
+  ],
+  "thanks": [
+   "LEAF beat the JRA! The base\nis free now. Thanks, LEAF!"
+  ]
+ },
+ {
+  "ptr": "0x173ac5",
+  "text": "We're RICH. We get to cruise\nthe WORLD, bee-yotches!",
+  "refs": [
+   {
+    "at": 1444840,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309110,
+    "g": 1,
+    "n": 13,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Our town is rich, but the JRA\nholds our base. Help LEAF!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA!\nOur base is free. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x1740a1",
+  "text": "The CAPTAIN touches me at\nnight. \nI kind of like it.",
+  "refs": [
+   {
+    "at": 1445175,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309242,
+    "g": 1,
+    "n": 23,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA Captain scares us all.\nLEAF, please beat him for us!"
+  ],
+  "thanks": [
+   "The JRA Captain is gone!\nThanks to LEAF, we are safe."
+  ]
+ },
+ {
+  "ptr": "0x1758d3",
+  "text": "{v1}!\nYou're a huge jerk! \nDamn you!",
+  "refs": [
+   {
+    "at": 1447671,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309373,
+    "g": 1,
+    "n": 49,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, you! Are you with LEAF?\nPlease beat the JRA here!"
+  ],
+  "thanks": [
+   "Hey, LEAF! You beat the JRA!\nGood work. We thank you!"
+  ]
+ },
+ {
+  "ptr": "0x176501",
+  "text": "You've cost us millions, maybe\nBILLIONS!\nDAMN!!!",
+  "refs": [
+   {
+    "at": 1448913,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309733,
+    "g": 1,
+    "n": 53,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "We lost millions! LEAF, please\nbeat the JRA. Then we rebuild."
+  ],
+  "thanks": [
+   "LEAF beat the JRA! We can\nrebuild now. Thank you, LEAF!"
+  ]
+ },
+ {
+  "ptr": "0x1770a9",
+  "text": "SECRETARY: Damn, kid! \nEveryone's salary was going\nto double if the ROCKET deal\n",
+  "refs": [
+   {
+    "at": 1449601,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309818,
+    "g": 1,
+    "n": 57,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Our jobs depend on this, LEAF!\nPlease beat the JRA here."
+  ],
+  "thanks": [
+   "Great news! LEAF beat the JRA.\nOur town is safe. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x1a31f0",
+  "text": "My dancing is legendary! \nOne dance is all it takes to  \nget a girl to the bedro",
+  "refs": [
+   {
+    "at": 1513688,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310202,
+    "g": 1,
+    "n": 61,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "My dancing is great! Hey, do\nyou know LEAF? Beat the JRA!"
+  ],
+  "thanks": [
+   "The JRA is gone? Let's dance!\nThanks to LEAF, we are free!"
+  ]
+ },
+ {
+  "ptr": "0x1a3245",
+  "text": "DJ SWAGGY BOY was one of\nthe men who brought swag \nto KANTO. \nKANTO sucked befor",
+  "refs": [
+   {
+    "at": 1513723,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310262,
+    "g": 1,
+    "n": 62,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Yo! Do you know LEAF? She is\nout to beat the JRA. Help her!"
+  ],
+  "thanks": [
+   "Yo, LEAF beat the JRA! Now we\ncan play music. Thanks, LEAF!"
+  ]
+ },
+ {
+  "ptr": "0x179c8c",
+  "text": "I got nothing,bro.\n--\nLife SUCKS!",
+  "refs": [
+   {
+    "at": 1454666,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310370,
+    "g": 1,
+    "n": 88,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Nothing to do here, bro.\nGo help LEAF beat the JRA."
+  ],
+  "thanks": [
+   "Things are better now, bro.\nLEAF beat the JRA. Good job!"
+  ]
+ },
+ {
+  "ptr": "0x18f292",
+  "text": "My family in JOHTO has\ndisowned me. \nNow I work for an abusive man\nwhere I have ",
+  "refs": [
+   {
+    "at": 1482397,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310466,
+    "g": 1,
+    "n": 91,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "I miss my family in JOHTO.\nLEAF, beat the JRA for us!"
+  ],
+  "thanks": [
+   "Thanks, LEAF! I can go home\nto JOHTO! The JRA is beaten."
+  ]
+ },
+ {
+  "ptr": "0x1953af",
+  "text": "I wonder if I should end my life\ntoo. \nLAVENDER really sucks. ",
+  "refs": [
+   {
+    "at": 1489580,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310554,
+    "g": 1,
+    "n": 92,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LAVENDER is quiet and scared.\nLEAF, beat the JRA for us!"
+  ],
+  "thanks": [
+   "LAVENDER is safe now! Thanks,\nLEAF. You beat the JRA!"
+  ]
+ },
+ {
+  "ptr": "0x17db78",
+  "text": "Damn! About friggin time! Damn!",
+  "refs": [
+   {
+    "at": 1464814,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16310880,
+    "g": 3,
+    "n": 1,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Finally, LEAF! Beat the JRA!\nOur base needs you, LEAF."
+  ],
+  "thanks": [
+   "Finally, it's done! LEAF beat\nthe JRA. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x17f614",
+  "text": "LAVENDER TOWN has the\nhighest suicide rate in all\nof KANTO.  \n--\nI wonder who wi",
+  "refs": [
+   {
+    "at": 1468593,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16311338,
+    "g": 3,
+    "n": 4,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Our town is hurting. The JRA\nhas hurt us. LEAF, stop them!"
+  ],
+  "thanks": [
+   "Our town can heal now!\nThanks LEAF, you beat the JRA!"
+  ]
+ },
+ {
+  "ptr": "0x17ff1c",
+  "text": "This GYM is great! \nIt's full of sexy women! ",
+  "refs": [
+   {
+    "at": 1469605,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16311495,
+    "g": 3,
+    "n": 6,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "This GYM is great! Do you know\nLEAF? Help her beat the JRA!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA! This town\nis safe now. Thank you, LEAF!"
+  ]
+ },
+ {
+  "ptr": "0x183491",
+  "text": "Whew\u2026 I better take a rest\u2026\n--\nKilling people and selling their\norgans is not ea",
+  "refs": [
+   {
+    "at": 1474426,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16311702,
+    "g": 3,
+    "n": 21,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Whew, I need a rest. The JRA\nkeeps us busy. Help LEAF win!"
+  ],
+  "thanks": [
+   "Whew, the JRA is finally gone!\nThanks, LEAF. Now we can rest."
+  ]
+ },
+ {
+  "ptr": "0x19d93b",
+  "text": "I don't even know this guy and\nI don't care!\nNot only am I drunk, I'm also\nhigh ",
+  "refs": [
+   {
+    "at": 1505074,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312254,
+    "g": 6,
+    "n": 0,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "I'm too tired to party now.\nLEAF, please beat the JRA!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA! Let's\ncelebrate. Thank you, LEAF!"
+  ]
+ },
+ {
+  "ptr": "0x1915db",
+  "text": "I hate that stupid child!\n--\nI used to beat that child daily!\nHe deserved it too",
+  "refs": [
+   {
+    "at": 1484575,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312386,
+    "g": 6,
+    "n": 4,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Our kids are scared. The JRA\nis near. LEAF, beat them!"
+  ],
+  "thanks": [
+   "Our kids can play safe again!\nThanks LEAF, you beat the JRA!"
+  ]
+ },
+ {
+  "ptr": "0x191ed8",
+  "text": "I figure what's lost is lost.\n--\nI'll put down my whore\ndaughter myself. \n\u2026\nToo ",
+  "refs": [
+   {
+    "at": 1485197,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16312491,
+    "g": 7,
+    "n": 1,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "My daughter is with the JRA.\nLEAF, please bring her home!"
+  ],
+  "thanks": [
+   "My daughter is home! Thanks,\nLEAF. You beat the JRA!"
+  ]
+ },
+ {
+  "ptr": "0x198285",
+  "text": "Stop right there, chump!\nThis place is for VIP ONLY!\nThis where the ladies get\nb",
+  "refs": [
+   {
+    "at": 1496390,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313298,
+    "g": 11,
+    "n": 2,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hold on! Are you with LEAF?\nPlease help her beat the JRA!"
+  ],
+  "thanks": [
+   "Hold on! LEAF beat the JRA!\nThanks! Come on in, friend."
+  ]
+ },
+ {
+  "ptr": "0x17320c",
+  "text": "Our CAPTAIN is a sword master.\nHe's CUT off many heads in\nmany bloody battles.\n-",
+  "refs": [
+   {
+    "at": 1444448,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16308910,
+    "g": 1,
+    "n": 7,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Are you LEAF? Please beat our\nCAPTAIN. He guards the JRA!"
+  ],
+  "thanks": [
+   "LEAF, you beat our CAPTAIN!\nThe JRA base is free. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x173462",
+  "text": "GET THE HELL OUT! \nWe're freaking cooking here!\nIt's our job!",
+  "refs": [
+   {
+    "at": 1444551,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16308970,
+    "g": 1,
+    "n": 10,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Beat the JRA soldiers!\nWe need our kitchen back."
+  ],
+  "thanks": [
+   "LEAF, you won! The JRA is out.\nWe can cook in peace again!"
+  ]
+ },
+ {
+  "ptr": "0x173b21",
+  "text": "I always travel with WIGGLYTUFF.\nIt cracks THUG's skulls!\nWoot!",
+  "refs": [
+   {
+    "at": 1444896,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309122,
+    "g": 1,
+    "n": 14,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "You're LEAF? Go, win for us!\nWIGGLYTUFF and I back you!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nThanks! WIGGLYTUFF is proud."
+  ]
+ },
+ {
+  "ptr": "0x173e7b",
+  "text": "Small trees can be chopped down\nusing the move CUT. \n--\nIt can also CUT off the ",
+  "refs": [
+   {
+    "at": 1445099,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309194,
+    "g": 1,
+    "n": 20,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "CUT can chop down small trees.\nUse it to clear your path.",
+   "LEAF, please beat the JRA!\nOur town is counting on you."
+  ],
+  "thanks": [
+   "CUT can chop down small trees.\nUse it to clear your path.",
+   "LEAF, you beat the JRA!\nThanks. Our town is safe now."
+  ]
+ },
+ {
+  "ptr": "0x1743f8",
+  "text": "My buddy MACHOKE is super strong!\n--\nHe can strangle average humans\nto death! ",
+  "refs": [
+   {
+    "at": 1445336,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309254,
+    "g": 1,
+    "n": 28,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Are you LEAF? Beat the JRA!\nMy MACHOKE is ready to help."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nMy MACHOKE and I thank you!"
+  ]
+ },
+ {
+  "ptr": "0x1746a7",
+  "text": "DIGLETT dug this long tunnel! \n--\nIt's completely useless. \n--\nThough, it'd be a",
+  "refs": [
+   {
+    "at": 1445630,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309314,
+    "g": 1,
+    "n": 38,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "DIGLETT dug this long tunnel!\nBeat the JRA, LEAF. Free us!"
+  ],
+  "thanks": [
+   "Great work, LEAF! Thanks!\nThe JRA is gone from town."
+  ]
+ },
+ {
+  "ptr": "0x176573",
+  "text": "Damn you, bastard!",
+  "refs": [
+   {
+    "at": 1448946,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309661,
+    "g": 1,
+    "n": 53,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF, please, stop the JRA!\nThey took my son. Stop them!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nThank you for saving us all."
+  ]
+ },
+ {
+  "ptr": "0x17696d",
+  "text": "SILPH is fo sucking awesome!  ",
+  "refs": [
+   {
+    "at": 1449086,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309759,
+    "g": 1,
+    "n": 54,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "SILPH CO. is so cool! LEAF,\nstop the JRA before they win."
+  ],
+  "thanks": [
+   "SILPH CO. is safe again!\nThank you, LEAF. Well done."
+  ]
+ },
+ {
+  "ptr": "0x1a20d5",
+  "text": "I'm on the phone kid!\nDon't be rude!\n\u2026\nOkay, JIMMY.\nI'll pay you you for the gir",
+  "refs": [
+   {
+    "at": 1511754,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309950,
+    "g": 1,
+    "n": 60,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Sorry, I'm on the phone, kid.\nLEAF, please beat the JRA!"
+  ],
+  "thanks": [
+   "Oh! LEAF, you beat the JRA!\nThat's great news. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x181dca",
+  "text": "The PARTY MANSION is\nGREAT!\n--\nSo much fun!\nSo much booze!\nSo much broads!\nSo mu",
+  "refs": [
+   {
+    "at": 1472343,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310010,
+    "g": 1,
+    "n": 60,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA ruins our fun.\nLEAF, please beat them all!"
+  ],
+  "thanks": [
+   "The JRA is gone! Thanks, LEAF.\nNow we can have our party."
+  ]
+ },
+ {
+  "ptr": "0x1a315c",
+  "text": "Our bodies are so close\ntogether!\nHe's simply incredible.\nHe's the greatest danc",
+  "refs": [
+   {
+    "at": 1513679,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310214,
+    "g": 1,
+    "n": 61,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA scares us. LEAF, beat\nthem so we can dance again!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Now we\ncan dance in peace. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x181e47",
+  "text": "DJ SWAGGY BOY is a not only\na man but a brand known\nworldwide. \nIn the Americas ",
+  "refs": [
+   {
+    "at": 1472354,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 1472367,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16310288,
+    "g": 1,
+    "n": 62,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Our DJ is fun, but the JRA\nis worse. LEAF, beat them!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Our DJ\nsays thanks. Now we can party!"
+  ]
+ },
+ {
+  "ptr": "0x191780",
+  "text": "I desperately need a\nPOKEMON for protection.\nI keep getting bullied and\nbeaten b",
+  "refs": [
+   {
+    "at": 1484718,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310490,
+    "g": 1,
+    "n": 91,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "I need a POKEMON to stay safe.\nLEAF, beat the JRA here!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA here!\nNow the town is safe. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x196fc1",
+  "text": "Illegal drugs are all I have \nto life for at my age! \nDRUGS! ",
+  "refs": [
+   {
+    "at": 1493880,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310614,
+    "g": 1,
+    "n": 93,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "I'm too old to fight the JRA.\nLEAF, please beat them for us!"
+  ],
+  "thanks": [
+   "You beat the JRA, LEAF!\nThanks. Our old town can rest."
+  ]
+ },
+ {
+  "ptr": "0x17f0b2",
+  "text": "No one cares about your\nPOKEDEX.  \nGo play in traffic, douche.",
+  "refs": [
+   {
+    "at": 1468191,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16311102,
+    "g": 3,
+    "n": 3,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Your POKEDEX? Nobody cares.\nLEAF, go beat the JRA instead!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Wow.\nYour POKEDEX is cool. Thanks."
+  ]
+ },
+ {
+  "ptr": "0x191f2a",
+  "text": "TEAM ROCKET did unspeakable \nthings to me\u2026\nI want to die\u2026",
+  "refs": [
+   {
+    "at": 1485207,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312502,
+    "g": 7,
+    "n": 1,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA hurt so many of us.\nLEAF, please end this war."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA.\nThank you. We feel safe now."
+  ]
+ },
+ {
+  "ptr": "0x192a79",
+  "text": "Do you know about HEROIN?\nThey don't sell it here.\n--\nThey sell it in the SLUMS.",
+  "refs": [
+   {
+    "at": 1485993,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312594,
+    "g": 7,
+    "n": 7,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA took our homes.\nLEAF, please beat them for us!"
+  ],
+  "thanks": [
+   "LEAF, the JRA is beaten!\nNow we can rebuild our homes."
+  ]
+ },
+ {
+  "ptr": "0x195a68",
+  "text": "My girlfiriend dumped me for \ngetting her a POK\u00e9 DOLL. \n--\nMy right hand will be",
+  "refs": [
+   {
+    "at": 1489905,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312842,
+    "g": 10,
+    "n": 3,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "My girl left me. Ugh.\nLEAF, go stop the JRA now!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nThanks. Our town can smile."
+  ]
+ },
+ {
+  "ptr": "0x1962fb",
+  "text": "KANTO's GOVERNMENT is a\ngreat place to work.\nHigh salary, tons of perks.\nFree pr",
+  "refs": [
+   {
+    "at": 1491951,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312914,
+    "g": 10,
+    "n": 7,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA took our office.\nLEAF, beat them for KANTO!"
+  ],
+  "thanks": [
+   "Thanks, LEAF! The JRA is gone.\nKANTO can get back to work."
+  ]
+ },
+ {
+  "ptr": "0x197b77",
+  "text": "This a hotel! \nNOT a cover for prostitution!\nWe run a clean business!\n",
+  "refs": [
+   {
+    "at": 1495686,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313170,
+    "g": 10,
+    "n": 19,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "We run a clean hotel here.\nLEAF, please beat the JRA!"
+  ],
+  "thanks": [
+   "You beat the JRA, LEAF!\nThanks. The hotel is safe."
+  ]
+ },
+ {
+  "ptr": "0x19a7f1",
+  "text": "CINNABAR used to be known\nfor science, not partying. \n\u2026\nA damn shame.",
+  "refs": [
+   {
+    "at": 1501723,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313454,
+    "g": 12,
+    "n": 7,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "CINNABAR was a science town.\nLEAF, please end the JRA now."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nLabs can open here again."
+  ]
+ },
+ {
+  "ptr": "0x173afa",
+  "text": "Cruises have fine women and\nalcohol!  ",
+  "refs": [
+   {
+    "at": 1444905,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309134,
+    "g": 1,
+    "n": 14,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA ruins our cruises.\nLEAF, please go beat them!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA! Cruises\nare safe again. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x175faa",
+  "text": "That man next to me\u2026\nHe's great in bed! ",
+  "refs": [
+   {
+    "at": 1448195,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309507,
+    "g": 1,
+    "n": 52,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Please go beat the JRA.\nThey hold our base right now."
+  ],
+  "thanks": [
+   "LEAF beat the JRA! Thanks,\nour base is quiet again."
+  ]
+ },
+ {
+  "ptr": "0x17698c",
+  "text": "Go YUCK FOURSELF,kid!",
+  "refs": [
+   {
+    "at": 1449096,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16309769,
+    "g": 1,
+    "n": 54,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey kid, the JRA is no joke.\nLEAF, be careful and win."
+  ],
+  "thanks": [
+   "Nice work, LEAF! You beat\nthe JRA. Go get some rest."
+  ]
+ },
+ {
+  "ptr": "0x177ae2",
+  "text": "This guy can dance!  \nI'm taking him home tonight! ",
+  "refs": [
+   {
+    "at": 1451009,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309842,
+    "g": 1,
+    "n": 59,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA ruined the party!\nLEAF, go beat their Captains!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA!\nLet's dance, the town is free!"
+  ]
+ },
+ {
+  "ptr": "0x17b457",
+  "text": "The girl at the table is so\nfreaking cute. \nI want her to be the mother\nof my ch",
+  "refs": [
+   {
+    "at": 1457866,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 1457959,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309902,
+    "g": 1,
+    "n": 59,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, is that LEAF? Good luck\nagainst the JRA. Please win!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA? Wow! Our\ntown can breathe again."
+  ]
+ },
+ {
+  "ptr": "0x1a212d",
+  "text": "This is the party's drug spot. \nI've got all kinds of DRUGS. \nDo you want any? \n",
+  "refs": [
+   {
+    "at": 1511763,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16309962,
+    "g": 1,
+    "n": 60,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey, you're LEAF! Please beat\nthe JRA. They hold our base."
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA. That\nbase is empty now. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x181fce",
+  "text": "DERON: Wazzup, bro!\n--\nI love hanging out here, bro.\nAs you can see, the sexy la",
+  "refs": [
+   {
+    "at": 1472395,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310022,
+    "g": 1,
+    "n": 60,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Yo LEAF! Beat the JRA, bro.",
+   "Key to CINNABAR GYM was lost\nhere. You will find it."
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA, bro!\nNow the streets are safe."
+  ]
+ },
+ {
+  "ptr": "0x1828eb",
+  "text": "I love to dance!\nEven if it's all by myself.\nIt's my passion!\nI spend countless ",
+  "refs": [
+   {
+    "at": 1473657,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310106,
+    "g": 1,
+    "n": 61,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Go beat the JRA and\nlet the music play again."
+  ],
+  "thanks": [
+   "LEAF beat the JRA!\nLet's dance, the town is free!"
+  ]
+ },
+ {
+  "ptr": "0x177a5a",
+  "text": "Where the hell is my idiot \nboyfriend? ",
+  "refs": [
+   {
+    "at": 1450990,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310226,
+    "g": 1,
+    "n": 62,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA.\nIt will free my boyfriend."
+  ],
+  "thanks": [
+   "LEAF beat the JRA! Now my\nboyfriend can come home."
+  ]
+ },
+ {
+  "ptr": "0x1a3a60",
+  "text": "Oh yes!\nYeah!\nFeels so good. \n--\nOh crap. Someone's looking!\nZip!\n\u2026\n\u2026\nWe weren't",
+  "refs": [
+   {
+    "at": 1757001,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 1757015,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16310323,
+    "g": 1,
+    "n": 62,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA.\nThen we can relax in town."
+  ],
+  "thanks": [
+   "LEAF beat the JRA! Now we can\nrelax in town. Thanks, LEAF!"
+  ]
+ },
+ {
+  "ptr": "0x19d9d4",
+  "text": "I have been making tons\nof cash since becoming a\ndrug dealer.\nI have a mansion i",
+  "refs": [
+   {
+    "at": 1505101,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310502,
+    "g": 1,
+    "n": 91,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Hey LEAF! Our town is under\nthe JRA. Please beat them."
+  ],
+  "thanks": [
+   "LEAF beat the JRA! Thanks!\nNow business can go on."
+  ]
+ },
+ {
+  "ptr": "0x196fff",
+  "text": "Business is good!\nI give the POLICE a part of my\ndrug profits.",
+  "refs": [
+   {
+    "at": 1493889,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16310626,
+    "g": 1,
+    "n": 93,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Business is slow with the JRA.\nPlease beat them, LEAF!"
+  ],
+  "thanks": [
+   "Business is back! Thanks,\nLEAF, for beating the JRA!"
+  ]
+ },
+ {
+  "ptr": "0x17dc4e",
+  "text": "KANTO would be a better place\nwithout the SLUMS in many\ncities.\nIt SUCKS.\n",
+  "refs": [
+   {
+    "at": 1465053,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16310913,
+    "g": 3,
+    "n": 1,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA hurts our cities.\nLEAF, please beat them for us."
+  ],
+  "thanks": [
+   "Our city is getting better!\nYou beat the JRA, LEAF!"
+  ]
+ },
+ {
+  "ptr": "0x17f1a1",
+  "text": "Damn, SLOWBRO! \nYou're useless! ",
+  "refs": [
+   {
+    "at": 1468356,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16311229,
+    "g": 3,
+    "n": 3,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "Ugh, Slowbro is so slow!\nLEAF, go beat the JRA for me."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nSlowbro and I are proud!"
+  ]
+ },
+ {
+  "ptr": "0x17fdd2",
+  "text": "Hello, {v1}!\n--\nHow did I know your name?\n--\nI am enlightened by the great\npower",
+  "refs": [
+   {
+    "at": 1469476,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16311436,
+    "g": 3,
+    "n": 5,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Go beat the JRA and save\nyour home. Good luck, LEAF.",
+   "A RARE CANDY is on a PC in\nPALLET TOWN."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Your\nhome is safe now. Well done."
+  ]
+ },
+ {
+  "ptr": "0x177ceb",
+  "text": "This beach SUCKS!\nThere's nothing to do!\n--\nKANTO needs to get its act\ntogether!",
+  "refs": [
+   {
+    "at": 1451074,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16311726,
+    "g": 3,
+    "n": 37,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA.\nKanto needs its beaches back."
+  ],
+  "thanks": [
+   "LEAF beat the JRA! The beach\nis fun again. Thanks, LEAF!"
+  ]
+ },
+ {
+  "ptr": "0x190b30",
+  "text": "Check out that girl in the\ncorner. She's hot.\nI think she's looking at you,bro.",
+  "refs": [
+   {
+    "at": 1484117,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312278,
+    "g": 6,
+    "n": 1,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! The JRA took our base.\nPlease go beat them, okay?"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nOur town is safe. Great job!"
+  ]
+ },
+ {
+  "ptr": "0x19d8d0",
+  "text": "I here to add little more\nexcitement. \nTons of money to be made\nselling weed, ec",
+  "refs": [
+   {
+    "at": 1505065,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312338,
+    "g": 6,
+    "n": 1,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA killed our trade.\nLEAF, please beat them!"
+  ],
+  "thanks": [
+   "Trade is back, thanks to you!\nLEAF, you beat the JRA!"
+  ]
+ },
+ {
+  "ptr": "0x191f80",
+  "text": "My husband likes trading POK\u00e9MON.\n--\nHe's way too old for that crap. \n--\nBut I p",
+  "refs": [
+   {
+    "at": 1485226,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312514,
+    "g": 7,
+    "n": 2,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "My husband trades POKEMON.\nLEAF, please beat the JRA!"
+  ],
+  "thanks": [
+   "LEAF, thank you for beating\nthe JRA. We feel safe now."
+  ]
+ },
+ {
+  "ptr": "0x1929c2",
+  "text": "Last week, some THUG tried\nto rob this MART.\nA POLICE lady came to stop\nhim but ",
+  "refs": [
+   {
+    "at": 1485984,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16312606,
+    "g": 7,
+    "n": 7,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA scared our town.\nLEAF, please beat them soon!"
+  ],
+  "thanks": [
+   "The JRA is gone! Thanks, LEAF.\nOur MART can open again."
+  ]
+ },
+ {
+  "ptr": "0x197bbe",
+  "text": "You can't afford a high class\ngirl like me.\nI'll go wild for rich man.\nScram!",
+  "refs": [
+   {
+    "at": 1495695,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313182,
+    "g": 10,
+    "n": 19,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! The JRA has our city.\nPlease go beat them, LEAF!"
+  ],
+  "thanks": [
+   "LEAF beat the JRA! Our streets\nare safe again. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x194a77",
+  "text": "I got a good one for you guys:\n--\nA girl comes back home from\ncollege and tells ",
+  "refs": [
+   {
+    "at": 1488479,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313370,
+    "g": 11,
+    "n": 7,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF, you can beat the JRA!\nWe are all counting on you."
+  ],
+  "thanks": [
+   "The JRA is beat! Nice work,\nLEAF. Our town says thanks."
+  ]
+ },
+ {
+  "ptr": "0x19be74",
+  "text": "\u2026Hey!\nDon't look at my letter! \n--\nIt has NOTHING to do with\nselling DRUGS, punk",
+  "refs": [
+   {
+    "at": 1503094,
+    "g": -1,
+    "n": -1,
+    "std": 2,
+    "clone": true
+   },
+   {
+    "at": 16313502,
+    "g": 14,
+    "n": 4,
+    "std": 2,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "LEAF! Don't read my letter,\nbut go beat the JRA for us!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! That\nletter is good news. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0xecf47f",
+  "text": "TEAM ROCKET attacks CERULEAN\ncitizens\u2026\nTEAM ROCKET is a group of\nmurderous, thie",
+  "refs": [
+   {
+    "at": 1505111,
+    "g": -1,
+    "n": -1,
+    "std": 4,
+    "clone": true
+   },
+   {
+    "at": 16313587,
+    "g": 16,
+    "n": 0,
+    "std": 4,
+    "clone": true
+   }
+  ],
+  "ask": [
+   "The JRA attacked our town!\nLEAF, go beat their Captains."
+  ],
+  "thanks": [
+   "The JRA is gone from our town!\nThanks, LEAF, you did it."
   ]
  }
 ]
