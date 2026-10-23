@@ -40,3 +40,4 @@
 0x8f45a064 start_menu_fix3.py 2026-10-23
 0x96dc0842 bless_key_fix.py 2026-10-23
 0xbce1dd1f viridian_base_cleared.py 2026-10-23
+0x44c888a3 shackle_despawn2.py 2026-10-23
