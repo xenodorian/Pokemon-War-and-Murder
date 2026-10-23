@@ -51,9 +51,10 @@ static void rec(u16 k){
     if(s->done || s->mode > 4 || s->n >= 150) return;      // also ignores garbage left in the scratch buffer
     if(s->mode == 1){ if(k) s->quiet = 0; else s->quiet++; if(++s->wait >= 300 || s->quiet >= 20) s->done = 1; }
     else if(s->mode == 2){ s->idle |= k; if(++s->n >= 60) s->done = 1; }
-    else if(s->mode == 4){          // REMAP: the first allowed key wins; A may not be B, B may not be A or the key chosen for A
-        u16 p = low(k);
-        if(p && (s->run == 0 ? p != 2 : (p != 1 && p != s->ca))){ s->idle = p; s->done = 1; }
+    else if(s->mode == 4){          // REMAP: the lowest pressed key wins; for B the key already chosen for A is ignored (n = 1 when it was pressed)
+        u16 use = s->run ? (k & ~s->ca) : k, p = low(use);
+        if(s->run && (k & s->ca)) s->n = 1;
+        if(p){ s->idle = p; s->done = 1; }
         else if(++s->wait >= 1800){ s->idle = 0; s->done = 1; }
     }
     else if(s->mode == 3){
@@ -73,8 +74,8 @@ void kn_poll(void){ RESULT = ST->done; }
 void kn_off(void){ volatile struct St *s = ST; s->mode = 0; s->done = 1; s->ca = 0; }     // REMAP start: no sampling, whatever the scratch buffer held
 void kn_pickA(void){ arm(4); ST->run = 0; }
 void kn_pickB(void){ arm(4); ST->run = 1; }
-// RESULT = 1 when a key was chosen (0x8004 = that key), 0 on timeout (30 seconds)
-void kn_got(void){ volatile struct St *s = ST; GSV(0x8004) = s->idle; RESULT = s->idle != 0; if(s->run == 0) s->ca = s->idle; }
+// RESULT = 1 when a key was chosen (0x8004 = that key); 0 on timeout (30 seconds); 2 on timeout when only the key already chosen for A was pressed
+void kn_got(void){ volatile struct St *s = ST; GSV(0x8004) = s->idle; RESULT = s->idle ? 1 : (s->n ? 2 : 0); if(s->run == 0) s->ca = s->idle; }
 // start of the report: header lines
 void kn_begin(void){
     u32 i; u8 mode = SB2 ? SB2[19] : 0xFF;
@@ -99,19 +100,29 @@ void kn_finB(void){ fin('B'); }
 // the report text is in the buffer: flash it to sector 31, VAR_RESULT = 1 on success
 void kn_write(void){ RESULT = WRITE_SECTOR(31, (const void*)BUF) == 1; }
 
-static u16 swp(u16 k, u16 a, u16 b){
-    u16 ta, tb;
-    if(!b || a == b || (b & (b - 1)) || b > 0x3ff) return k;
-    ta = k & a; tb = k & b; k &= ~(a | b);
-    if(ta) k |= b;
-    if(tb) k |= a;
-    return k;
+// The key chosen for A (ra) and for B (rb) take the A and B places; the old A and B keys move into the places they leave.
+// Any pair of different keys works, including the old A key as B and the old B key as A (a swap) or one key out of the three-way cycle.
+static int one(u16 v){ return v && v <= 0x3ff && !(v & (v - 1)); }
+static u16 remap(u16 k, u16 ra, u16 rb){
+    u16 out, d[2], f[2]; int nd = 0, nf = 0, i;
+    if(!one(ra)) ra = 1;
+    if(!one(rb)) rb = 2;
+    if(ra == rb || (ra == 1 && rb == 2)) return k;
+    out = k & ~(u16)(3 | ra | rb);
+    if(k & ra) out |= 1;
+    if(k & rb) out |= 2;
+    if(ra != 1 && rb != 1) d[nd++] = 1;
+    if(ra != 2 && rb != 2) d[nd++] = 2;
+    if(ra != 1 && ra != 2) f[nf++] = ra;
+    if(rb != 1 && rb != 2) f[nf++] = rb;
+    for(i = 0; i < nd && i < nf; i++) if(k & d[i]) out |= f[i];
+    return out;
 }
-// the key hook: k = pressed keys; the chosen keys swap places with A and B, then the old A/B swap option
+// the key hook: k = pressed keys; the chosen keys take the A and B places, then the old A/B swap option
 static u16 mapped(u16 k){
     u8 *s1 = SB1, *s2 = SB2;
-    if(s1){ k = swp(k, 1, SAVED(VAR_A)); k = swp(k, 2, SAVED(VAR_B)); }
-    if(s2 && s2[19] == 3) k = swp(k, 1, 2);
+    if(s1) k = remap(k, SAVED(VAR_A), SAVED(VAR_B));
+    if(s2 && s2[19] == 3){ u16 t = k & 3; k = (k & ~(u16)3) | ((t & 1) << 1) | (t >> 1); }
     return k;
 }
 u16 kn_map(u16 k){

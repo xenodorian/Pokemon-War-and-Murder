@@ -80,6 +80,32 @@ check('remap: saved vars hold LEFT and RIGHT', (var(sb1, 0x40AE), var(sb1, 0x40B
 check('remap: Left is seen as A', struct.unpack('<H', ram[(1410, 0x3003118)][:2])[0] == 1)
 check('remap: Right is seen as B', struct.unpack('<H', ram[(1510, 0x3003118)][:2])[0] == 2)
 
+# 3a remap pairs: (key for A, key for B) -> what the game sees for each raw key afterwards (A=1 B=2 Right=0x10 Left=0x20 Up=0x40)
+def remap_case(tag, ka, kb, probes):
+    for f in glob.glob('%s/%s.sav' % (OUT, tag)): os.remove(f)
+    keys = '60 8;' + downs(10) + ';420 1;700 %x 20;900 %x 20;1150 1 8' % (ka, kb)
+    rams = []
+    for i, k in enumerate(probes):
+        keys += ';%d %x 12' % (1400 + 60 * i, k); rams.append('%d 3003118 2' % (1400 + 60 * i + 6))
+    ram = run(tag, keys, 1500 + 60 * len(probes), 500, sav='%s/%s.sav' % (OUT, tag), rams=rams, dumps=[1300])
+    sb = open('%s/%s_01300.sb1' % (OUT, tag), 'rb').read()
+    seen = [struct.unpack('<H', ram[(1400 + 60 * i + 6, 0x3003118)])[0] for i in range(len(probes))]
+    return (var(sb, 0x40AE), var(sb, 0x40B5)), seen
+# the A-then-B closing message needs the key that is A after the remap; the old A key (or a key swapped with it) closes it in each case below
+r, seen = remap_case('swapab', 2, 1, [1, 2])
+check('remap A/B swap: vars (B key, A key)', r == (2, 1), r); check('remap A/B swap: raw A is seen as B and raw B as A', seen == [2, 1], seen)
+r, seen = remap_case('cycle', 2, 0x20, [1, 2, 0x20, 0x40])
+check('remap three-way: A takes the B key and B takes Left', r == (2, 0x20), r)
+check('remap three-way: raw A goes to Left, B is A, Left is B, Up unchanged', seen == [0x20, 1, 2, 0x40], seen)
+r, seen = remap_case('plain', 0x20, 0x10, [1, 2, 0x20, 0x10, 0x40])
+check('remap Left/Right: A and B move to Left and Right, Up unchanged', seen == [0x20, 0x10, 1, 2, 0x40], seen)
+
+# 3c B pressed on the same key as A: nothing is stored, the game says why (shot is in /tmp/emu_out/startmenu_same.png)
+for f in glob.glob(OUT + '/same.sav'): os.remove(f)
+run('same', '60 8;' + downs(10) + ';420 1;700 20 20;900 20 20', 3200, 3000, sav=OUT + '/same.sav', dumps=[3100]); sheet('same', 2)
+sb1 = open('%s/same_03100.sb1' % OUT, 'rb').read()
+check('remap same key for A and B: nothing stored', (var(sb1, 0x40AE), var(sb1, 0x40B5)) == (0, 0))
+
 # 3b remap with no key pressed: nothing changes, the key mask flag is cleared, the game gets its keys back
 ram = run('remapto', '60 8;' + downs(10) + ';420 1', 4300, 500, sav=OUT + '/sr2.sav', rams=['4200 20370ca 2'], dumps=[4200]); sheet('remapto', 6)
 sb1 = open('%s/remapto_04200.sb1' % OUT, 'rb').read()

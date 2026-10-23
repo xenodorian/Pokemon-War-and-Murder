@@ -9,7 +9,8 @@ REMAP: two prompts read the raw key register; the chosen key masks are kept in t
 calls (0x08175228) swaps the A and B bits with those keys.
 History: CRC 0xedb85fb0 was built by the first version of this stage, which kept the masks in 0x40C4 and 0x40DC. Those are inside the shot-trainer bit store
 (tools/build.py VARS_POOL), so REMAP corrupted it. start_menu_fix2.py runs this stage again on that ROM: new natives, scripts, callbacks, tail and fade
-list are written and everything is repointed to them; the first copies stay as dead bytes."""
+list are written and everything is repointed to them; the first copies stay as dead bytes.
+start_menu_fix3.py runs it a third time: any two different keys can be chosen (including A as B and B as A) and a refused B says so."""
 import sys, struct
 sys.path.insert(0, 'tools')
 from inc import Rom
@@ -121,18 +122,19 @@ def build_scripts(r, nat):
     S.msg(t('The report could not be saved.'), 4); S.releaseall(); S.end()
     S.lab('ok'); S.msg(t('Controller report saved.\nGitROMs uploads it later.'), 4); S.releaseall(); S.end()
     report = put_script(r, S)
-    # REMAP: press the key for A, then the key for B (30 seconds each, then nothing changes). The masks are stored only when both were chosen.
+    # REMAP: press the key for A, then the key for B (30 seconds each, then nothing changes; B may not be the key chosen for A). The masks are stored only when both were chosen.
     S = SB(); S.lockall(); cn(S, 'kn_off'); S.setvar(0x8009, 0xC0DE)
     phase(S, 'kn_settle', 'r0')
-    S.raw(0x67); S.ptr(t('Press the button that\nshould be A. Not B.')); S.raw(0x66)
+    S.raw(0x67); S.ptr(t('Press the button that\nshould be A.')); S.raw(0x66)
     phase(S, 'kn_pickA', 'pa'); cn(S, 'kn_got'); S.cmp(0x800D, 1); S.goto_if(1, 'aok'); S.goto('none')
     S.lab('aok'); S.raw(0x19, 0x05, 0x80, 0x04, 0x80)
     phase(S, 'kn_settle', 'r1')
-    S.raw(0x67); S.ptr(t('Press the button that\nshould be B. Not A.')); S.raw(0x66)
-    phase(S, 'kn_pickB', 'pb'); cn(S, 'kn_got'); S.cmp(0x800D, 1); S.goto_if(1, 'bok'); S.goto('none')
+    S.raw(0x67); S.ptr(t('Press the button that\nshould be B. Not the same.')); S.raw(0x66)
+    phase(S, 'kn_pickB', 'pb'); cn(S, 'kn_got'); S.cmp(0x800D, 1); S.goto_if(1, 'bok'); S.cmp(0x800D, 2); S.goto_if(1, 'same'); S.goto('none')
     S.lab('bok'); S.raw(0x19, VAR_B & 255, VAR_B >> 8, 0x04, 0x80); S.raw(0x19, VAR_A & 255, VAR_A >> 8, 0x05, 0x80)
     phase(S, 'kn_settle', 'r2')
     S.close(); S.setvar(0x8009, 0); S.msg(t('A and B are registered.\nThe game uses them now.'), 4); S.releaseall(); S.end()
+    S.lab('same'); S.close(); S.setvar(0x8009, 0); S.msg(t('That is the same button\nas A. Nothing changed.'), 4); S.releaseall(); S.end()
     S.lab('none'); S.close(); S.setvar(0x8009, 0); S.msg(t('Nothing was pressed.\nThe buttons are unchanged.'), 4); S.releaseall(); S.end()
     remap = put_script(r, S)
     return report, remap
