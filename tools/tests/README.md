@@ -3,6 +3,7 @@ starts from saves/ported/new_game_empty_party.raw (made from the current ROM) an
 - moves.py TAG        generic runner: KEYS="frame hexmask [hold];..." AUTO_TO END SHOT_FROM SHOT_STEP RAMS="addr count;..."; then sheet.py TAG
 - start_menu.py [ROM]   start menu rows, REPORT text and flash sector, REMAP vars and keys seen by the game, hook transparency (prints PASS/FAIL, contact sheets in /tmp/emu_out/startmenu_*.png)
 - map_change.py [ROM]   warps to Pallet, Viridian and the Viridian base and checks the game is still running there (a bad map-load hook crashes every map change)
+- viridian_base.py [ROM]   Viridian base: cleared flag kept, Purple Heart added when missing, nothing added while the captain is alive
 - death.py, shackle.py, battle.py   older fixed-timing runners (death.py also takes SHOTS="f,f,...")
 - anim_test.py, anim_test2.py, damage_test.py, warp_test.py, battle_test.py, walk_test.py   older scripted checks, same rules
 - newgame_test.py ROM.gba, opening_test.py ROM.gba   cold boot checks, no state
