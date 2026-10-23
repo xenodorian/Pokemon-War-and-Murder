@@ -216,3 +216,10 @@ Owner decision: once the Viridian captain is defeated the base stays cleared. vi
 
 ## Shackled captain despawn (shackle_despawn2.py)
 Cause: the wrapper removed the sprite with `removeobject 0x800F`, a scratch word that battle code (unstable_order.py) and the shop overwrite, so the wrong local id was used. Now a native finds the captain's own object (trainerbattle script against the current opponent) in gMapHeader and removeobject uses 0x8004. Emulator check (Pallet base, captain 15): shackle adds the mon to the party (count 1 to 2) and the captain sprite vanishes; the menu no longer offers SHACKLE. NOT verified: the full-party path (stock ScriptGiveMon returns 1 and prints the PC message), and the other 10 captains (same code, id taken from the map object).
+
+## 2026-10-23 FE8 ally attack animations: plan (steps are independent files, each pushed as it lands)
+Why it was blocked: /home/user/poekemblem was a sparse clone. After `git sparse-checkout disable` the sources are present: decomp_overlay/src/ally_attack.c, include/ally_attack.h, src/data/ally_attack/*.h (frame lists, hit frame, part positions), graphics/.../ally_attack/<Name>/pN.png + attack.pal. No reverse engineering is needed.
+Owner decisions: play at true pixel size even if it overflows the usual battle bounds; break into steps, use several agents, note and push as we go.
+Shared data layout (step 1 writes it, step 2 reads it). Table: 16-byte entries, terminated by species 0xFFFF: u16 species, u8 numParts, u8 hit, u32 palPtr (16 x u16 GBA colors), u32 partsPtr, u32 pad. Part: 8 bytes: u32 spriteTemplatePtr, s16 x, s16 y. SpriteTemplate: the 24-byte engine struct (tileTag 0xFFFF, paletteTag 0xEA01, oam, anims, images, affineAnims 0x08231CFC, callback = native SpriteCB|1).
+Steps: 1 data packer tools/fe8_ally_attack_data.py; 2 natives tools/fe8_ally_attack_native.py; 3 hook in PlayerDoMoveAnimation (0x08032978) tools/fe8_ally_attack.py (stage run by patch.sh); 4 emulator test tools/tests/ally_attack.py; 5 true-size frames (uncropped) from the FE8 renderer in poekemblem/tools.
+Status: (update below as steps land)
