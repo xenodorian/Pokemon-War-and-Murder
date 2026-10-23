@@ -238,3 +238,12 @@ Notes: the test emulator needs libmgba.so.0.10 (built from mGBA 0.10.5 source in
 
 ## 2026-10-23 Visual check of the Shinigami / Anne / Mason edits
 Every edit was run in the emulator on the final ROM (0xb1e9647f) and looked at in screenshots: cage closed and open, Shinigami cell talk, the SHINIGAMI battle, SCROLL, win lines, Anne news, bedside choice, father revival, Tower 2F Mason scene and fight, Route 22 gate lines, Daisy and Oak lab lines, the douche NPC trainer, Blaine, the name quiz text. Fix found: Mason said he handed over the TOWN MAP while the script has Daisy give it (tools/mason_fix2.py). Not changed: the sleeping Father object in the house still says he does not wake after the revival (asked about, not done). The name quiz and one NPC line were shown through a direct text script, not by finding the NPC on the map.
+
+## 2026-10-23 Task list 2 (owner request; each step lands, is noted here and is pushed to main with the GBA and IPS)
+1. [ ] Review every cutscene, scripted event and event dialogue: right place, every party in the scene on screen. (Open from the visual check: the TOWN MAP scene in the rival's house, map 4,2: the script with my Mason line is on the object at (10,6), graphic 76, not visible in the room; Daisy at the table (6,4) says another line. Who gives the map is not confirmed.)
+2. [ ] Second pass over every Mason line (grep list in the session scratchpad mason_lines.md plus the live ROM scan): character, tone and plot consistency.
+3. [ ] Shinigami subplot: blood splatter, feathers, crime scenes, police and related dialogue must not appear until he is freed; consistency and coherence.
+4. [ ] Rename the character who was in the game before the protagonist became LEAF (the old LEAF girlfriend records, Cerulean and Silph, and anything that names her) to TWIG.
+5. [ ] Bystander dialogue: replace old vulgar shock-value lines that do not serve the plot with people who recognize LEAF and either ask her to defeat the JRA or congratulate her on defeating them.
+6. [ ] Quest log: drop the stale original quest, add the story quests, show the story quests as a list, checked off or crossed out when done.
+7. [ ] This list in CURRENT_WORK, steps done one at a time, pushed one at a time, easy work handed to Haiku agents and reviewed.
