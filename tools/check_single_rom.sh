@@ -13,11 +13,14 @@ d = open('PokemonWarAndMurder.gba', 'rb').read()
 crc = '0x%08x' % (zlib.crc32(d) & 0xffffffff)
 last = [l for l in open('ROM_LOG.txt') if l.strip() and not l.startswith('#')][-1].split()[0]
 if crc != last: print('REFUSED: root ROM CRC %s does not match the last ROM_LOG.txt entry %s' % (crc, last)); sys.exit(1)
-b = bytearray(open(sys.argv[1], 'rb').read()); p = open('PokemonWarAndMurder.ips', 'rb').read(); i = 5
-while p[i:i + 3] != b'EOF':
-    o = int.from_bytes(p[i:i + 3], 'big'); n = int.from_bytes(p[i + 3:i + 5], 'big'); i += 5
-    if n == 0: r = int.from_bytes(p[i:i + 2], 'big'); b[o:o + r] = p[i + 2:i + 3] * r; i += 3
-    else: b[o:o + n] = p[i:i + n]; i += n
+b = bytearray(open(sys.argv[1], 'rb').read()); p = open('PokemonWarAndMurder.ips', 'rb').read()
+W, E = (4, b'EEOF') if p[:5] == b'IPS32' else (3, b'EOF'); i = 5      # IPS32 for the ROM grown past 16 MB (see mkips.py)
+while p[i:i + len(E)] != E:
+    o = int.from_bytes(p[i:i + W], 'big'); n = int.from_bytes(p[i + W:i + W + 2], 'big'); i += W + 2
+    if n == 0: r = int.from_bytes(p[i:i + 2], 'big'); data = p[i + 2:i + 3] * r; i += 3
+    else: data = p[i:i + n]; i += n
+    if o + len(data) > len(b): b.extend(b'\xff' * (o + len(data) - len(b)))
+    b[o:o + len(data)] = data
 if bytes(b) != d: print('REFUSED: PokemonWarAndMurder.ips does not rebuild PokemonWarAndMurder.gba'); sys.exit(1)
 print('single ROM ok', crc)
 PY

@@ -6,7 +6,7 @@ pack(r, cb, tbl_pal_tag=0xEA01) allocates everything in the ROM and returns the 
   species table: 16-byte entries {u16 species, u8 numParts, u8 hit, u32 palPtr, u32 partsPtr, u32 pad}, ended by species 0xFFFF
   part (8 bytes): {u32 SpriteTemplate*, s16 x, s16 y}
   SpriteTemplate (24 bytes): {tileTag 0xFFFF, paletteTag, oam, anims, images, affineAnims 0x08231CFC, callback cb}
-  OamData (8 bytes, one per used size, shared): attr0 = shape<<14, attr1 = size<<14, attr2 = priority 1 << 10
+  OamData (8 bytes, one per used size, shared): attr0 = shape<<14, attr1 = size<<14, attr2 = priority 0 << 10 (drawn over the health boxes and the text box)
   SpriteFrameImage (8 bytes): {u32 data, u16 size, u16 0}; AnimCmd frame = image | duration<<16; end = 0x0000FFFF
   palette: 16 x u16 (r>>3)|(g>>3)<<5|(b>>3)<<10 from attack.pal (index 0 is the transparent magenta)
   frame pixels: 4bpp in GBA OBJ tile order (8x8 tiles, row-major over the sprite, 32 bytes per tile), frames consecutive.
@@ -32,7 +32,8 @@ TAG_NONE = 0xFFFF
 ANIMCMD_END = 0x0000FFFF
 MAX_PARTS = 8                      # ALLY_ATTACK_MAX_PARTS
 # (w, h) -> (OAM shape, OAM size)
-OAM_CODES = {(64, 64): (0, 3), (32, 64): (2, 2), (64, 32): (1, 2), (32, 32): (0, 2)}
+# GBA OAM: shape 0 square (8,16,32,64), shape 1 wide (16x8, 32x8, 32x16, 64x32), shape 2 tall (8x16, 8x32, 16x32, 32x64): 32x64 and 64x32 are size 3.
+OAM_CODES = {(64, 64): (0, 3), (32, 64): (2, 3), (64, 32): (1, 3), (32, 32): (0, 2)}
 
 ROM_SIZE_MAX = 0x2000000            # GBA cartridge address space; the base ROM (16 MB) has too little free space for the data
 LAST_REPORT = []                   # per species, filled by pack()
@@ -205,7 +206,7 @@ def pack(r, cb, tbl_pal_tag=0xEA01):
     def oam(w, h):
         if (w, h) not in oam_cache:
             shape, size = OAM_CODES[(w, h)]
-            oam_cache[(w, h)] = r.alloc(struct.pack('<HHHH', shape << 14, size << 14, 1 << 10, 0), 4)
+            oam_cache[(w, h)] = r.alloc(struct.pack("<HHHH", shape << 14, size << 14, 0 << 10, 0), 4)
         return oam_cache[(w, h)]
 
     shared_start = r.cur

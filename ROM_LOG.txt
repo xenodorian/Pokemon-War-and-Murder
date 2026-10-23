@@ -41,3 +41,5 @@
 0x96dc0842 bless_key_fix.py 2026-10-23
 0xbce1dd1f viridian_base_cleared.py 2026-10-23
 0x44c888a3 shackle_despawn2.py 2026-10-23
+0xae99a8f5 fe8_ally_attack.py 2026-10-23 (ROM grown to 32 MB, IPS32)
+0x91186969 fe8_ally_attack_prio.py 2026-10-23
