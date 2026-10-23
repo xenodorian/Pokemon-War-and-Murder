@@ -1,0 +1,1483 @@
+[
+ {
+  "ptr": "0x1736a6",
+  "text": "CAPTAIN: Hmm\u2026\nNot a bad hit, kid.\nNot bad\u2026\nBefore I became the captain\nof the S.",
+  "refs": [
+   {
+    "at": 1444712,
+    "g": 1,
+    "n": 11,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "CAPTAIN: LEAF? You hit hard, kid.\nUse CUT against the JRA!",
+   "Take this HM. Bring them down."
+  ],
+  "thanks": [
+   "CAPTAIN: LEAF! The JRA is beaten!\nYou did what we could not.",
+   "Keep this HM. You earned it."
+  ]
+ },
+ {
+  "ptr": "0x194234",
+  "text": "Oh crap! You beat my entourage\u2026\nThose were two hardcore thugs.\nWe bullied that p",
+  "refs": [
+   {
+    "at": 1740053,
+    "g": 1,
+    "n": 90,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 5,
+    "n": 5,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 5,
+    "n": 5,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 6,
+    "n": 6,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 6,
+    "n": 6,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 7,
+    "n": 4,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 7,
+    "n": 4,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 8,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 8,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 9,
+    "n": 2,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 9,
+    "n": 2,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 10,
+    "n": 13,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 10,
+    "n": 13,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 11,
+    "n": 6,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 11,
+    "n": 6,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 12,
+    "n": 6,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 12,
+    "n": 6,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 13,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 13,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 14,
+    "n": 7,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 14,
+    "n": 7,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 16,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 16,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 21,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 21,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 31,
+    "n": 4,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 31,
+    "n": 4,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 32,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 32,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 33,
+    "n": 3,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 33,
+    "n": 3,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 34,
+    "n": 2,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 34,
+    "n": 2,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 35,
+    "n": 2,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 35,
+    "n": 2,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 36,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 36,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 37,
+    "n": 1,
+    "std": 4
+   },
+   {
+    "at": 1740053,
+    "g": 37,
+    "n": 1,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF! Don't hit me, please!\nStop the JRA. We are scared!"
+  ],
+  "thanks": [
+   "The JRA is down? Nice, LEAF!\nThanks! I'm out of this mess."
+  ]
+ },
+ {
+  "ptr": "0x19358e",
+  "text": "I gotta work these kids! \nThey ain't got nothing else!\n--\nI'll probably give the",
+  "refs": [
+   {
+    "at": 1757361,
+    "g": 1,
+    "n": 93,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA!\nThey work us hard every day."
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA! Wow!\nWe can rest now. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x18001b",
+  "text": "My POLIWRATH and I are\nPISSED at the GOVERNMENT!\nThey're selling out to TEAM\nROC",
+  "refs": [
+   {
+    "at": 1469641,
+    "g": 3,
+    "n": 6,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF! Our town is with you.\nPlease stop the JRA. Go on!"
+  ],
+  "thanks": [
+   "Yes! LEAF beat the JRA!\nOur town is free. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x180b34",
+  "text": "The PARTY MANSION is so\nawesome!\nDJ SWAGGY BOY throws a wild\nPARTAY! \nPeople fro",
+  "refs": [
+   {
+    "at": 1470976,
+    "g": 3,
+    "n": 8,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF! Please stop the JRA!\nTheir men hold our town base."
+  ],
+  "thanks": [
+   "Great job, LEAF! JRA is gone!\nThank you! Come celebrate!"
+  ]
+ },
+ {
+  "ptr": "0x172b00",
+  "text": "LOL! LOL! LOL! LOL! \n--\nOMG! He's so FUNNY! \n--\nLOL! LOL! LOL! LOL!\n--\nHe's a CO",
+  "refs": [
+   {
+    "at": 1756691,
+    "g": 3,
+    "n": 22,
+    "std": 4
+   },
+   {
+    "at": 1756691,
+    "g": 11,
+    "n": 7,
+    "std": 4
+   },
+   {
+    "at": 1756691,
+    "g": 11,
+    "n": 7,
+    "std": 4
+   },
+   {
+    "at": 1756691,
+    "g": 11,
+    "n": 7,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Wait, you're LEAF? Wow!\nPlease stop the JRA, friend!"
+  ],
+  "thanks": [
+   "Hey, LEAF! The JRA is beaten!\nNice work! Thanks a lot."
+  ]
+ },
+ {
+  "ptr": "0x18ed81",
+  "text": "I'm so tired of OAK's crap!\n--\nHe sexually harrasses me and\npays me nothing. I d",
+  "refs": [
+   {
+    "at": 1482327,
+    "g": 4,
+    "n": 3,
+    "std": 4
+   },
+   {
+    "at": 1482327,
+    "g": 4,
+    "n": 3,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF! Please stop the JRA!\nOur whole town needs you."
+  ],
+  "thanks": [
+   "Our town is safe now, LEAF!\nYou beat the JRA. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x191743",
+  "text": "WHOO!\nWOOT! PARTAY!\nMOAR DRINKS FOR ME!\nWHOO!\nNIGHTCLUB!\nHA!",
+  "refs": [
+   {
+    "at": 1484708,
+    "g": 6,
+    "n": 5,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Whoa, LEAF! Stop the JRA!\nThey will not leave us alone."
+  ],
+  "thanks": [
+   "Whoa, LEAF! You beat the JRA!\nDinner's on me. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x192f67",
+  "text": "I make all kinds of DRUGS with\nBERRY POWDER.\n--\nMy VIP clients get the illegal s",
+  "refs": [
+   {
+    "at": 1486429,
+    "g": 7,
+    "n": 9,
+    "std": 5
+   }
+  ],
+  "ask": [
+   "Berry farms are ruined, LEAF.\nPlease beat the JRA for us."
+  ],
+  "thanks": [
+   "Thank you, LEAF! The JRA fell!\nOur berry fields are safe!"
+  ]
+ },
+ {
+  "ptr": "0x1940af",
+  "text": "Man, this guy is good.\nI'm up next. I hope I can\nkeep the crowd entertained.\n--\n",
+  "refs": [
+   {
+    "at": 1487943,
+    "g": 9,
+    "n": 1,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "Are you LEAF? Beat the JRA!\nPlease stop them for us."
+  ],
+  "thanks": [
+   "LEAF, you did it! Thank you!\nNow I can relax and enjoy."
+  ]
+ },
+ {
+  "ptr": "0x196913",
+  "text": "Outta my way!\nHe has CRACK!\nCRACK! \n\u2026\n--\nCRACK!",
+  "refs": [
+   {
+    "at": 1492504,
+    "g": 10,
+    "n": 12,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "Hurry, LEAF! Go hit the JRA!\nWe are counting on you."
+  ],
+  "thanks": [
+   "LEAF! You stopped the JRA!\nThank you! The town is safe."
+  ]
+ },
+ {
+  "ptr": "0x19a6b1",
+  "text": "There's no such thing as \nexcessive force! \nWhatever it takes to kill\nTHUGS! \nIf",
+  "refs": [
+   {
+    "at": 1501443,
+    "g": 12,
+    "n": 5,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF, stop the JRA for good.\nThey hurt people here."
+  ],
+  "thanks": [
+   "LEAF beat the JRA! Thank you!\nPeace is back in town now."
+  ]
+ },
+ {
+  "ptr": "0x19cbd3",
+  "text": "Do you know what? \nI want to be like SABRINA! \n--\nShe's a heterosexual unlike \nt",
+  "refs": [
+   {
+    "at": 1504047,
+    "g": 14,
+    "n": 9,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Wow, LEAF! You're my hero.\nPlease stop the JRA for us!"
+  ],
+  "thanks": [
+   "You won, LEAF! JRA is done!\nA real hero. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x19dcdb",
+  "text": "LOL, I totally conned this\nidiot. I sold him a LEVEL 5\nMagikarp for $500!\nHe mus",
+  "refs": [
+   {
+    "at": 1505478,
+    "g": 16,
+    "n": 0,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "Hey, LEAF? Take down the JRA!\nThey are worse than me."
+  ],
+  "thanks": [
+   "LEAF, you got them! Wow!\nI will change. Thanks a lot."
+  ]
+ },
+ {
+  "ptr": "0x1a2f3e",
+  "text": "You see the hot blond babe\nover there? \nYeah, she's super sexy.\nI'm gonna have h",
+  "refs": [
+   {
+    "at": 1513502,
+    "g": 33,
+    "n": 4,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "You're LEAF? Wow, I'm a fan!\nGo beat the JRA. Go LEAF!"
+  ],
+  "thanks": [
+   "You did it, LEAF! Amazing!\nEveryone is cheering for you!"
+  ]
+ },
+ {
+  "ptr": "0x1a3697",
+  "text": "I go to the PARTY MANSION\nin order to feel YOUNG!\n\u2026\n--\nThat's BS and we both kno",
+  "refs": [
+   {
+    "at": 1514509,
+    "g": 35,
+    "n": 1,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF, please end the JRA rule.\nThen we can have fun again."
+  ],
+  "thanks": [
+   "You ended the JRA, LEAF!\nNow we can party. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x173e04",
+  "text": "I fished up some worthless\ncrap POKEMON\u2026\nThis sucks. ",
+  "refs": [
+   {
+    "at": 1445057,
+    "g": 1,
+    "n": 18,
+    "std": 6
+   }
+  ],
+  "ask": [
+   "I caught nothing but junk.\nLEAF, please stop the JRA!"
+  ],
+  "thanks": [
+   "Fishing is calm again, LEAF.\nThank you for beating the JRA!"
+  ]
+ },
+ {
+  "ptr": "0x176acb",
+  "text": "TEAM ROCKET's BOSS is totally\nawesome! \n--\nHe's not only a criminal but\nan excel",
+  "refs": [
+   {
+    "at": 1757438,
+    "g": 1,
+    "n": 51,
+    "std": 4
+   },
+   {
+    "at": 1757438,
+    "g": 1,
+    "n": 54,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Are you LEAF? The JRA runs\nthis base. Please stop them."
+  ],
+  "thanks": [
+   "LEAF, you did it! The JRA is\ngone. Thanks for the help!"
+  ]
+ },
+ {
+  "ptr": "0x194381",
+  "text": "Hey buddy? How's it going.\nWe're friends now, right?\nNo? Well\u2026\nYou're not going ",
+  "refs": [
+   {
+    "at": 1740097,
+    "g": 1,
+    "n": 90,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF? Beat the JRA, will you?\nWe need you out there."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nGood job, we owe you one."
+  ]
+ },
+ {
+  "ptr": "0x1b1bd1",
+  "text": "POK\u00e9MON JOURNAL\n--\nSpecial Feature:\nPARTY MANSION!\n--\nThe PARTY MANSION is one\nt",
+  "refs": [
+   {
+    "at": 1757388,
+    "g": 1,
+    "n": 93,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Hey, you're LEAF? Please end\nthe JRA's war. We need you."
+  ],
+  "thanks": [
+   "LEAF beat the JRA at last!",
+   "The war is over. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x17e644",
+  "text": "I'm growing marijuana plants. \nThe POLICE have no clue!  ",
+  "refs": [
+   {
+    "at": 1466971,
+    "g": 3,
+    "n": 2,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Oh, it's LEAF! Please end\nthe JRA's war on our town."
+  ],
+  "thanks": [
+   "LEAF, you stopped the JRA!\nOur farms are safe again."
+  ]
+ },
+ {
+  "ptr": "0x1806d3",
+  "text": "ADULT ENTERTAINMENT!\nSEXY!!!",
+  "refs": [
+   {
+    "at": 1469925,
+    "g": 3,
+    "n": 7,
+    "std": 3
+   }
+  ],
+  "ask": [
+   "Are you LEAF? Please beat the\nJRA. Our town needs you."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nOur town can breathe again."
+  ]
+ },
+ {
+  "ptr": "0x18329d",
+  "text": "Hey, I just stole a bunch of stuff\nfrom the POKEMON MART!\nWhat a thrill!\nThey we",
+  "refs": [
+   {
+    "at": 1474315,
+    "g": 3,
+    "n": 19,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Hey, you're LEAF, right?\nStop the JRA! Save our town."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nNow we can sleep at night."
+  ]
+ },
+ {
+  "ptr": "0x1882e1",
+  "text": "TRAINERS with WATER POK\u00e9MON\nare common around here. \n--\nMISTY of the CERULEAN GY",
+  "refs": [
+   {
+    "at": 1756743,
+    "g": 3,
+    "n": 38,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "The JRA base is near here.\nLEAF, please beat the Captain."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nCerulean trainers thank you."
+  ]
+ },
+ {
+  "ptr": "0x19a9e7",
+  "text": "AGATHA's is a old hag who's\npart of the ELITE FOUR.\nI haven't reached her, yet!\n",
+  "refs": [
+   {
+    "at": 1757106,
+    "g": 3,
+    "n": 64,
+    "std": 4
+   },
+   {
+    "at": 1757132,
+    "g": 3,
+    "n": 64,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF, the JRA is strong too.\nPlease beat them for us."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nYou are a true champion now."
+  ]
+ },
+ {
+  "ptr": "0x1903e5",
+  "text": "I'm a big time drug dealer!\nI poison the community and make\na huge profit.\nPOLIC",
+  "refs": [
+   {
+    "at": 1483482,
+    "g": 5,
+    "n": 4,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF! The JRA is hurting\nour town. Please stop them."
+  ],
+  "thanks": [
+   "LEAF, you did it!\nThe JRA is gone for good."
+  ]
+ },
+ {
+  "ptr": "0x19110f",
+  "text": "Head over to CERULEAN\nGYM.\n--\nThe leader is MISTY!\nShe's totally HOT! She wears\n",
+  "refs": [
+   {
+    "at": 1484221,
+    "g": 6,
+    "n": 2,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF, the JRA base is here.\nPlease beat their Captain."
+  ],
+  "thanks": [
+   "LEAF, you took down the JRA!\nCerulean is safe. Thank you!"
+  ]
+ },
+ {
+  "ptr": "0x192079",
+  "text": "Have you heard about BILL? \n--\nEveryone calls him a sad,\ndesperate lonely loser.",
+  "refs": [
+   {
+    "at": 1485383,
+    "g": 7,
+    "n": 3,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "Have you seen BILL around?\nPlease beat the JRA, LEAF."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nBILL and the town thank you."
+  ]
+ },
+ {
+  "ptr": "0xa01bac",
+  "text": "Yo, kid, want a free flute?\nJust sanitize it before you\n--\nuse it. I've been usi",
+  "refs": [
+   {
+    "at": 10493014,
+    "g": 8,
+    "n": 0,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Hey, LEAF! Beat the JRA, kid.\nGood luck out there!"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Nice!\nTake this flute, it's on me."
+  ]
+ },
+ {
+  "ptr": "0x1935ed",
+  "text": "MR. FUJI was a pedofile!  \nI'm glad he's gone! ",
+  "refs": [
+   {
+    "at": 1487321,
+    "g": 8,
+    "n": 2,
+    "std": 4
+   },
+   {
+    "at": 1487331,
+    "g": 8,
+    "n": 2,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF, the JRA took our homes.\nPlease beat them for us."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nOur town is free again."
+  ]
+ },
+ {
+  "ptr": "0x19446f",
+  "text": "My PIKACHU has RIGHTS too,\nDAMMIT!\nYEAH,bro!",
+  "refs": [
+   {
+    "at": 1488240,
+    "g": 9,
+    "n": 3,
+    "std": 4
+   },
+   {
+    "at": 1488264,
+    "g": 9,
+    "n": 3,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF! The JRA has our POKeMON\nlocked up. Please stop them!"
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA!\nOur POKeMON are free. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x195875",
+  "text": "An RPG!\nThose are for NERDS, bro.",
+  "refs": [
+   {
+    "at": 1489850,
+    "g": 10,
+    "n": 2,
+    "std": 3
+   }
+  ],
+  "ask": [
+   "That's LEAF! Please beat the\nJRA before they come here."
+  ],
+  "thanks": [
+   "It's LEAF! Thank you for\nbeating the JRA!"
+  ]
+ },
+ {
+  "ptr": "0x1979c1",
+  "text": "Nom-Nom-Nom!\n--\nI lub eatin, bruh!\n--\nNom! Nom!\n--\nI need MOAR!\n--\nI SAID MOAR!\n",
+  "refs": [
+   {
+    "at": 1495562,
+    "g": 10,
+    "n": 17,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF, go beat the JRA!\nWe are counting on you."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Yum!",
+   "Thanks! Lunch is on me today."
+  ]
+ },
+ {
+  "ptr": "0x19971d",
+  "text": "TM38 contains FIRE BLAST.\nIt will power up FIRE POK\u00e9MON.\n--\nIt's KANTO's officia",
+  "refs": [
+   {
+    "at": 1497598,
+    "g": 12,
+    "n": 0,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "TM38 has FIRE BLAST.\nLEAF, beat the JRA with it!"
+  ],
+  "thanks": [
+   "TM38 has FIRE BLAST.",
+   "LEAF beat the JRA. Thanks!"
+  ]
+ },
+ {
+  "ptr": "0x1a3b14",
+  "text": "More! More!\nDo it harder!\nYes!\n\u2026\n--\nOh crap.\n--\nYou didn't see anything did you?",
+  "refs": [
+   {
+    "at": 1514730,
+    "g": 35,
+    "n": 7,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "Hi, LEAF! Please beat the JRA.\nThe town is counting on you."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Wow.\nThe town will remember you."
+  ]
+ },
+ {
+  "ptr": "0x1a4a3f",
+  "text": "Eeeeek!\nThat's a HERACROSS!\n--\nPlease, please, may I measure how\nbig it is?",
+  "refs": [
+   {
+    "at": 1515674,
+    "g": 38,
+    "n": 3,
+    "std": 4
+   },
+   {
+    "at": 1515674,
+    "g": 41,
+    "n": 0,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Eeeeek! Is that LEAF?\nPlease beat the JRA for us."
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA!\nThank you! We feel safe now."
+  ]
+ },
+ {
+  "ptr": "0x180c0d",
+  "text": "CINNABAR ISLAND \nVisit the PARTY MANSION, bros! ",
+  "refs": [
+   {
+    "at": 1470995,
+    "g": 3,
+    "n": 8,
+    "std": 3
+   }
+  ],
+  "ask": [
+   "CINNABAR ISLAND\nLEAF, please beat the JRA!"
+  ],
+  "thanks": [
+   "CINNABAR ISLAND\nThanks, LEAF! JRA is gone!"
+  ]
+ },
+ {
+  "ptr": "0x182ce3",
+  "text": "DJ SWAGGY BOY, JIM from\nACCOUNTING and COLE\nJOHNSON. They are the true\nleaders o",
+  "refs": [
+   {
+    "at": 1474142,
+    "g": 3,
+    "n": 15,
+    "std": 4
+   },
+   {
+    "at": 1474155,
+    "g": 3,
+    "n": 15,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Hey, you're LEAF, right?\nPlease take the JRA down!"
+  ],
+  "thanks": [
+   "Thanks, LEAF! JRA is gone!\nNow we can party in peace!"
+  ]
+ },
+ {
+  "ptr": "0x189569",
+  "text": "My rate is $100 for the full\nservice.  \nLet's get st-\nLet's wait until this perv",
+  "refs": [
+   {
+    "at": 1756767,
+    "g": 3,
+    "n": 38,
+    "std": 4
+   },
+   {
+    "at": 1756767,
+    "g": 3,
+    "n": 44,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF? Good luck out there.\nPlease beat the JRA here."
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA? Wow!\nThe town can finally relax."
+  ]
+ },
+ {
+  "ptr": "0x18eaf4",
+  "text": "There's an e-mail message here.\n--\n\u2026\n--\nDear Mr. Oak\n(username: longwood77),\nYou",
+  "refs": [
+   {
+    "at": 1482346,
+    "g": 4,
+    "n": 3,
+    "std": 3
+   }
+  ],
+  "ask": [
+   "There's a note on the desk.\nLEAF, please beat the JRA!"
+  ],
+  "thanks": [
+   "There's a note on the desk.\nThanks, LEAF! We are free."
+  ]
+ },
+ {
+  "ptr": "0x1916a9",
+  "text": "Do you want services from \nmy girls? \nYes? \n\u2026\nYou're too young. ",
+  "refs": [
+   {
+    "at": 1484666,
+    "g": 6,
+    "n": 5,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF? You're marching to war.\nPlease stop the JRA for us."
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA, nice!\nRest here, you earned it."
+  ]
+ },
+ {
+  "ptr": "0x1957b0",
+  "text": "What the hell! \nThis guy is trying to rip me\noff. \nI WANTED a HAUNTER, not\na dam",
+  "refs": [
+   {
+    "at": 1489823,
+    "g": 10,
+    "n": 2,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF? Please beat the JRA!\nThey cheat folks like me!"
+  ],
+  "thanks": [
+   "Thanks, LEAF! JRA is beaten!\nHonest folks can trade again."
+  ]
+ },
+ {
+  "ptr": "0x195bba",
+  "text": "HP UP raises POK\u00e9MON HP but\nit also gives you a killer high!\n--\nCALCIUM raises S",
+  "refs": [
+   {
+    "at": 1489987,
+    "g": 10,
+    "n": 3,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF, you're going to war?\nPlease beat the JRA for us."
+  ],
+  "thanks": [
+   "LEAF! You beat the JRA!\nNow our town can rest easy."
+  ]
+ },
+ {
+  "ptr": "0x19816b",
+  "text": "Wow! This girl is so HOT!\nShe's got quite the body and\ncan really move it!\nSo aw",
+  "refs": [
+   {
+    "at": 1496363,
+    "g": 11,
+    "n": 1,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "Hey, LEAF! Go beat the JRA!\nPlease stop their soldiers."
+  ],
+  "thanks": [
+   "Wow, LEAF! You beat the JRA!\nYou really are a hero."
+  ]
+ },
+ {
+  "ptr": "0x198c7b",
+  "text": "BILL is so damn annoying. \nHe thinks he so friggin special!",
+  "refs": [
+   {
+    "at": 1496810,
+    "g": 11,
+    "n": 4,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF! Bill is hiding from the\nJRA. Please stop them!"
+  ],
+  "thanks": [
+   "LEAF! Bill says thank you.\nThe JRA is finally gone!"
+  ]
+ },
+ {
+  "ptr": "0x19a5be",
+  "text": "You been to da\nPARTY MANSION, broseph?\n--\nIt's da most awesomest place\non da pla",
+  "refs": [
+   {
+    "at": 1501425,
+    "g": 12,
+    "n": 5,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF, go take the JRA down!\nOur town is counting on you."
+  ],
+  "thanks": [
+   "LEAF! The JRA is down. Nice!\nOur town owes you a lot."
+  ]
+ },
+ {
+  "ptr": "0x19c142",
+  "text": "\u2026Wait! Don't say a word!\n--\nYou wanted this!",
+  "refs": [
+   {
+    "at": 1503340,
+    "g": 14,
+    "n": 8,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA!\nOur town needs you badly."
+  ],
+  "thanks": [
+   "Thanks, LEAF!\nYou beat the JRA. Well done!"
+  ]
+ },
+ {
+  "ptr": "0x1a2e59",
+  "text": "That black American guy over\nthere.\nHe's got swag.\nSwag is rare.\nThat guy and DJ",
+  "refs": [
+   {
+    "at": 1513422,
+    "g": 33,
+    "n": 2,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF, the JRA base is close.\nPlease take it down, okay?"
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA!\nThanks! The base is gone now."
+  ]
+ },
+ {
+  "ptr": "0x1a303b",
+  "text": "I've always wo\u2026\nI've alw\u2026\n--\nI've always wondered\u2026\n--\nthis.\n\u2026\nI've\u2026\nCan a PIKACH",
+  "refs": [
+   {
+    "at": 1513548,
+    "g": 34,
+    "n": 1,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF, are you off to war?\nPlease stop the JRA soldiers."
+  ],
+  "thanks": [
+   "LEAF! The JRA is beaten!\nYou made the town proud."
+  ]
+ },
+ {
+  "ptr": "0x17a3af",
+  "text": "She's a friggin criminal,man!",
+  "refs": [
+   {
+    "at": 1455510,
+    "g": 1,
+    "n": 89,
+    "std": 6
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA!\nOur town needs you."
+  ],
+  "thanks": [
+   "LEAF, the JRA is beaten!\nOur town is safe now."
+  ]
+ },
+ {
+  "ptr": "0x19214c",
+  "text": "These people are savages!\nGet out of here now!\nThere's nothing they won't\nburn o",
+  "refs": [
+   {
+    "at": 1485426,
+    "g": 1,
+    "n": 92,
+    "std": 2
+   },
+   {
+    "at": 1485426,
+    "g": 7,
+    "n": 3,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF! Please stop the JRA.\nI am so scared!"
+  ],
+  "thanks": [
+   "LEAF, you stopped the JRA!\nWe can breathe again."
+  ]
+ },
+ {
+  "ptr": "0x17e49f",
+  "text": "PEWTER GYM's BROCK is a\ndisgrace to this CITY.\nNo one will work with him after\nh",
+  "refs": [
+   {
+    "at": 1466940,
+    "g": 3,
+    "n": 2,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Are you LEAF? Take down the\nJRA Captain at our base."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA here!\nPewter owes you one."
+  ]
+ },
+ {
+  "ptr": "0x1b14e8",
+  "text": "POK\u00e9MON JOURNAL\n--\nSpecial Feature: CERULEAN GYM\nLEADER MISTY!\n--\nMISTY's boyfri",
+  "refs": [
+   {
+    "at": 1756795,
+    "g": 3,
+    "n": 44,
+    "std": 4
+   },
+   {
+    "at": 1756795,
+    "g": 7,
+    "n": 3,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "POKEMON JOURNAL\nLEAF, please beat the JRA."
+  ],
+  "thanks": [
+   "POKEMON JOURNAL\nLEAF beat the JRA base!"
+  ]
+ },
+ {
+  "ptr": "0x190450",
+  "text": "I'm hungry. When I make any\nmoney or get any food,\nthe cops always take it from ",
+  "refs": [
+   {
+    "at": 1483500,
+    "g": 5,
+    "n": 4,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF, please beat the JRA.\nWe need food and peace here."
+  ],
+  "thanks": [
+   "LEAF, you beat the JRA! Now I\ncan eat in peace."
+  ]
+ },
+ {
+  "ptr": "0x1918e7",
+  "text": "Only skilled TRAINERS can collect\nPOK\u00e9MON BADGES. \n--\nNo scrubs are allowed. \nNO",
+  "refs": [
+   {
+    "at": 1484788,
+    "g": 7,
+    "n": 0,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF, you look strong.\nBeat the JRA Captain here!"
+  ],
+  "thanks": [
+   "LEAF, you are a true hero!\nThe JRA Captain is down."
+  ]
+ },
+ {
+  "ptr": "0x1934de",
+  "text": "I used to have dreams but\nthey're dead. \nGrown ups are so mean.\nThey make me wor",
+  "refs": [
+   {
+    "at": 1487122,
+    "g": 8,
+    "n": 0,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "Are you LEAF? Please beat\nthe JRA. I miss my family."
+  ],
+  "thanks": [
+   "Wow, LEAF! The JRA is gone.\nNow my family can come home."
+  ]
+ },
+ {
+  "ptr": "0x194145",
+  "text": "DAMN! \nThe NURSE won't give me her\nPHONE NUMBER! \nDAMN IT!",
+  "refs": [
+   {
+    "at": 1487934,
+    "g": 9,
+    "n": 1,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF! Please beat the JRA so\nour nurses can work safely."
+  ],
+  "thanks": [
+   "Thanks, LEAF! The JRA fell.\nOur nurses are safe now."
+  ]
+ },
+ {
+  "ptr": "0x194860",
+  "text": "You support the MURDER of\nPOKEMON, fool!",
+  "refs": [
+   {
+    "at": 1488031,
+    "g": 9,
+    "n": 3,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "LEAF, the JRA is hurting our\nPOKEMON. Stop them, please!"
+  ],
+  "thanks": [
+   "LEAF, you saved our POKEMON!\nThe JRA cannot hurt them now."
+  ]
+ },
+ {
+  "ptr": "0x194c8e",
+  "text": "A little word of advice, kid!\n--\nThis is a kill or be killed world.\n--\nYou can b",
+  "refs": [
+   {
+    "at": 1489268,
+    "g": 9,
+    "n": 6,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Hey kid, you're LEAF, right?\nPlease beat the JRA here."
+  ],
+  "thanks": [
+   "Good job, LEAF! The JRA fell.\nOur town is safer now."
+  ]
+ },
+ {
+  "ptr": "0x195823",
+  "text": "Some guy tried to steal\nbut he got killed by a\ncop's GROWLITHE.",
+  "refs": [
+   {
+    "at": 1489832,
+    "g": 10,
+    "n": 2,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF! Our officers need help.\nPlease beat the JRA base."
+  ],
+  "thanks": [
+   "Thanks, LEAF! You won at the\nJRA base. Officers can rest."
+  ]
+ },
+ {
+  "ptr": "0x1b161b",
+  "text": "Hey, kid!\nDon't believe in all those damn\nconspiracy theories.\nKANTO's Governmen",
+  "refs": [
+   {
+    "at": 1756848,
+    "g": 10,
+    "n": 8,
+    "std": 4
+   }
+  ],
+  "ask": [
+   "Hey, kid! You're LEAF, right?\nPlease beat the JRA."
+  ],
+  "thanks": [
+   "Nice work, LEAF! Town is free.\nThe whole town is grateful."
+  ]
+ },
+ {
+  "ptr": "0x19a4f8",
+  "text": "Hey, could you not tell the\nother POLICE OFFICERS\nthat I'm here?\nThere's just so",
+  "refs": [
+   {
+    "at": 1501434,
+    "g": 12,
+    "n": 5,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF, please go beat the JRA.\nThe thugs are too much here."
+  ],
+  "thanks": [
+   "The JRA is beaten, LEAF!\nNow the town can relax."
+  ]
+ },
+ {
+  "ptr": "0x1a2ebe",
+  "text": "I love sexy foreign men like\nDERON.\nI get bored with all the local\nmen. \nDERON h",
+  "refs": [
+   {
+    "at": 1513431,
+    "g": 33,
+    "n": 2,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF! Stop the JRA for us.\nThen our town can be calm."
+  ],
+  "thanks": [
+   "Thank you, LEAF! The JRA is\nbeaten. Our town is saved."
+  ]
+ },
+ {
+  "ptr": "0x1a30a3",
+  "text": "There's some violence at the\nPARTY MANSION.\nOnce things get ugly, it\nget ugly fa",
+  "refs": [
+   {
+    "at": 1513557,
+    "g": 34,
+    "n": 1,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "Hey, LEAF! The JRA is causing\ntrouble. Please beat them!"
+  ],
+  "thanks": [
+   "JRA is gone, LEAF! Great work.\nThe party is safe again."
+  ]
+ },
+ {
+  "ptr": "0x1a3627",
+  "text": "DJ SWAGGY BOY was born in\nAmerica.\nHe quickly became one of the\nmost powerful pe",
+  "refs": [
+   {
+    "at": 1514500,
+    "g": 35,
+    "n": 1,
+    "std": 2
+   }
+  ],
+  "ask": [
+   "LEAF! Go end the JRA now!\nThe whole city needs you."
+  ],
+  "thanks": [
+   "Thanks, LEAF! The JRA is done.\nThe whole city thanks you."
+  ]
+ }
+]
