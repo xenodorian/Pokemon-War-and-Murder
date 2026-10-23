@@ -54,3 +54,5 @@
 0x819c036b questlog_story.py 2026-10-23
 0xafef3b57 mason_pass2.py 2026-10-23
 0xa054055c scenes_fix.py 2026-10-23
+0x0cf5a6f4 daisy_fix.py 2026-10-23
+0x3c0512dc questlog_gyms.py 2026-10-23
