@@ -272,3 +272,7 @@ House (4,0): the bed object (local id 1) and the two bed bg tiles (2,3), (2,5) n
 
 ## Mason sprite in Cerulean and Silph (tools/mason_gfx.py)
 The Cerulean (3,3) object 8 and SilphCo_7F (1,53) object 1 (rival hide flags 0x3C, 0x4E) used gfx 7, the base hack's girlfriend (looks like LEAF). Every other rival object uses gfx 72 (Gary). Both are gfx 72 now. Checked the Cerulean scene in the emulator; Silph uses the same change and was not walked. Not touched: the duplicate map entries in groups 0 and 1 (e.g. (0,58), (0,191), (1,186)) that match the same pattern but are not in allmaps.txt.
+
+## SHOOT restored for ordinary trainers (tools/ordinary_shoot.py, ROM 0x8f58fbe8)
+Cause of the loss: tools/liberty.py (2026-10-22, commit dd9a42e) built a three-row BLESS / THREATEN / LEAVE menu for ordinary trainers ("never shoot"); the bystander update (4a68a60) never touched trainers. Owner: that was a misunderstanding, restore it.
+The live front script's ordinary menu now jumps to a new script with the original rows (menus 78 to 81: shoot grey when the trainer cannot be shot, bless and threaten grey once one was used, all grey) and the original deal gate; BLESS and THREATEN still run the liberty handlers. SHOOT is the old shoot block (needs GLOCK and 9MM ROUND, takes the money first if not already robbed, takes the round, gunshot, party taken). Checked in the emulator on Route 3 LASS SALLY (menu with four rows, shoot, "A bloody mess."). Not changed: JRA soldiers, captains and the General.
