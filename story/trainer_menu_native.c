@@ -59,11 +59,6 @@ static void map_range(int* a,int* z){
     int j=i; while(j<NMT && MT_G[j]==g&&MT_N[j]==n) j++;
     *a=i; *z=j;
 }
-// slot of the trainer whose object template is t (-1 if none)
-static int tmpl_slot(u8* t,int a,int z){
-    for(int k=a;k<z;k++) if(MT_L[k]==t[0]) return MT_S[k];
-    return -1;
-}
 // does object template t belong to trainer slot s on this map
 static int tmpl_is(u8* t,int s,int a,int z){
     for(int k=a;k<z;k++) if(MT_L[k]==t[0]&&MT_S[k]==s) return 1;

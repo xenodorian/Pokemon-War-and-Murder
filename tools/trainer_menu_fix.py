@@ -6,14 +6,15 @@ Owner rule: every trainer can be blessed, threatened or shot. Nothing is grey un
   after THREATEN     BLESS THREATEN grey, SHOOT live                      (menu 80)
   after SHOOT        the trainer is a splatter
 The old post-battle menu (S1, ordinary_shoot.py) picked its rows from the 'robbed' bit, which BLESS and THREATEN both set, and from rob_info's SHOOT test
-(g_shoot, and an object script that has to start with trainerbattle type 0). Gym leaders (type 2), double battles (type 4), the camp women and the
-Kanto leaders were therefore grey or had no menu at all. This stage replaces that menu by a new script that uses new natives (story/trainer_menu_native.c):
+(g_shoot, and an object script that has to start with trainerbattle type 0). The 16 trainers with a continue script (type 2: Cinnabar gym, Rocket hideouts, dojo ...) had SHOOT grey,
+the 14 double-battle trainers (type 4) never reached the menu, and the Kanto gym leaders, the camp women and the camp grunts (ids not in g_ids) had no menu at all. This stage replaces that menu by a new script that uses new natives (story/trainer_menu_native.c):
  - tm_info: GSV4 = 0 fresh / 1 threatened / 2 blessed, GSV6 = known trainer, GSV8 = the object talked to belongs to this trainer.
  - tm_bless: the stock bless routine plus a 'blessed' bit.  tm_pay: the money of threatening or of a shot trainer.  tm_shoot: splatters every object of the trainer, takes the party.
  - tm_wrap_load / tm_wrap_scripts: replace rob.c's apply_killed (shot trainers stay splatters); both hook literals in the gun natives are redirected.
 Trainers are found by (map group, map number, local id) from a table built here from the object scripts of the ROM being patched, not by looking at the first bytes of the script.
-Persistence: one 'blessed' bit per slot (417 original ranks + the extra trainers) in the new bit store (the vars 0x4010..0x401F and a list of flags, see BIT_FLAGS), the used and killed bits
-of the extra trainers there too. The original ranks keep their used bit (g_vars bit r) and killed bit (g_vars bit 512+r): the Kill Count keeps counting them.
+Persistence: one 'blessed' bit per slot (417 original ranks + 23 extra trainers) in a new bit store: the vars 0x4018..0x401F and 0x40BC (144 bits) and 326 generic flags
+(BIT_FLAG_RANGES), plus a used and a killed bit for each extra trainer. The original ranks keep their used bit (g_vars bit r) and killed bit (g_vars bit 512+r): the Kill Count keeps counting them.
+g_vars position 12 pointed at var 0x403C, which the game sets to 0x0302 at every new game (trainers 301, 308 and 309 started 'used'); all 9 copies of the pool now point at 0x40CF there.
 The police deal rule is kept: after the deal SHOOT stays live but answers 'You gave the police your word, soldiers only.' (no grey for something that was not selected).
 Also here: the double-battle 'already beaten' branch of the engine script (0x1A4EFA) jumps to the post-battle script so double-battle trainers get the menu; the JRA menu uses
 menu 80 after THREATEN (bless and threaten grey) and refuses a second THREATEN. The first 0x40 bytes of the front script (shackle check and prompt) are not touched."""
@@ -32,6 +33,7 @@ DEAL_STATE = 0x08F22DED
 OLD_BLESS = 0x08EBB05D
 JRA_STATE = 0x08F8C3BD
 GVARS_OFF = 0xA0A2E2
+JIDS_OFF = 0xF23A40                                                # the 94 JRA trainer ids (gun natives)
 WRAP_LITERALS = {0xF22988: 0x08A09901, 0xF22C90: 0x08A0991D}   # gun natives: rob.c wrap_load / wrap_scripts
 DOUBLE_BEATEN = 0x1A4EFA                                          # goto_if != in the double-battle engine script: 06 05 <1A4F20>
 GFX_SPLAT, SPLAT_SCRIPT = 152, 0x08A09811
@@ -44,12 +46,11 @@ STAGE2_DATA = os.path.join(HERE, '..', 'stage2', 'data.h')
 # type 3 scripted fights (their own scripts decide what happens after the battle).
 EXTRA_IDS = [30, 31, 32] + list(range(36, 49)) + list(range(414, 421))
 
-# New bit store. Vars 0x4018..0x401F are object graphics vars that no object template uses (templates use graphics 0xF0..0xF7 = vars 0x4010..0x4017 only), 0x40A3 / 0x40A4 are
-# unnamed in the decomp and 0x40BC is the unused seventh Mystery Gift var; no script of the ROM touches any of them. Flags are generic ones (FLAG_0x... in the decomp, never
+# New bit store. Vars 0x4018..0x401F are object graphics vars that no object template uses (templates use graphics 0xF0..0xF7 = vars 0x4010..0x4017 only), 0x40CF (VAR_FRONTIER_FACILITY, no Battle Frontier in FireRed) and 0x40BC is the unused seventh Mystery Gift var; no script of the ROM touches any of them. Flags are generic ones (FLAG_0x... in the decomp, never
 # named, nothing in the maps, objects or scripts of this ROM reads or writes them, see tools/tests/trainer_menu_fix.py).
-POOL_FIX = (12, 0x40A3)                                          # g_vars position 12 was var 0x403C, which the game sets to 0x0302 at every new game: trainers 301, 308 and 309 started 'used'
-BIT_VARS = list(range(0x4018, 0x4020)) + [0x40A4, 0x40BC]
-BIT_FLAG_RANGES = [(0x335, 0x3D7), (0x319, 0x333), (0x304, 0x317), (0x300, 0x302), (0x204, 0x22F), (0x10A, 0x153)]
+POOL_FIX = (12, 0x40CF)                                          # g_vars position 12 was var 0x403C, which the game sets to 0x0302 at every new game: trainers 301, 308 and 309 started 'used'
+BIT_VARS = list(range(0x4018, 0x4020)) + [0x40BC]
+BIT_FLAG_RANGES = [(0x335, 0x3D7), (0x319, 0x333), (0x304, 0x317), (0x300, 0x302), (0x204, 0x22F), (0x10A, 0x153), (0xB0, 0xBA)]
 
 def r32(b, o): return struct.unpack_from('<I', b, o)[0]
 def r16(b, o): return struct.unpack_from('<H', b, o)[0]
@@ -198,6 +199,8 @@ def install(r):
     assert bytes(b).find(struct.pack('<%dH' % NG, *G_IDS)) > 0, 'g_ids table not in the ROM'
     ids = G_IDS + EXTRA_IDS
     assert len(set(ids)) == len(ids)
+    jids = set(struct.unpack_from('<94H', b, JIDS_OFF)); assert r16(b, JIDS_OFF) == 1 and not (jids & set(ids)), 'a slot trainer is a JRA trainer'
+    assert not any(55 <= t <= 78 for t in ids), 'police ids are not slots'
     slot_of = {tid: s for s, tid in enumerate(ids)}
     NX = len(EXTRA_IDS); NSLOT = NG + NX
     rows = object_table(b, slot_of)
