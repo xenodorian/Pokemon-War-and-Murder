@@ -190,7 +190,7 @@ def static_proofs(slot_of, rows, flags, vars_):
     hits = {k: v for k, v in hits.items()}
     # numbers that also look like other constants (sizes, addresses) are listed, not failed on: the report has to be read
     print('repo files that mention one of the numbers (hex, 3-4 digits):', {hex(k): sorted(v)[:3] for k, v in sorted(hits.items())})
-    check('no source file of the repo names a var of the new store (flags are listed above for reading)', not any(k >= 0x4000 and not (k == 0x40CF and set(v) <= {'tools/build.py', 'tools/gvars_fix.py', 'tools/start_menu_fix.py'}) for k, v in hits.items()), {hex(k): sorted(v) for k, v in hits.items() if k >= 0x4000})   # 0x40CF appears only as the exclusive end of the old pool range(0x40BD, 0x40CF)
+    check('no source file of the repo names a var of the new store (flags are listed above for reading)', not any(k >= 0x4000 and not (k == 0x40CF and set(v) <= {'tools/build.py', 'tools/gvars_fix.py', 'tools/start_menu_fix.py'}) and not (set(v) <= {'tools/police_vars.py', 'tools/tests/police_vars.py'}) for k, v in hits.items()), {hex(k): sorted(v) for k, v in hits.items() if k >= 0x4000})   # 0x40CF appears only as the exclusive end of the old pool range(0x40BD, 0x40CF)
 
 # ---------------------------------------------------------------- emulator
 def tmpl_off(b, g, n, lid):

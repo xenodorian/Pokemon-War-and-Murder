@@ -12,7 +12,7 @@ the 14 double-battle trainers (type 4) never reached the menu, and the Kanto gym
  - tm_bless: the stock bless routine plus a 'blessed' bit.  tm_pay: the money of threatening or of a shot trainer.  tm_shoot: splatters every object of the trainer, takes the party.
  - tm_wrap_load / tm_wrap_scripts: replace rob.c's apply_killed (shot trainers stay splatters); both hook literals in the gun natives are redirected.
 Trainers are found by (map group, map number, local id) from a table built here from the object scripts of the ROM being patched, not by looking at the first bytes of the script.
-Persistence: one 'blessed' bit per slot (417 original ranks + 23 extra trainers) in a new bit store: the vars 0x4018..0x401F and 0x40BC (144 bits) and 326 generic flags
+Persistence: one 'blessed' bit per slot (417 original ranks + 23 extra trainers) in a new bit store: the vars 0x4018..0x401D and 0x40BC (112 bits) and 326 generic flags
 (BIT_FLAG_RANGES), plus a used and a killed bit for each extra trainer. The original ranks keep their used bit (g_vars bit r) and killed bit (g_vars bit 512+r): the Kill Count keeps counting them.
 g_vars position 12 pointed at var 0x403C, which the game sets to 0x0302 at every new game (trainers 301, 308 and 309 started 'used'); all 9 copies of the pool now point at 0x40CF there.
 The police deal rule is kept: after the deal SHOOT stays live but answers 'You gave the police your word, soldiers only.' (no grey for something that was not selected).
@@ -49,8 +49,8 @@ EXTRA_IDS = [30, 31, 32] + list(range(36, 49)) + list(range(414, 421))
 # New bit store. Vars 0x4018..0x401F are object graphics vars that no object template uses (templates use graphics 0xF0..0xF7 = vars 0x4010..0x4017 only), 0x40CF (VAR_FRONTIER_FACILITY, no Battle Frontier in FireRed) and 0x40BC is the unused seventh Mystery Gift var; no script of the ROM touches any of them. Flags are generic ones (FLAG_0x... in the decomp, never
 # named, nothing in the maps, objects or scripts of this ROM reads or writes them, see tools/tests/trainer_menu_fix.py).
 POOL_FIX = (12, 0x40CF)                                          # g_vars position 12 was var 0x403C, which the game sets to 0x0302 at every new game: trainers 301, 308 and 309 started 'used'
-BIT_VARS = list(range(0x4018, 0x4020)) + [0x40BC]
-BIT_FLAG_RANGES = [(0x335, 0x3D7), (0x319, 0x333), (0x304, 0x317), (0x300, 0x302), (0x204, 0x22F), (0x10A, 0x153), (0xB0, 0xBA)]
+BIT_VARS = list(range(0x4018, 0x401E)) + [0x40BC]          # 0x401E and 0x401F belong to the police store (police_vars.py)
+BIT_FLAG_RANGES = [(0x335, 0x3D7), (0x319, 0x333), (0x304, 0x317), (0x300, 0x302), (0x204, 0x22F), (0x10A, 0x153), (0xB0, 0xDA)]
 
 def r32(b, o): return struct.unpack_from('<I', b, o)[0]
 def r16(b, o): return struct.unpack_from('<H', b, o)[0]
