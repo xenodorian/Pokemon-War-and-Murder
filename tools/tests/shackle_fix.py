@@ -148,7 +148,7 @@ def cap_job(a):
     if mode == 'no': kw['bfrom'] = 5200
     if mode == 'noball': kw['ball'] = False
     if mode == 'full': kw['fill'] = 5; kw['mixb'] = (1600, 4600)   # B declines the 'change POKeMON?' question that appears with more than one mon
-    res = run('cap_%s_%d_%s' % (mode, side, name), g, n, x + SIDES[side][1], y + SIDES[side][2], SIDES[side][3], nA=110, tpoll=(4200, 7800, 30), **kw)
+    res = run('cap_%s_%d_%s' % (mode, side, name), g, n, x + SIDES[side][1], y + SIDES[side][2], SIDES[side][3], nA=110, tpoll=(4900, 5700, 6) if mode == 'no' else (4200, 7800, 30), **kw)
     return a, res
 cjobs = []
 for c in CAPS:
