@@ -68,3 +68,4 @@
 0x5078068d questlog_jra.py 2026-10-24
 0x976db4e6 shoot_order.py 2026-10-24
 0xbe8199cd surge_fix.py 2026-10-25
+0x7a551808 shackle_fix.py 2026-10-25
