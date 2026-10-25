@@ -67,3 +67,4 @@
 0x8f58fbe8 ordinary_shoot.py 2026-10-23
 0x5078068d questlog_jra.py 2026-10-24
 0x976db4e6 shoot_order.py 2026-10-24
+0xbe8199cd surge_fix.py 2026-10-25
