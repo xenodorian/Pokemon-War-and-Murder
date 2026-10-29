@@ -71,3 +71,4 @@
 0x7a551808 shackle_fix.py 2026-10-25
 0x59bda019 trainer_menu_fix.py 2026-10-25
 0x4a0a2748 police_vars.py 2026-10-25
+0xe4f467a6 death_facing_fix.py 2026-10-29
